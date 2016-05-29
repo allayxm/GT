@@ -4,13 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{81D8ED1D-32D6-449E-9A69-0DF7DC7EB161}</ProjectGuid>
+    <ProjectGuid>{FAD8E9AF-E87D-45E3-99B8-CD3E3360B682}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JXDL.ManageBusiness</RootNamespace>
-    <AssemblyName>ManageBusiness</AssemblyName>
+    <RootNamespace>MXKJ.DBMiddleWareLib</RootNamespace>
+    <AssemblyName>MXKJ.DBMiddleWareLib</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,19 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserManage.cs" />
+    <Compile Include="BasicDB.cs" />
+    <Compile Include="Comm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserOperateLog.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DBMiddleWareLib\DBMiddleWareLib.csproj">
-      <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
-      <Name>DBMiddleWareLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ManageEFModel\ManageEFModel.csproj">
-      <Project>{7f64e787-ae1e-41a6-ab55-0396ac83180c}</Project>
-      <Name>ManageEFModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

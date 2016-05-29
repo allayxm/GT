@@ -48,7 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\DBMiddleWare\DBMiddleWareLib\DBMiddleWareLib.csproj">
+    <ProjectReference Include="..\DBMiddleWareLib\DBMiddleWareLib.csproj">
       <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
       <Name>DBMiddleWareLib</Name>
     </ProjectReference>

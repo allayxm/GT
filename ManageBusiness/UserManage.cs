@@ -84,6 +84,7 @@ namespace JXDL.ManageBusiness
             {
 
             }
+            return vResult;
         }
     }
 }

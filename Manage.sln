@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageBusiness", "ManageBus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{EFD5A6E3-E951-4886-877C-3872A6A7F7D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBMiddleWareLib", "..\..\..\DBMiddleWare\DBMiddleWareLib\DBMiddleWareLib.csproj", "{FAD8E9AF-E87D-45E3-99B8-CD3E3360B682}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBMiddleWareLib", "DBMiddleWareLib\DBMiddleWareLib.csproj", "{FAD8E9AF-E87D-45E3-99B8-CD3E3360B682}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
