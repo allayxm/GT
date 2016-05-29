@@ -891,6 +891,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\LoginController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1032,6 +1033,10 @@
     <ProjectReference Include="..\ManageBusiness\ManageBusiness.csproj">
       <Project>{81d8ed1d-32d6-449e-9a69-0df7dc7eb161}</Project>
       <Name>ManageBusiness</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManageEFModel\ManageEFModel.csproj">
+      <Project>{7f64e787-ae1e-41a6-ab55-0396ac83180c}</Project>
+      <Name>ManageEFModel</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace JXDL.ManageEFModel
 {
     [TableAttrib("UploadFiles", "ID")]
-    public struct UploadFiles
+    public struct UploadFilesEF
     {
         [ColumnAttrib("ID")]
         public int ID { get; set; }

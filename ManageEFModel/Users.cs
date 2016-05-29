@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace JXDL.ManageEFModel
 {
     [TableAttrib("Users", "ID")]
-    public struct Users
+    public struct UsersEF
     {
         [ColumnAttrib("ID")]
         public int ID { get; set; }

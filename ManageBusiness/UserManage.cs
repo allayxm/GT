@@ -17,10 +17,10 @@ namespace JXDL.ManageBusiness
             m_BasicDBClass = new BasicDBClass(DataBaseType.SqlServer);
         }
 
-        public Users Login( string UserName,string Password )
+        public UsersEF Login( string UserName,string Password )
         {
-            Users vResult = new Users();
-            Users vUserEF = new Users();
+            UsersEF vResult = new UsersEF();
+            UsersEF vUserEF = new UsersEF();
             vUserEF.UserName = UserName;
             vUserEF.Password = Password;
             DataTable vTable =  m_BasicDBClass.SelectRecords(vUserEF);
@@ -40,7 +40,7 @@ namespace JXDL.ManageBusiness
         public bool AddUser( string UserName,string Password,int Power)
         {
             bool vResult = false;
-            Users vUserEF = new Users();
+            UsersEF vUserEF = new UsersEF();
             vUserEF.UserName = UserName;
             vUserEF.Password = Password;
             vUserEF.LateLoginTime = DateTime.Now;
@@ -54,7 +54,7 @@ namespace JXDL.ManageBusiness
         public bool UpdateUser( int UserID,string Password,int Power)
         {
             bool vResult = false;
-            Users vUserEF = new Users();
+            UsersEF vUserEF = new UsersEF();
             vUserEF.ID = UserID;
             vUserEF.Password = Password;
             
@@ -65,9 +65,9 @@ namespace JXDL.ManageBusiness
             return vResult;
         }
 
-        public Users GetUserInfo( int UserID )
+        public UsersEF GetUserInfo( int UserID )
         {
-            Users vUserEF = new Users();
+            UsersEF vUserEF = new UsersEF();
             vUserEF.ID = UserID;
             DataTable vTable =  m_BasicDBClass.SelectRecords(vUserEF);
             if (vTable.Rows.Count > 0)
@@ -76,15 +76,33 @@ namespace JXDL.ManageBusiness
             vTable.Dispose();
             return vUserEF;
         }
-        public List<Users> OnlineUsersInfo()
+        public List<UsersEF> OnlineUsersInfo()
         {
-            List<Users> vResult = new List<Users>();
-            DataTable vTable =  m_BasicDBClass.SelectCustom("Select *From Users where DATEDIFF(ss,LateLoginTime,'2016-05-23 22:18')>=-60");
-            if ( vTable.Rows.Count > 0 )
-            {
+            List<UsersEF> vResult = new List<UsersEF>();
+            UsersEF[] vData =  m_BasicDBClass.SelectCustomEx<UsersEF>("Select *From Users where DATEDIFF(ss,LateLoginTime,'2016-05-23 22:18')>=-60");
+            vResult.AddRange(vData);
+            return vResult;
+        }
 
+        /// <summary>
+        /// 心跳包
+        /// </summary>
+        /// <returns></returns>
+        public bool HeartBeat( string UserNama,string Token)
+        {
+            bool vResult = false;
+            UsersEF vUserEF = new UsersEF();
+            vUserEF.UserName = UserNama;
+            vUserEF.Token = Token;
+            UsersEF[] vData = m_BasicDBClass.SelectRecordsEx(vUserEF);
+            if ( vData.Length > 0 )
+            {
+                UsersEF vHeartBeat = new UsersEF();
+                vHeartBeat.LateLoginTime = DateTime.Now;
+                vResult = m_BasicDBClass.UpdateRecord(vHeartBeat, vData[0].ID);
             }
             return vResult;
         }
+
     }
 }

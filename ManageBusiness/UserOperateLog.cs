@@ -18,16 +18,11 @@ namespace JXDL.ManageBusiness
         }
 
 
-        public List<Log> GetAllLog()
+        public List<LogEF> GetAllLog()
         {
-            List<Log> vResult = new List<Log>();
-            DataTable vTable = m_BasicDBClass.SelectAllRecords<Log>();
-            if ( vTable.Rows.Count > 0 )
-            {
-                vResult = CommClass.ConvertDataTableToList<Log>(vTable);
-            }
-            vTable.Clear();
-            vTable.Dispose();
+            List<LogEF> vResult = new List<LogEF>();
+            LogEF[] vData= m_BasicDBClass.SelectAllRecordsEx<LogEF>();
+            vResult.AddRange(vData);
             return vResult;
         }
     }
