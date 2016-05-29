@@ -40,8 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="UserManage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserOperateLog.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DBMiddleWare\DBMiddleWareLib\DBMiddleWareLib.csproj">
+      <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
+      <Name>DBMiddleWareLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManageEFModel\ManageEFModel.csproj">
+      <Project>{7f64e787-ae1e-41a6-ab55-0396ac83180c}</Project>
+      <Name>ManageEFModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -893,6 +893,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1019,9 +1020,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Admin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DBMiddleWare\DBMiddleWareLib\DBMiddleWareLib.csproj">
+      <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
+      <Name>DBMiddleWareLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ManageBusiness\ManageBusiness.csproj">
+      <Project>{81d8ed1d-32d6-449e-9a69-0df7dc7eb161}</Project>
+      <Name>ManageBusiness</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
