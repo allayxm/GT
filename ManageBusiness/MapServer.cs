@@ -9,14 +9,9 @@ using JXDL.ManageEFModel;
 
 namespace JXDL.ManageBusiness
 {
-    public class SystemConfig
+    public class MapServer: Business
     {
-        BasicDBClass m_BasicDBClass = null;
-        public SystemConfig()
-        {
-            m_BasicDBClass = new BasicDBClass(DataBaseType.SqlServer);
-        }
-
+        
         public SystemConfigEF GetMapConfig()
         {
             SystemConfigEF vSystemEF = new SystemConfigEF();

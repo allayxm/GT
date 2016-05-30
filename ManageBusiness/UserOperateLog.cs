@@ -9,15 +9,8 @@ using JXDL.ManageEFModel;
 
 namespace JXDL.ManageBusiness
 {
-    public class UserOperateLog
+    public class UserOperateLog:Business
     {
-        BasicDBClass m_BasicDBClass = null;
-        public UserOperateLog()
-        {
-            m_BasicDBClass = new BasicDBClass( DataBaseType.SqlServer);
-        }
-
-
         public List<LogEF> GetAllLog()
         {
             List<LogEF> vResult = new List<LogEF>();

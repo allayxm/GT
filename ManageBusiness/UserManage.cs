@@ -9,14 +9,8 @@ using JXDL.ManageEFModel;
 
 namespace JXDL.ManageBusiness
 {
-    public class UserManage
+    public class UserManage: Business
     {
-        BasicDBClass m_BasicDBClass = null;
-        public UserManage()
-        {
-            m_BasicDBClass = new BasicDBClass(DataBaseType.SqlServer);
-        }
-
         public UsersEF Login( string UserName,string Password )
         {
             UsersEF vResult = new UsersEF();

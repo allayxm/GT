@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SystemConfig.cs" />
+    <Compile Include="AdminManage.cs" />
+    <Compile Include="Business.cs" />
+    <Compile Include="MapServer.cs" />
     <Compile Include="UserManage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserOperateLog.cs" />
