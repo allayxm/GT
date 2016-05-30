@@ -922,6 +922,7 @@
     </Compile>
     <Compile Include="Models\Admin\ChangePasswordViewModel.cs" />
     <Compile Include="Models\Admin\MainViewModel.cs" />
+    <Compile Include="Models\Admin\UserListViewModel.cs" />
     <Compile Include="Models\Home\IndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

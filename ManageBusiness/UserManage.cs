@@ -78,6 +78,13 @@ namespace JXDL.ManageBusiness
             return vResult;
         }
 
+        public UsersEF[] GetAllNormalUsers()
+        {
+            UsersEF vUserEF = new UsersEF();
+            vUserEF.IsUse = false;
+            return m_BasicDBClass.SelectRecordsEx(vUserEF);
+        }
+
         /// <summary>
         /// 心跳包
         /// </summary>

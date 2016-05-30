@@ -1,8 +1,110 @@
-﻿
+﻿@model JXDL.Manage.Models.Admin.UserListViewModel
+@using JXDL.Manage.Models.Admin
 @{
     ViewBag.Title = "UserList";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+@section CSS{
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables/dataTables.bootstrap.css">
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+}
+@section JS{
+    <!-- DataTables -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.min.js"></script>
+}
+<body class="hold-transition sidebar-mini" style="background-color:#ecf0f5;">
+    <div class="wrapper">
+        <!-- Content Wrapper. Contains page content -->
+        <div>
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    用户管理
+                </h1>
+            </section>
 
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    @Html.ActionLink("增加用户","AddUser","Admin",new {@class="btn btn-block btn-primary btn-lg" })
+                                    @Html.ActionLink("删除用户", "EditUser", "Admin", new { @class = "btn btn-block btn-success btn-lg" })
+                                    <button type="button" class="btn btn-block btn-danger btn-lg">删除用户</button>
+                                </h3>
+                            </div><!-- /.box-header -->
+                            <!-- form start -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box">
+                                        <div class="box-header">
+                                            <h3 class="box-title">s</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <table id="UsersTable" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr >
+                                                        <th>编号</th>
+                                                        <th>用户名</th>
+                                                        <th>最后登陆时间</th>
+                                                        <th>权限</th>
+                                                        <th>CSS grade</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (UserViewModel vTempUser in Model.UserList)
+                                                    {
+                                                        <tr class="even gradeA">
+                                                            <td>@vTempUser.ID</td>
+                                                            <td>@vTempUser.UserName</td>
+                                                            <td>@vTempUser.LateLoginTime==null?"":vTempUser.LateLoginTime.ToString("yyyy年MM月dd日")</td>
+                                                            <td>@vTempUser.PowerName</td>
+                                                        </tr>
+                                                    }
+                                            </table>
+                                        </div><!-- /.box-body -->
+                                    </div><!-- /.box -->
+                                </div>
+                            </div>
+                        </div><!-- /.box -->
+                    </div><!--/.col (left) -->
+                </div>   <!-- /.row -->
+            </section><!-- /.content -->
+        </div><!-- /.content-wrapper -->
+    </div><!-- ./wrapper -->
+    <script>
+      $(function () {
+        $('#UsersTable').DataTable({
+            responsive: true,
+            'language': {
+                'search': '搜索:',
+                'zeroRecords': "没有记录",
+                'lengthMenu': '显示 _MENU_ 条记录',
+                paginate: {
+                    previous: '‹',
+                    next: '›'
+                },
+                aria: {
+                    paginate: {
+                        previous: '上一页',
+                        next: '下一页'
+                    }
+                }
+            }
+        });
+      });
+  
+
+      $('#UsersTable tbody').on('click', 'tr', function () {
+          $(this).toggleClass('selected');
+      });
+    </script>
+</body>
 
 

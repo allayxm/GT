@@ -24,13 +24,11 @@ namespace JXDL.Manage.Controllers
             return View(vModel);
         }
 
-
         public ActionResult ChangePassword()
         {
             ChangePasswordViewModel vModel = new ChangePasswordViewModel();
             return View(vModel);
         }
-
 
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordViewModel vModel)
@@ -51,10 +49,24 @@ namespace JXDL.Manage.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         public ActionResult UserList()
         {
-
+            UserListViewModel vModel = new UserListViewModel();
+            UserManage vUsersManage = new UserManage();
+            UsersEF[] vUsers = vUsersManage.GetAllNormalUsers();
+            foreach( UsersEF vTempUser in vUsers )
+            {
+                UserViewModel vUserModel = new UserViewModel();
+                vUserModel.ID = vTempUser.ID;
+                vUserModel.UserName = vTempUser.UserName;
+                vUserModel.LateLoginTime = vTempUser.LateLoginTime;
+                switch( vTempUser.Power)
+                {
+                    case 1:
+                        vUserModel.PowerName = "";
+                        break;
+                }
+            }
             return View();
         }
 
