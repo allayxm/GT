@@ -101,9 +101,11 @@ namespace JXDL.Manage.Controllers
             
         }
 
-        public bool DeleteUsers(string UsersValue)
+        public JsonResult DeleteUsers(string UsersValue)
         {
             bool vResult = false;
+            if (UsersValue != null || UsersValue != "")
+                UsersValue = UsersValue.Remove(UsersValue.Length - 1);
             UserManage vUserMange = new UserManage();
             string[] vUserArray = UsersValue.Split('|');
             foreach( string vUser in vUserArray )
@@ -113,7 +115,7 @@ namespace JXDL.Manage.Controllers
                 if (!vResult)
                     break;
             }
-            return vResult;
+            return Json(vResult, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AddUser()

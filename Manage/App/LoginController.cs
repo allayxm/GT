@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using JXDL.ManageBusiness;
 using JXDL.ManageEFModel;
+using System.Web.Script.Serialization;
 
 namespace JXDL.Manage.App_Start
 {
@@ -18,13 +19,13 @@ namespace JXDL.Manage.App_Start
         }
 
         // GET: api/Login/5
-        public bool Get(string UserName,string Password)
+        public UsersEF Get(string UserName,string Password)
         {
-            bool vResult = false;
             UserManage vUserManage = new UserManage();
             UsersEF vUsers =  vUserManage.Login(UserName, Password);
-            vResult = vUsers.ID == 0 ? false : true;
-            return vResult;
+            //JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            //string vResult= vJSC.Serialize(vUsers);
+            return vUsers;
         }
 
         // POST: api/Login

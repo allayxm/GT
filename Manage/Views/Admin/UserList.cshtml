@@ -50,7 +50,7 @@
                                             <h3 class="box-title"></h3>
                                         </div><!-- /.box-header -->
                                         <div class="box-body">
-                                            <table id="UsersTable" class="table table-bordered table-striped">
+                                            <table id="usersTable" class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr >
                                                         <th>编号</th>
@@ -83,59 +83,66 @@
         </div><!-- /.content-wrapper -->
     </div><!-- ./wrapper -->
     <script>
-        $(function () {
-         $('#UsersTable').DataTable({
-            responsive: true,
-            'language': {
-                'search': '搜索:',
-                'zeroRecords': "没有记录",
-                'lengthMenu': '显示 _MENU_ 条记录',
-                paginate: {
-                    previous: '‹',
-                    next: '›'
-                },
-                aria: {
-                    paginate: {
-                        previous: '上一页',
-                        next: '下一页'
+        $(document).ready(function () {
+            $(function () {
+                $('#usersTable').DataTable({
+                    responsive: true,
+                    'language': {
+                        'search': '搜索:',
+                        'zeroRecords': "没有记录",
+                        "info": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        "infoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                        'lengthMenu': '显示 _MENU_ 条记录',
+                        paginate: {
+                            previous: '‹',
+                            next: '›'
+                        },
+                        aria: {
+                            paginate: {
+                                previous: '上一页',
+                                next: '下一页'
+                            }
+                        }
                     }
+                });
+            });
+            //var table = $('#usersTable').DataTable({
+            //    'bDestroy': true
+            //});
+            //var table = $('#usersTable').dataTable().fnDestroy(); 
+            $('#usersTable tbody').on('click', 'tr', function () {
+                $(this).toggleClass('selected');
+            });
+            
+            $('#DelButton').click(function () {
+                var table = $('#usersTable').dataTable(); 
+                var selectRows = table.rows('.selected').indexes();
+                var count = table.rows('.selected').data().length;
+                if (count == 0)
+                {
+                    alert("请选择需要删除的用户");
+                    return;
                 }
-            }
-        });
-      });
-
-      $('#UsersTable tbody').on('click', 'tr', function () {
-          $(this).toggleClass('selected');
-      });
-     
-      $('#DelButton').click(function () {
-          var table = $('#dataTables').DataTable();
-          var selectRows = table.rows('.selected').indexes();
-          var count = table.rows('.selected').data().length;
-          if (count == 0)
-          {
-              alert("请选择需要删除的用户");
-              return;
-          }
-          if (confirm("确定删除选择的数据？")) {
-              var i = 0;
-              var code = "";
-              for (i; i < count; i++) {
-                  var tempData = table.rows(selectRows[i]).data();
-                  code += tempData[0][0] + "|";
-                  //table.rows(selectRows[i]).remove().draw(false);
-              }
-              $.getJSON(
-                     "/Admin/DeleteUser",
-                     { Users: code },
-                     function (result) {
-                         if (result) {
-                             table.row('.selected').remove().draw(false);
-                         }
-                     }
-                )
-          }
-      });
+                if (confirm("确定删除选择的数据？")) {
+                    var i = 0;
+                    var code = "";
+                    for (i; i < count; i++) {
+                        var tempData = table.rows(selectRows[i]).data();
+                        code += tempData[0][0] + "|";
+                        //table.rows(selectRows[i]).remove().draw(false);
+                    }
+                    $.getJSON(
+                           "/Admin/DeleteUsers",
+                           { UsersValue: code },
+                           function (result) {
+                               if (result) {
+                                   table.row('.selected').remove().draw(false);
+                               }
+                           }
+                      )
+                }
+            });
+        })
 
     </script>
 </body>

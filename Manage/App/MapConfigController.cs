@@ -14,7 +14,6 @@ namespace JXDL.Manage.App
         // GET: api/MapConfig
         public IEnumerable<string> Get()
         {
-            string vReuslt = "";
             MapServer vSystemConfig = new MapServer();
             SystemConfigEF vModel = vSystemConfig.GetMapConfig();
             return new string[] { vModel.ItemValue1, vModel.ItemValue2 };
