@@ -11,7 +11,7 @@ namespace JXDL.ManageEFModel
     public struct UsersEF
     {
         [ColumnAttrib("ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [ColumnAttrib("UserName")]
         public String UserName { get; set; }
         [ColumnAttrib("Password")]
@@ -21,8 +21,8 @@ namespace JXDL.ManageEFModel
         [ColumnAttrib("LateLoginTime")]
         public DateTime? LateLoginTime { get; set; }
         [ColumnAttrib("IsUse")]
-        public bool IsUse { get; set; }
+        public bool? IsUse { get; set; }
         [ColumnAttrib("Power")]
-        public int Power { get; set; }
+        public int? Power { get; set; }
     }
 }

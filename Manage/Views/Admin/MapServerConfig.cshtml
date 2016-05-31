@@ -1,0 +1,66 @@
+﻿@model JXDL.Manage.Models.Admin.MapServerConfigViewModel
+@using System.Web.Optimization
+@{
+    ViewBag.Title = "地图服务配置";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section JS {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<body class="hold-transition sidebar-mini" style="background-color:#ecf0f5;">
+    <div class="wrapper">
+        <!-- Content Wrapper. Contains page content -->
+        <div>
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    地图服务配置
+                </h1>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"></h3>
+                            </div><!-- /.box-header -->
+                            <!-- form start -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @using (Html.BeginForm("MapServerConfig", "Admin", FormMethod.Post, new { role = "form" }))
+                                    {
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>服务器地址</label>
+                                                @Html.TextBoxFor(m => m.MapServerAddress, new { @class = "form-control", placeholder = "请输入服务器地址" })
+                                                @Html.ValidationMessageFor(m => m.MapServerAddress, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group">
+                                                <label>服务名称</label>
+                                                @Html.TextBoxFor(m => m.MapServerName, new { @class = "form-control", placeholder = "请输入服务名称" })
+                                                @Html.ValidationMessageFor(m => m.MapServerName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="checkbox text-">
+                                                <label>
+                                                    <p>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</p>
+                                                </label>
+                                            </div>
+                                        </div><!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <button type="submit" class="btn btn-primary">更新配置</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div><!-- /.box -->
+                    </div><!--/.col (left) -->
+                </div>   <!-- /.row -->
+            </section><!-- /.content -->
+        </div><!-- /.content-wrapper -->
+    </div><!-- ./wrapper -->
+</body>
+

@@ -11,7 +11,7 @@ namespace JXDL.ManageEFModel
     public struct AdminUserEF
     {
         [ColumnAttrib("ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [ColumnAttrib("UserName")]
         public String UserName { get; set; }
         [ColumnAttrib("Password")]

@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace JXDL.Manage.Models.Admin
 {
-    public class UserListViewModel
+    public class AddUserViewModel
     {
-        public List<UserViewModel> UserList { get; set; }
-    }
-
-    public class UserViewModel
-    {
+        public List<System.Web.Mvc.SelectListItem> PowerList { get; set; }
         public int ID { get; set; }
         [Required]
         [Display(Name = "用户名")]
@@ -22,12 +17,9 @@ namespace JXDL.Manage.Models.Admin
 
         [Required]
         [Display(Name = "确认密码")]
-        [Compare("NewPassword", ErrorMessage = "请重新确认新密码")]
+        [Compare("Password", ErrorMessage = "请重新确认新密码")]
         public string ConfirmNewPassword { get; set; }
-        public String Token { get; set; }
-        public DateTime? LateLoginTime { get; set; }
-        public bool IsUse { get; set; }
+
         public int Power { get; set; }
-        public string PowerName { get; set; }
     }
 }

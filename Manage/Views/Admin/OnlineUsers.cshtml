@@ -1,7 +1,7 @@
-﻿@model JXDL.Manage.Models.Admin.UserListViewModel
+﻿@model JXDL.Manage.Models.Admin.OnlineUsersViewModel
 @using JXDL.Manage.Models.Admin
 @{
-    ViewBag.Title = "用户管理";
+    ViewBag.Title = "在线用户";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 @section CSS{
@@ -21,10 +21,9 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    用户管理
+                    在线用户
                 </h1>
             </section>
-
             <!-- Main content -->
             <section class="content">
                 <div class="row">
@@ -32,16 +31,6 @@
                     <div class="col-md-12">
                         <!-- general form elements -->
                         <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        @Html.ActionLink("增加用户", "AddUser", "Admin", "", new { @class = "btn btn-block btn-primary", @style = "float:left; display:inline" })
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" id="DelButton" class="btn btn-block btn-danger" style="float:left; display:inline">删除用户</button>
-                                    </div>
-                                </div>
-                            </div><!-- /.box-header -->
                             <!-- form start -->
                             <div class="row">
                                 <div class="col-md-12">
@@ -52,12 +41,11 @@
                                         <div class="box-body">
                                             <table id="UsersTable" class="table table-bordered table-striped">
                                                 <thead>
-                                                    <tr >
+                                                    <tr>
                                                         <th>编号</th>
                                                         <th>用户名</th>
                                                         <th>最后登陆时间</th>
                                                         <th>权限</th>
-                                                        <th style="width:170px">编辑</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -68,7 +56,6 @@
                                                             <td>@vTempUser.UserName</td>
                                                             <td>@vTempUser.LateLoginTime</td>
                                                             <td>@vTempUser.PowerName</td>
-                                                            <td >@Html.ActionLink("编辑用户", "EditUser", "Admin", new { UserID=vTempUser.ID}, new { @class = "btn btn-block btn-success",@style="width:150px" })</td>
                                                         </tr>
                                                     }
                                             </table>
@@ -103,40 +90,6 @@
             }
         });
       });
-
-      $('#UsersTable tbody').on('click', 'tr', function () {
-          $(this).toggleClass('selected');
-      });
-     
-      $('#DelButton').click(function () {
-          var table = $('#dataTables').DataTable();
-          var selectRows = table.rows('.selected').indexes();
-          var count = table.rows('.selected').data().length;
-          if (count == 0)
-          {
-              alert("请选择需要删除的用户");
-              return;
-          }
-          if (confirm("确定删除选择的数据？")) {
-              var i = 0;
-              var code = "";
-              for (i; i < count; i++) {
-                  var tempData = table.rows(selectRows[i]).data();
-                  code += tempData[0][0] + "|";
-                  //table.rows(selectRows[i]).remove().draw(false);
-              }
-              $.getJSON(
-                     "/Admin/DeleteUser",
-                     { Users: code },
-                     function (result) {
-                         if (result) {
-                             table.row('.selected').remove().draw(false);
-                         }
-                     }
-                )
-          }
-      });
-
     </script>
 </body>
 

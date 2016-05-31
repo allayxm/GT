@@ -14,6 +14,7 @@ namespace JXDL.Manage.Models.Admin
         [Required]
         [Display(Name = "新密码")]
         public string NewPassword { get; set; }
+
         [Required]
         [Display(Name = "确认密码")]
         [Compare("NewPassword", ErrorMessage = "请重新确认新密码")]

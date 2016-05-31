@@ -11,13 +11,13 @@ namespace JXDL.ManageEFModel
     public struct UploadFilesEF
     {
         [ColumnAttrib("ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [ColumnAttrib("ObjectID")]
-        public int ObjectID { get; set; }
+        public int? ObjectID { get; set; }
         [ColumnAttrib("FileName")]
         public String FileName { get; set; }
         [ColumnAttrib("UserID")]
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
         [ColumnAttrib("UploadTime")]
         public DateTime UploadTime { get; set; }
         [ColumnAttrib("Author")]

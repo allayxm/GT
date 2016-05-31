@@ -11,12 +11,10 @@ namespace JXDL.ManageBusiness
 {
     public class UserOperateLog:Business
     {
-        public List<LogEF> GetAllLog()
+        public LogEF[] GetAllLog()
         {
-            List<LogEF> vResult = new List<LogEF>();
             LogEF[] vData= m_BasicDBClass.SelectAllRecordsEx<LogEF>();
-            vResult.AddRange(vData);
-            return vResult;
+            return vData;
         }
     }
 }

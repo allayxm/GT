@@ -22,7 +22,7 @@ namespace JXDL.ManageBusiness
             return vSystemEF;
         }
 
-        public bool UpdateMapConfig( string MapServerAddress,string MapName)
+        public bool SetMapConfig( string MapServerAddress,string MapName)
         {
             SystemConfigEF vSystemEF = new SystemConfigEF();
             vSystemEF.ItemValue1 = MapServerAddress;

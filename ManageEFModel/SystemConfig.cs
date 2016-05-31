@@ -11,7 +11,7 @@ namespace JXDL.ManageEFModel
     public struct SystemConfigEF
     {
         [ColumnAttrib("ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [ColumnAttrib("ItemName")]
         public String ItemName { get; set; }
         [ColumnAttrib("ItemValue1")]

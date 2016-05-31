@@ -11,7 +11,7 @@ namespace JXDL.ManageEFModel
     public struct LogEF
     {
         [ColumnAttrib("ID")]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [ColumnAttrib("UserID")]
         public int? UserID { get; set; }
         [ColumnAttrib("UserName")]

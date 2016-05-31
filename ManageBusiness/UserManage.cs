@@ -37,7 +37,6 @@ namespace JXDL.ManageBusiness
             UsersEF vUserEF = new UsersEF();
             vUserEF.UserName = UserName;
             vUserEF.Password = Password;
-            vUserEF.LateLoginTime = DateTime.Now;
             vUserEF.Power = Power;
             vUserEF.IsUse = true;
             if (m_BasicDBClass.InsertRecord(vUserEF) > 0 )
@@ -54,35 +53,60 @@ namespace JXDL.ManageBusiness
             
             vUserEF.Power = Power;
             vUserEF.IsUse = true;
-            if (m_BasicDBClass.InsertRecord(vUserEF) > 0)
+            if (m_BasicDBClass.UpdateRecord(vUserEF) )
                 vResult = true;
             return vResult;
         }
 
+
         public UsersEF GetUserInfo( int UserID )
         {
             UsersEF vUserEF = new UsersEF();
-            vUserEF.ID = UserID;
-            DataTable vTable =  m_BasicDBClass.SelectRecords(vUserEF);
-            if (vTable.Rows.Count > 0)
-                CommClass.ConvertDataRowToStruct(ref vUserEF, vTable.Rows[0]);
-            vTable.Clear();
-            vTable.Dispose();
+            UsersEF[] vData =  m_BasicDBClass.SelectRecordByPrimaryKeyEx<UsersEF>(UserID);
+            if (vData.Length > 0)
+                vUserEF= vData[0];
             return vUserEF;
         }
-        public List<UsersEF> OnlineUsersInfo()
+
+        public UsersEF GetUserInfo( string UserName )
         {
-            List<UsersEF> vResult = new List<UsersEF>();
-            UsersEF[] vData =  m_BasicDBClass.SelectCustomEx<UsersEF>("Select *From Users where DATEDIFF(ss,LateLoginTime,'2016-05-23 22:18')>=-60");
-            vResult.AddRange(vData);
-            return vResult;
+            UsersEF vUserEF = new UsersEF();
+            vUserEF.UserName = UserName;
+            UsersEF[] vData = m_BasicDBClass.SelectRecordsEx(vUserEF);
+            if (vData.Length > 0)
+                vUserEF = vData[0];
+            return vUserEF;
+        }
+        public UsersEF[] OnlineUsersInfo()
+        {
+            string vSql = string.Format("Select *From Users where DATEDIFF(ss,'{0}',LateLoginTime)>=-60", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));//mmssyyyyMMddHH
+            UsersEF[] vData =  m_BasicDBClass.SelectCustomEx<UsersEF>(vSql);
+            return vData;
         }
 
         public UsersEF[] GetAllNormalUsers()
         {
             UsersEF vUserEF = new UsersEF();
-            vUserEF.IsUse = false;
+            vUserEF.IsUse = true;
             return m_BasicDBClass.SelectRecordsEx(vUserEF);
+        }
+
+        public static string ConverPowerIDToName( int PowerID )
+        {
+            string vResult = "";
+            switch ( PowerID)
+            {
+                case 1:
+                    vResult = "村民";
+                    break;
+                case 2:
+                    vResult = "村委会";
+                    break;
+                case 3:
+                    vResult = "政府及城建部门";
+                    break;
+            }
+            return vResult;
         }
 
         /// <summary>
@@ -102,6 +126,16 @@ namespace JXDL.ManageBusiness
                 vHeartBeat.LateLoginTime = DateTime.Now;
                 vResult = m_BasicDBClass.UpdateRecord(vHeartBeat, vData[0].ID);
             }
+            return vResult;
+        }
+
+        public bool DeleteUses(int UserID )
+        {
+            bool vResult = false;
+            UsersEF vUserEF = new UsersEF();
+            vUserEF.ID = UserID;
+            vUserEF.IsUse = false;
+            vResult = m_BasicDBClass.UpdateRecord(vUserEF);
             return vResult;
         }
 
