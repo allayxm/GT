@@ -26,6 +26,16 @@ namespace JXDL.ClientBusiness
             return vUserInfo;
         }
 
+        public bool Logout( string UserName,string Token )
+        {
+            string vUrl = string.Format("{0}/Api/Logout", m_RemotingServerAddress);
+            string[] vData = new string[] { UserName, Token };
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string vPostData = vJSC.Serialize(vData);
+            string vResult = HttpPost(vUrl, vPostData);
+            return vJSC.Deserialize<bool>(vResult);
+        }
+
         public void GetMapServer(ref string MapServerAddress,ref string MapServerName )
         {
             string vUrl = string.Format("{0}/Api/MapConfig", m_RemotingServerAddress);

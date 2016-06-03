@@ -11,15 +11,17 @@ using MXKJ.DBMiddleWareLib;
 
 namespace JXDL.Manage.Controllers
 {
+   
     public class AdminController : Controller
     {
+        [Authorize(Roles = "Admin")]
         // GET: Admin
         public ActionResult Main()
         {
             MainViewModel vModel = new MainViewModel();
             AdminUserEF vUserInfo = (AdminUserEF)Session["UserInfo"];
             vModel.UserName = vUserInfo.UserName;
-            vModel.LoginLateTime = vModel.LoginLateTime;
+            vModel.LoginLateTime = vUserInfo.LateLoginTime==null?DateTime.Now: vUserInfo.LateLoginTime.Value;
             UserManage vUserManage = new UserManage();
             vModel.OnlineUsersNumber = vUserManage.OnlineUsersInfo().Length;
             return View(vModel);
@@ -55,6 +57,7 @@ namespace JXDL.Manage.Controllers
         #endregion
 
         #region 用户管理
+        [Authorize(Roles = "Admin")]
         public ActionResult UserList()
         {
             UserListViewModel vModel = new UserListViewModel();
@@ -130,7 +133,7 @@ namespace JXDL.Manage.Controllers
         {
             UserManage vUserMange = new UserManage();
             UsersEF vUserInfo =  vUserMange.GetUserInfo(Model.UserName);
-            if (vUserInfo.ID==null || vUserInfo.ID == 0)
+            if (vUserInfo.ID == null || vUserInfo.ID == 0 || vUserInfo.IsUse == false)
             {
 
                 if (vUserMange.AddUser(Model.UserName, Model.Password, Model.Power))
@@ -219,8 +222,8 @@ namespace JXDL.Manage.Controllers
         List<SelectListItem> createPowerSelectList()
         {
             List<SelectListItem> vSelectList = new List<SelectListItem> {
-                new SelectListItem() {  Text="材民", Value="1"},
-                new SelectListItem() {  Text="材委会", Value="2"},
+                new SelectListItem() {  Text="村民", Value="1"},
+                new SelectListItem() {  Text="村委会", Value="2"},
                 new SelectListItem() {  Text="政府及城建部门", Value="3"}
 
             };

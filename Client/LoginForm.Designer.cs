@@ -142,11 +142,11 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button_Login;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_UserName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_Password;
-        private System.Windows.Forms.Button button_Config;
+        public System.Windows.Forms.Button button_Config;
+        public System.Windows.Forms.Button button_Login;
     }
 }

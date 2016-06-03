@@ -26,20 +26,27 @@ namespace JXDL.Client
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            LoginForm vLoginForm = new LoginForm();
-            if ( vLoginForm.ShowDialog() == DialogResult.OK)
+            try
             {
-                Program.LoginUserInfo = vLoginForm.LoginUserInfo;
-                RemoteInterface vRemoteInterface = new RemoteInterface();
-                vRemoteInterface.GetMapServer(ref Program.MapServerAddress, ref Program.MapServerName);
-                Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】",Program.LoginUserInfo.UserName,getPowerName(Program.LoginUserInfo.Power.Value));
-                init_Menu();
-                init_Heartbeat();
-                init_Map();
+                LoginForm vLoginForm = new LoginForm();
+                if (vLoginForm.ShowDialog() == DialogResult.OK)
+                {
+                    Program.LoginUserInfo = vLoginForm.LoginUserInfo;
+                    RemoteInterface vRemoteInterface = new RemoteInterface();
+                    vRemoteInterface.GetMapServer(ref Program.MapServerAddress, ref Program.MapServerName);
+                    Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
+                    init_Menu();
+                    init_Heartbeat();
+                    init_Map();
+                }
+                else
+                {
+                    Application.Exit();
+                }
             }
-            else
+            catch(Exception ex)
             {
-                Application.Exit();
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -131,15 +138,15 @@ namespace JXDL.Client
 
                     ToolStripMenuItem_Doc_Edit.Enabled = false;
                     ToolStripMenuItem_Doc_Input.Enabled = false;
-                    ToolStripMenuItem_Doc_Query.Enabled = false;
+                    ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
                     ToolStripMenuItem_Doc_Setup.Enabled = false;
 
                     ToolStripMenuItem_Pic_Anayle.Enabled = false;
-                    ToolStripMenuItem_Pic_Browse.Enabled = false;
+                    ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
-                    ToolStripMenuItem_Pic_Map.Enabled = false;
-                    ToolStripMenuItem_Pic_Statistics.Enabled = false;
+                    ToolStripMenuItem_Pic_Map.Enabled = true;
+                    ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     break;
                 case 2:
                     ToolStripMenuItem_System_Setup.Enabled = true;
@@ -152,11 +159,12 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Report.Enabled = true;
                     ToolStripMenuItem_Doc_Setup.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Anayle.Enabled = false;
-                    ToolStripMenuItem_Pic_Browse.Enabled = false;
+                    
+                    ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
                     ToolStripMenuItem_Pic_Map.Enabled = false;
-                    ToolStripMenuItem_Pic_Statistics.Enabled = false;
+                    ToolStripMenuItem_Pic_Anayle.Enabled = true;
+                    ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     break;
                 case 3:
                     ToolStripMenuItem_System_Setup.Enabled = true;
@@ -177,6 +185,7 @@ namespace JXDL.Client
                     break;
             }
         }
+
         void init_Heartbeat()
         {
             m_HeartbeatTimer = new Timer();
@@ -189,6 +198,47 @@ namespace JXDL.Client
         {
             RemoteInterface vRemoteInterface = new RemoteInterface();
             vRemoteInterface.Heartbeat(Program.LoginUserInfo);
+        }
+
+        private void ToolStripMenuItem_System_Setup_Click(object sender, EventArgs e)
+        {
+            ConfigForm vConfigForm = new ConfigForm();
+            vConfigForm.ShowDialog();
+        }
+
+        private void ToolStripMenuItem_System_Exit_Click(object sender, EventArgs e)
+        {
+            if ( MessageBox.Show("是否确认退出?","信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK )
+            {
+                exit();
+            }
+        }
+
+        /// <summary>
+        /// 注销
+        /// </summary>
+        void exit()
+        {
+            RemoteInterface vRemoteInterface = new RemoteInterface();
+            vRemoteInterface.Logout(Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            exit();
+        }
+
+        private void ToolStripMenuItem_System_Logout_Click(object sender, EventArgs e)
+        {
+            LoginForm vLoginForm = new LoginForm();
+            vLoginForm.button_Config.Visible = false;
+            vLoginForm.button_Login.Left = vLoginForm.button_Login.Left + 80;
+            if (vLoginForm.ShowDialog() == DialogResult.OK)
+            {
+                Program.LoginUserInfo = vLoginForm.LoginUserInfo;
+                Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
+                init_Menu();
+            }
         }
     }
 }

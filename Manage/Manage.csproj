@@ -911,6 +911,7 @@
   <ItemGroup>
     <Compile Include="App\HeartbeatController.cs" />
     <Compile Include="App\LoginController.cs" />
+    <Compile Include="App\LogoutController.cs" />
     <Compile Include="App\MapConfigController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -1053,6 +1054,7 @@
     <Content Include="Views\Admin\OnlineUsers.cshtml" />
     <Content Include="Views\Admin\Log.cshtml" />
     <Content Include="Views\Admin\MapServerConfig.cshtml" />
+    <None Include="Properties\PublishProfiles\Manage.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

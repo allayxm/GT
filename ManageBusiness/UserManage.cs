@@ -24,10 +24,30 @@ namespace JXDL.ManageBusiness
                 vUserEF.LateLoginTime = DateTime.Now;
                 vUserEF.Token = DateTime.Now.ToString("mmssyyyyMMddHH");
                 if (m_BasicDBClass.UpdateRecord(vUserEF))
+                {
+                    UserOperateLog vUserOperateLog = new UserOperateLog();
+                    vUserOperateLog.WriteLog(vUserEF.ID.Value, vUserEF.UserName, "用户登录");
                     vResult = vUserEF;
+                }
             }
             vTable.Clear();
             vTable.Dispose();
+            return vResult;
+        }
+
+        public bool Logout( string UserName,string Token )
+        {
+            bool vResult = false;
+            UsersEF vUserEF = new UsersEF();
+            vUserEF.UserName = UserName;
+            vUserEF.Token = Token;
+            UsersEF[] vQueryData = m_BasicDBClass.SelectRecordsEx(vUserEF);
+            if ( vQueryData.Length > 0 )
+            {
+                UserOperateLog vLog = new UserOperateLog();
+                vLog.WriteLog(vQueryData[0].ID.Value, UserName, "用户退出");
+                vResult = true;
+            }
             return vResult;
         }
 

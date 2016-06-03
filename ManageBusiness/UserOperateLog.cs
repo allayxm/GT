@@ -13,8 +13,21 @@ namespace JXDL.ManageBusiness
     {
         public LogEF[] GetAllLog()
         {
-            LogEF[] vData= m_BasicDBClass.SelectAllRecordsEx<LogEF>();
+            LogEF[] vData= m_BasicDBClass.SelectAllRecordsEx<LogEF>("ID desc","*");
             return vData;
+        }
+
+        public bool WriteLog( int UserID,string UserName,string Type)
+        {
+            LogEF vLogEF = new LogEF();
+            vLogEF.UserID = UserID;
+            vLogEF.UserName = UserName;
+            vLogEF.Type = Type;
+            vLogEF.OperateTime = DateTime.Now;
+            if (m_BasicDBClass.InsertRecord(vLogEF) > 0)
+                return true;
+            else
+                return false;
         }
     }
 }

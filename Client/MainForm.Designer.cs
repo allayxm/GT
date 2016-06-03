@@ -30,26 +30,26 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip_Main = new System.Windows.Forms.MenuStrip();
-            this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
-            this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
-            this.axMapControl1 = new ESRI.ArcGIS.Controls.AxMapControl();
             this.ToolStripMenuItem_System = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_Doc = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_Pic = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_System_Setup = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_System_Logout = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_System_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_Doc = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Input = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Query = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Report = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Setup = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_Pic = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Layer = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Browse = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Map = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Anayle = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
+            this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
+            this.axMapControl1 = new ESRI.ArcGIS.Controls.AxMapControl();
             this.menuStrip_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
@@ -69,6 +69,131 @@
             this.menuStrip_Main.Size = new System.Drawing.Size(678, 28);
             this.menuStrip_Main.TabIndex = 0;
             this.menuStrip_Main.Text = "menuStrip_Main";
+            // 
+            // ToolStripMenuItem_System
+            // 
+            this.ToolStripMenuItem_System.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_System_Setup,
+            this.ToolStripMenuItem_System_Logout,
+            this.ToolStripMenuItem_System_Exit});
+            this.ToolStripMenuItem_System.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_System.Image")));
+            this.ToolStripMenuItem_System.Name = "ToolStripMenuItem_System";
+            this.ToolStripMenuItem_System.Size = new System.Drawing.Size(67, 24);
+            this.ToolStripMenuItem_System.Text = "系统";
+            // 
+            // ToolStripMenuItem_System_Setup
+            // 
+            this.ToolStripMenuItem_System_Setup.Name = "ToolStripMenuItem_System_Setup";
+            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Setup.Text = "系统设置";
+            this.ToolStripMenuItem_System_Setup.Click += new System.EventHandler(this.ToolStripMenuItem_System_Setup_Click);
+            // 
+            // ToolStripMenuItem_System_Logout
+            // 
+            this.ToolStripMenuItem_System_Logout.Name = "ToolStripMenuItem_System_Logout";
+            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Logout.Text = "注销";
+            this.ToolStripMenuItem_System_Logout.Click += new System.EventHandler(this.ToolStripMenuItem_System_Logout_Click);
+            // 
+            // ToolStripMenuItem_System_Exit
+            // 
+            this.ToolStripMenuItem_System_Exit.Name = "ToolStripMenuItem_System_Exit";
+            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Exit.Text = "退出";
+            this.ToolStripMenuItem_System_Exit.Click += new System.EventHandler(this.ToolStripMenuItem_System_Exit_Click);
+            // 
+            // ToolStripMenuItem_Doc
+            // 
+            this.ToolStripMenuItem_Doc.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_Doc_Input,
+            this.ToolStripMenuItem_Doc_Edit,
+            this.ToolStripMenuItem_Doc_Query,
+            this.ToolStripMenuItem_Doc_Report,
+            this.ToolStripMenuItem_Doc_Setup});
+            this.ToolStripMenuItem_Doc.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Doc.Image")));
+            this.ToolStripMenuItem_Doc.Name = "ToolStripMenuItem_Doc";
+            this.ToolStripMenuItem_Doc.Size = new System.Drawing.Size(97, 24);
+            this.ToolStripMenuItem_Doc.Text = "文档资料";
+            // 
+            // ToolStripMenuItem_Doc_Input
+            // 
+            this.ToolStripMenuItem_Doc_Input.Name = "ToolStripMenuItem_Doc_Input";
+            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Input.Text = "信息输入";
+            // 
+            // ToolStripMenuItem_Doc_Edit
+            // 
+            this.ToolStripMenuItem_Doc_Edit.Name = "ToolStripMenuItem_Doc_Edit";
+            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Edit.Text = "管理编辑";
+            // 
+            // ToolStripMenuItem_Doc_Query
+            // 
+            this.ToolStripMenuItem_Doc_Query.Name = "ToolStripMenuItem_Doc_Query";
+            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Query.Text = "信息查询";
+            // 
+            // ToolStripMenuItem_Doc_Report
+            // 
+            this.ToolStripMenuItem_Doc_Report.Name = "ToolStripMenuItem_Doc_Report";
+            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
+            // 
+            // ToolStripMenuItem_Doc_Setup
+            // 
+            this.ToolStripMenuItem_Doc_Setup.Name = "ToolStripMenuItem_Doc_Setup";
+            this.ToolStripMenuItem_Doc_Setup.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Setup.Text = "系统设置";
+            // 
+            // ToolStripMenuItem_Pic
+            // 
+            this.ToolStripMenuItem_Pic.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_Pic_Layer,
+            this.ToolStripMenuItem_Pic_Browse,
+            this.ToolStripMenuItem_Pic_Map,
+            this.ToolStripMenuItem_Pic_Anayle,
+            this.ToolStripMenuItem_Pic_Statistics});
+            this.ToolStripMenuItem_Pic.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Pic.Image")));
+            this.ToolStripMenuItem_Pic.Name = "ToolStripMenuItem_Pic";
+            this.ToolStripMenuItem_Pic.Size = new System.Drawing.Size(97, 24);
+            this.ToolStripMenuItem_Pic.Text = "图形资料";
+            // 
+            // ToolStripMenuItem_Pic_Layer
+            // 
+            this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
+            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
+            // 
+            // ToolStripMenuItem_Pic_Browse
+            // 
+            this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
+            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
+            // 
+            // ToolStripMenuItem_Pic_Map
+            // 
+            this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
+            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
+            // 
+            // ToolStripMenuItem_Pic_Anayle
+            // 
+            this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
+            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
+            // 
+            // ToolStripMenuItem_Pic_Statistics
+            // 
+            this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
+            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
+            // 
+            // ToolStripMenuItem_About
+            // 
+            this.ToolStripMenuItem_About.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_About.Image")));
+            this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
+            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(67, 24);
+            this.ToolStripMenuItem_About.Text = "关于";
             // 
             // axLicenseControl1
             // 
@@ -97,128 +222,6 @@
             this.axMapControl1.Size = new System.Drawing.Size(678, 422);
             this.axMapControl1.TabIndex = 3;
             // 
-            // ToolStripMenuItem_System
-            // 
-            this.ToolStripMenuItem_System.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItem_System_Setup,
-            this.ToolStripMenuItem_System_Logout,
-            this.ToolStripMenuItem_System_Exit});
-            this.ToolStripMenuItem_System.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_System.Image")));
-            this.ToolStripMenuItem_System.Name = "ToolStripMenuItem_System";
-            this.ToolStripMenuItem_System.Size = new System.Drawing.Size(67, 24);
-            this.ToolStripMenuItem_System.Text = "系统";
-            // 
-            // ToolStripMenuItem_Doc
-            // 
-            this.ToolStripMenuItem_Doc.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItem_Doc_Input,
-            this.ToolStripMenuItem_Doc_Edit,
-            this.ToolStripMenuItem_Doc_Query,
-            this.ToolStripMenuItem_Doc_Report,
-            this.ToolStripMenuItem_Doc_Setup});
-            this.ToolStripMenuItem_Doc.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Doc.Image")));
-            this.ToolStripMenuItem_Doc.Name = "ToolStripMenuItem_Doc";
-            this.ToolStripMenuItem_Doc.Size = new System.Drawing.Size(97, 24);
-            this.ToolStripMenuItem_Doc.Text = "文档资料";
-            // 
-            // ToolStripMenuItem_Pic
-            // 
-            this.ToolStripMenuItem_Pic.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItem_Pic_Layer,
-            this.ToolStripMenuItem_Pic_Browse,
-            this.ToolStripMenuItem_Pic_Map,
-            this.ToolStripMenuItem_Pic_Anayle,
-            this.ToolStripMenuItem_Pic_Statistics});
-            this.ToolStripMenuItem_Pic.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Pic.Image")));
-            this.ToolStripMenuItem_Pic.Name = "ToolStripMenuItem_Pic";
-            this.ToolStripMenuItem_Pic.Size = new System.Drawing.Size(97, 24);
-            this.ToolStripMenuItem_Pic.Text = "图形资料";
-            // 
-            // ToolStripMenuItem_About
-            // 
-            this.ToolStripMenuItem_About.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_About.Image")));
-            this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
-            this.ToolStripMenuItem_About.Size = new System.Drawing.Size(67, 24);
-            this.ToolStripMenuItem_About.Text = "关于";
-            // 
-            // ToolStripMenuItem_System_Setup
-            // 
-            this.ToolStripMenuItem_System_Setup.Name = "ToolStripMenuItem_System_Setup";
-            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_System_Setup.Text = "系统设置";
-            // 
-            // ToolStripMenuItem_System_Logout
-            // 
-            this.ToolStripMenuItem_System_Logout.Name = "ToolStripMenuItem_System_Logout";
-            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_System_Logout.Text = "注销";
-            // 
-            // ToolStripMenuItem_System_Exit
-            // 
-            this.ToolStripMenuItem_System_Exit.Name = "ToolStripMenuItem_System_Exit";
-            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_System_Exit.Text = "退出";
-            // 
-            // ToolStripMenuItem_Doc_Input
-            // 
-            this.ToolStripMenuItem_Doc_Input.Name = "ToolStripMenuItem_Doc_Input";
-            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Input.Text = "信息输入";
-            // 
-            // ToolStripMenuItem_Doc_Edit
-            // 
-            this.ToolStripMenuItem_Doc_Edit.Name = "ToolStripMenuItem_Doc_Edit";
-            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Edit.Text = "管理编辑";
-            // 
-            // ToolStripMenuItem_Doc_Query
-            // 
-            this.ToolStripMenuItem_Doc_Query.Name = "ToolStripMenuItem_Doc_Query";
-            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Query.Text = "信息查询";
-            // 
-            // ToolStripMenuItem_Doc_Report
-            // 
-            this.ToolStripMenuItem_Doc_Report.Name = "ToolStripMenuItem_Doc_Report";
-            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
-            // 
-            // ToolStripMenuItem_Doc_Setup
-            // 
-            this.ToolStripMenuItem_Doc_Setup.Name = "ToolStripMenuItem_Doc_Setup";
-            this.ToolStripMenuItem_Doc_Setup.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Setup.Text = "系统设置";
-            // 
-            // ToolStripMenuItem_Pic_Layer
-            // 
-            this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
-            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
-            // 
-            // ToolStripMenuItem_Pic_Browse
-            // 
-            this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
-            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
-            // 
-            // ToolStripMenuItem_Pic_Map
-            // 
-            this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
-            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
-            // 
-            // ToolStripMenuItem_Pic_Anayle
-            // 
-            this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
-            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
-            // 
-            // ToolStripMenuItem_Pic_Statistics
-            // 
-            this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
-            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -233,6 +236,7 @@
             this.Name = "MainForm";
             this.Text = "主窗口";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip_Main.ResumeLayout(false);
             this.menuStrip_Main.PerformLayout();

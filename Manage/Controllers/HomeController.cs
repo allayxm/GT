@@ -16,6 +16,7 @@ namespace JXDL.Manage.Controllers
         public ActionResult Index()
         {
             UserManage vUserManage = new UserManage();
+            //ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 

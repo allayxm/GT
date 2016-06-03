@@ -34,7 +34,7 @@
                                     <img src="~/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                     <p>
                                         登录用户：@Model.UserName
-                                        <small>登陆时间：@Model.LoginLateTime.ToString("yyyy-MM-dd")</small>
+                                        <small>登陆时间：@Model.LoginLateTime.ToLongTimeString()</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

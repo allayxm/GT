@@ -83,10 +83,12 @@
         </div><!-- /.content-wrapper -->
     </div><!-- ./wrapper -->
     <script>
+        var table;
         $(document).ready(function () {
             $(function () {
-                $('#usersTable').DataTable({
+               table =  $('#usersTable').DataTable({
                     responsive: true,
+                    Retrieve:true,
                     'language': {
                         'search': '搜索:',
                         'zeroRecords': "没有记录",
@@ -104,18 +106,21 @@
                             }
                         }
                     }
-                });
+                 });
+                //var table = $('#usersTable').dataTable();
             });
             //var table = $('#usersTable').DataTable({
             //    'bDestroy': true
             //});
             //var table = $('#usersTable').dataTable().fnDestroy(); 
+        
             $('#usersTable tbody').on('click', 'tr', function () {
                 $(this).toggleClass('selected');
             });
             
+            
             $('#DelButton').click(function () {
-                var table = $('#usersTable').dataTable(); 
+                
                 var selectRows = table.rows('.selected').indexes();
                 var count = table.rows('.selected').data().length;
                 if (count == 0)
@@ -136,7 +141,7 @@
                            { UsersValue: code },
                            function (result) {
                                if (result) {
-                                   table.row('.selected').remove().draw(false);
+                                   table.rows('.selected').remove().draw(false);
                                }
                            }
                       )
