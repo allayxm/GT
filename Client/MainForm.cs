@@ -59,7 +59,7 @@ namespace JXDL.Client
                     vPowerName = "村民";
                     break;
                 case 2:
-                    vPowerName = "村委员";
+                    vPowerName = "村委会";
                     break;
                 case 3:
                     vPowerName = "政府及城建部门";
@@ -210,7 +210,7 @@ namespace JXDL.Client
         {
             if ( MessageBox.Show("是否确认退出?","信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK )
             {
-                exit();
+                Application.Exit();
             }
         }
 

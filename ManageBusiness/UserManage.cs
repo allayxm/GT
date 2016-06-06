@@ -17,6 +17,7 @@ namespace JXDL.ManageBusiness
             UsersEF vUserEF = new UsersEF();
             vUserEF.UserName = UserName;
             vUserEF.Password = Password;
+            vUserEF.IsUse = true;
             DataTable vTable =  m_BasicDBClass.SelectRecords(vUserEF);
             if (vTable.Rows.Count > 0)
             {
