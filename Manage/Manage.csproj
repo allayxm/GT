@@ -909,10 +909,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\DownloadFileController.cs" />
     <Compile Include="App\HeartbeatController.cs" />
     <Compile Include="App\LoginController.cs" />
     <Compile Include="App\LogoutController.cs" />
     <Compile Include="App\MapConfigController.cs" />
+    <Compile Include="App\MultipartFormDataMemoryStreamProvider.cs" />
+    <Compile Include="App\UploadFileController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -1069,6 +1072,10 @@
     <ProjectReference Include="..\DBMiddleWareLib\DBMiddleWareLib.csproj">
       <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
       <Name>DBMiddleWareLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IntrefaceStruct\IntrefaceStruct.csproj">
+      <Project>{0939aa0a-2e65-4b68-adcf-f35943092a9a}</Project>
+      <Name>IntrefaceStruct</Name>
     </ProjectReference>
     <ProjectReference Include="..\ManageBusiness\ManageBusiness.csproj">
       <Project>{81d8ed1d-32d6-449e-9a69-0df7dc7eb161}</Project>

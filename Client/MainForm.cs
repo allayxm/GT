@@ -83,15 +83,12 @@ namespace JXDL.Client
             //添加数据图层
 
             axMapControl1.AddLayer(pMapServerLayer as ILayer);
-
             axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();
         }
 
         public IAGSServerObjectName GetMapServer(string pHostOrUrl, string pServiceName, bool pIsLAN)
         {
-
-
             //设置连接属性
             IPropertySet pPropertySet = new PropertySetClass();
             if (pIsLAN)
@@ -239,6 +236,27 @@ namespace JXDL.Client
                 Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
                 init_Menu();
             }
+        }
+
+        private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog vOpenFileDialog = new OpenFileDialog();
+            //vOpenFileDialog.Multiselect = true;
+            //if (  vOpenFileDialog.ShowDialog() == DialogResult.OK )
+            //{
+            //    string[] vFiles = vOpenFileDialog.FileNames;
+            //    RemoteInterface vRemoteInterface = new RemoteInterface();
+            //    vRemoteInterface.UploadFile(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, vFiles, new string[] { "Test1","Test2" }, new string[] { "12345","78945" });
+            //}
+            //SaveFileDialog vSaveFileDialog = new SaveFileDialog();
+            //if ( vSaveFileDialog.ShowDialog()== DialogResult.OK )
+            //{
+             RemoteInterface vRemoteInterface = new RemoteInterface();
+            if (  vRemoteInterface.DownloadFile(6, @"c:\\kwmusic2016_web_4.exe") )
+            {
+                MessageBox.Show("下载成功");
+            }
+            //}
         }
     }
 }

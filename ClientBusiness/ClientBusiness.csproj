@@ -51,6 +51,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInfocs.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IntrefaceStruct\IntrefaceStruct.csproj">
+      <Project>{0939aa0a-2e65-4b68-adcf-f35943092a9a}</Project>
+      <Name>IntrefaceStruct</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

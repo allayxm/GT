@@ -34,7 +34,7 @@ namespace JXDL.Manage.App
         public bool Put([FromBody]UsersEF UserInfo)
         {
             UserManage vUserManage = new UserManage();
-            return vUserManage.HeartBeat(UserInfo.UserName, UserInfo.Token);
+            return vUserManage.HeartBeat(UserInfo.ID.Value, UserInfo.Token);
         }
 
         // DELETE: api/Heartbeat/5

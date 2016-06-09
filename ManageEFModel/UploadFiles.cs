@@ -12,8 +12,8 @@ namespace JXDL.ManageEFModel
     {
         [ColumnAttrib("ID")]
         public int? ID { get; set; }
-        [ColumnAttrib("ObjectID")]
-        public int? ObjectID { get; set; }
+        [ColumnAttrib("AreaCode")]
+        public string AreaCode { get; set; }
         [ColumnAttrib("FileName")]
         public String FileName { get; set; }
         [ColumnAttrib("UserID")]

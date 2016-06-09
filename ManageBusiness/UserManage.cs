@@ -83,9 +83,7 @@ namespace JXDL.ManageBusiness
         public UsersEF GetUserInfo( int UserID )
         {
             UsersEF vUserEF = new UsersEF();
-            UsersEF[] vData =  m_BasicDBClass.SelectRecordByPrimaryKeyEx<UsersEF>(UserID);
-            if (vData.Length > 0)
-                vUserEF= vData[0];
+            UsersEF vData =  m_BasicDBClass.SelectRecordByPrimaryKeyEx<UsersEF>(UserID);
             return vUserEF;
         }
 
@@ -134,20 +132,25 @@ namespace JXDL.ManageBusiness
         /// 心跳包
         /// </summary>
         /// <returns></returns>
-        public bool HeartBeat( string UserNama,string Token)
+        public bool HeartBeat( int UserID,string Token)
         {
             bool vResult = false;
-            UsersEF vUserEF = new UsersEF();
-            vUserEF.UserName = UserNama;
-            vUserEF.Token = Token;
-            UsersEF[] vData = m_BasicDBClass.SelectRecordsEx(vUserEF);
-            if ( vData.Length > 0 )
+            if (checkUserLegal(UserID, Token))
             {
                 UsersEF vHeartBeat = new UsersEF();
                 vHeartBeat.LateLoginTime = DateTime.Now;
-                vResult = m_BasicDBClass.UpdateRecord(vHeartBeat, vData[0].ID);
+                vResult = m_BasicDBClass.UpdateRecord(vHeartBeat,UserID);
             }
             return vResult;
+        }
+
+        /// <summary>
+        /// 校验用户合法性
+        /// </summary>
+        bool checkUserLegal(int UserID,string Token )
+        {
+            UsersEF vUserInfo = m_BasicDBClass.SelectRecordByPrimaryKeyEx<UsersEF>(UserID);
+            return vUserInfo.ID == 0 ? false : true;
         }
 
         public bool DeleteUses(int UserID )

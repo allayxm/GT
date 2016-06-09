@@ -588,9 +588,9 @@ namespace MXKJ.DBMiddleWareLib
             return resultArray;
         }
 
-        public virtual T[] SelectRecordByPrimaryKeyEx<T>(object PrimaryKeyValue) where T : new()
+        public virtual T SelectRecordByPrimaryKeyEx<T>(object PrimaryKeyValue) where T : new()
         {
-            T[] resultArray = new T[0];
+            T resultArray = new T();
             initTableParam(new T());
             DataTable resultTable = new DataTable();
             m_DbCommand.CommandText = string.Format("Select *From {0} Where {1}=@PrimaryKeyValue", m_TableName, m_PrimaryKey);
@@ -610,14 +610,14 @@ namespace MXKJ.DBMiddleWareLib
 
             if (resultTable.Rows.Count > 0)
             {
-                resultArray = ConvertTableToStructArray<T>(resultTable);
+                resultArray = ConvertTableToStructArray<T>(resultTable)[0];
             }
             return resultArray;
         }
 
-        public virtual T[] SelectRecordByPrimaryKeyEx<T>(object PrimaryKeyValue, string Columns) where T : new()
+        public virtual T SelectRecordByPrimaryKeyEx<T>(object PrimaryKeyValue, string Columns) where T : new()
         {
-            T[] resultArray = new T[0];
+            T resultArray = new T();
             initTableParam(new T());
             DataTable resultTable = new DataTable();
             if (Columns == "")
@@ -640,7 +640,7 @@ namespace MXKJ.DBMiddleWareLib
 
             if (resultTable.Rows.Count > 0)
             {
-                resultArray = ConvertTableToStructArray<T>(resultTable);
+                resultArray = ConvertTableToStructArray<T>(resultTable)[0];
             }
             return resultArray;
         }
@@ -1021,7 +1021,6 @@ namespace MXKJ.DBMiddleWareLib
             return table;
         }
 
-    
 
         public virtual DataTable SelectRecordByPrimaryKey<T>(object PrimaryKeyValue, string Columns) where T : new()
         {
