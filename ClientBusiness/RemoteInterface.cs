@@ -41,7 +41,8 @@ namespace JXDL.ClientBusiness
             return vJSC.Deserialize<bool>(vResult);
         }
 
-        public void GetMapServer(ref string MapServerAddress,ref string MapServerName )
+        public void GetMapServer(ref string MapServerAddress,ref string MapDBName,
+            ref string DBUserName,ref string DBPassword )
         {
             string vUrl = string.Format("{0}/Api/MapConfig", m_RemotingServerAddress);
             string vPostData = "";
@@ -49,7 +50,9 @@ namespace JXDL.ClientBusiness
             JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
             string[] vMapConfig = vJSC.Deserialize<string[]>(vResult);
             MapServerAddress = vMapConfig[0];
-            MapServerName = vMapConfig[1];
+            MapDBName = vMapConfig[1];
+            DBUserName = vMapConfig[2];
+            DBPassword = vMapConfig[3];
         }
 
         public void Heartbeat( UserInfo LoginUserInfo)

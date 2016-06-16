@@ -11,12 +11,17 @@ namespace JXDL.Manage.App
 {
     public class MapConfigController : ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>1:数据库地址 2:数据库名称 3:数据库用户名 4:数据库密码</returns>
         // GET: api/MapConfig
         public IEnumerable<string> Get()
         {
             MapServer vSystemConfig = new MapServer();
             SystemConfigEF vModel = vSystemConfig.GetMapConfig();
-            return new string[] { vModel.ItemValue1, vModel.ItemValue2 };
+            
+            return new string[] { vModel.ItemValue1, vModel.ItemValue2, vModel.ItemValue3, vModel.ItemValue4 };
         }
 
         // GET: api/MapConfig/5

@@ -10,8 +10,15 @@ namespace JXDL.Client
     static class Program
     {
         public static UserInfo LoginUserInfo;
-        public static string MapServerAddress;
-        public static string MapServerName;
+
+        #region 地图数据库参数
+        public static string MapDBAddress;
+        public static string MapDBName;
+        public static string MapDBUserName;
+        public static string MapDBPassword;
+        #endregion
+
+        public static string[] MapTables = new string[] { "sde.SDE.乡镇街道", "sde.SDE.村委会", "sde.SDE.自然村" };
 
         /// <summary>
         /// 应用程序的主入口点。

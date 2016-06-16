@@ -22,11 +22,14 @@ namespace JXDL.ManageBusiness
             return vSystemEF;
         }
 
-        public bool SetMapConfig( string MapServerAddress,string MapName)
+        public bool SetMapConfig( string MapServerAddress,string MapName,string DBUserName,string DBPassword)
         {
             SystemConfigEF vSystemEF = new SystemConfigEF();
             vSystemEF.ItemValue1 = MapServerAddress;
             vSystemEF.ItemValue2 = MapName;
+            vSystemEF.ItemValue3 = DBUserName;
+            vSystemEF.ItemValue4 = DBPassword;
+
             return m_BasicDBClass.UpdateRecord(vSystemEF, "ItemName='MapServer'");
         }
     }

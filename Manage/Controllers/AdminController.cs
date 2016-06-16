@@ -203,7 +203,9 @@ namespace JXDL.Manage.Controllers
             MapServer vMapServer = new MapServer();
             SystemConfigEF vMapConfigEF =  vMapServer.GetMapConfig();
             vModel.MapServerAddress = vMapConfigEF.ItemValue1;
-            vModel.MapServerName = vMapConfigEF.ItemValue2;
+            vModel.MapDBName = vMapConfigEF.ItemValue2;
+            vModel.DBUserName = vMapConfigEF.ItemValue3;
+            vModel.DBPassword = vMapConfigEF.ItemValue4;
             return View(vModel);
         }
 
@@ -211,7 +213,7 @@ namespace JXDL.Manage.Controllers
         public ActionResult MapServerConfig(MapServerConfigViewModel Model)
         {
             MapServer vMapServer = new MapServer();
-            if (vMapServer.SetMapConfig(Model.MapServerAddress, Model.MapServerName))
+            if (vMapServer.SetMapConfig(Model.MapServerAddress, Model.MapDBName, Model.DBUserName, Model.DBPassword))
                 ModelState.AddModelError("","地图服务设置成功" );
             else
                 ModelState.AddModelError("", "地图服务设置失败");

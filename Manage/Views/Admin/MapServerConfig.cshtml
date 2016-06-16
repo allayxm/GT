@@ -40,9 +40,19 @@
                                                 @Html.ValidationMessageFor(m => m.MapServerAddress, "", new { @class = "text-danger" })
                                             </div>
                                             <div class="form-group">
-                                                <label>服务名称</label>
-                                                @Html.TextBoxFor(m => m.MapServerName, new { @class = "form-control", placeholder = "请输入服务名称" })
-                                                @Html.ValidationMessageFor(m => m.MapServerName, "", new { @class = "text-danger" })
+                                                <label>数据库名称</label>
+                                                @Html.TextBoxFor(m => m.MapDBName, new { @class = "form-control", placeholder = "请输入服务名称" })
+                                                @Html.ValidationMessageFor(m => m.MapDBName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group">
+                                                <label>数据库用户名</label>
+                                                @Html.TextBoxFor(m => m.DBUserName, new { @class = "form-control", placeholder = "请输入数据库用户名" })
+                                                @Html.ValidationMessageFor(m => m.DBUserName, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="form-group">
+                                                <label>数据库密码</label>
+                                                @Html.TextBoxFor(m => m.DBPassword, new { @class = "form-control", placeholder = "请输入数据库密码" })
+                                                @Html.ValidationMessageFor(m => m.DBPassword, "", new { @class = "text-danger" })
                                             </div>
                                             <div class="checkbox text-">
                                                 <label>

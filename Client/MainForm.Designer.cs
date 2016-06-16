@@ -47,6 +47,7 @@
             this.ToolStripMenuItem_Pic_Anayle = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
             this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
             this.axMapControl1 = new ESRI.ArcGIS.Controls.AxMapControl();
@@ -190,11 +191,20 @@
             // 
             // ToolStripMenuItem_About
             // 
+            this.ToolStripMenuItem_About.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testToolStripMenuItem});
             this.ToolStripMenuItem_About.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_About.Image")));
             this.ToolStripMenuItem_About.Name = "ToolStripMenuItem_About";
             this.ToolStripMenuItem_About.Size = new System.Drawing.Size(67, 24);
             this.ToolStripMenuItem_About.Text = "关于";
             this.ToolStripMenuItem_About.Click += new System.EventHandler(this.ToolStripMenuItem_About_Click);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.testToolStripMenuItem.Text = "test";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // axLicenseControl1
             // 
@@ -213,6 +223,8 @@
             this.axToolbarControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axToolbarControl1.OcxState")));
             this.axToolbarControl1.Size = new System.Drawing.Size(678, 28);
             this.axToolbarControl1.TabIndex = 2;
+            this.axToolbarControl1.OnMouseUp += new ESRI.ArcGIS.Controls.IToolbarControlEvents_Ax_OnMouseUpEventHandler(this.axToolbarControl1_OnMouseUp);
+            this.axToolbarControl1.MouseCaptureChanged += new System.EventHandler(this.axToolbarControl1_MouseCaptureChanged);
             // 
             // axMapControl1
             // 
@@ -222,6 +234,7 @@
             this.axMapControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl1.OcxState")));
             this.axMapControl1.Size = new System.Drawing.Size(678, 422);
             this.axMapControl1.TabIndex = 3;
+            this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
             // 
             // MainForm
             // 
@@ -272,6 +285,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Map;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Anayle;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Statistics;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
     }
 }
 

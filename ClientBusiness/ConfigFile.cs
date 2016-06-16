@@ -13,7 +13,8 @@ namespace JXDL.ClientBusiness
 
         Configuration m_Configuration = null;
         public string RemotingServerAddress { get; set; }
-        
+        public int MapBackgroundColor { get; set; }
+
         #endregion
 
         #region 构造
@@ -22,6 +23,7 @@ namespace JXDL.ClientBusiness
             m_Configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             //远程服务器
             RemotingServerAddress = m_Configuration.AppSettings.Settings["RemotingServerAddress"].Value;
+            MapBackgroundColor = int.Parse( m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value );
         }
         #endregion
 
@@ -30,7 +32,7 @@ namespace JXDL.ClientBusiness
         {
             //远程服务器
             m_Configuration.AppSettings.Settings["RemotingServerAddress"].Value = RemotingServerAddress;
-
+            m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value = MapBackgroundColor.ToString();
             m_Configuration.Save(ConfigurationSaveMode.Modified);
             System.Configuration.ConfigurationManager.RefreshSection("appSettings");
         }
