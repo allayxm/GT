@@ -32,17 +32,17 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox_Township = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox_File = new System.Windows.Forms.TextBox();
+            this.textBox_Author = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.button_Browse = new System.Windows.Forms.Button();
+            this.textBox_File = new System.Windows.Forms.TextBox();
+            this.comboBox_Village = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBox_VillageCommittee = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.button_Upload = new System.Windows.Forms.Button();
             this.button_Exit = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox_Author = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +58,7 @@
             // 
             // comboBox_Township
             // 
+            this.comboBox_Township.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Township.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox_Township.FormattingEnabled = true;
             this.comboBox_Township.Location = new System.Drawing.Point(110, 29);
@@ -71,10 +72,10 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.button_Browse);
             this.groupBox1.Controls.Add(this.textBox_File);
-            this.groupBox1.Controls.Add(this.comboBox2);
+            this.groupBox1.Controls.Add(this.comboBox_Village);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.comboBox_VillageCommittee);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.comboBox_Township);
@@ -86,43 +87,49 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "单位选择";
             // 
-            // label2
+            // textBox_Author
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(43, 72);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "村委会:";
+            this.textBox_Author.Location = new System.Drawing.Point(110, 149);
+            this.textBox_Author.Name = "textBox_Author";
+            this.textBox_Author.Size = new System.Drawing.Size(199, 21);
+            this.textBox_Author.TabIndex = 9;
             // 
-            // comboBox1
+            // label5
             // 
-            this.comboBox1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(110, 69);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(199, 23);
-            this.comboBox1.TabIndex = 3;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(28, 150);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(75, 15);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "文档作者:";
             // 
-            // label3
+            // button_Browse
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(43, 113);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 15);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "自然村:";
+            this.button_Browse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button_Browse.Location = new System.Drawing.Point(314, 180);
+            this.button_Browse.Name = "button_Browse";
+            this.button_Browse.Size = new System.Drawing.Size(35, 30);
+            this.button_Browse.TabIndex = 7;
+            this.button_Browse.UseVisualStyleBackColor = true;
+            this.button_Browse.Click += new System.EventHandler(this.button_Browse_Click);
             // 
-            // comboBox2
+            // textBox_File
             // 
-            this.comboBox2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(110, 110);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(199, 23);
-            this.comboBox2.TabIndex = 5;
+            this.textBox_File.Location = new System.Drawing.Point(109, 188);
+            this.textBox_File.Name = "textBox_File";
+            this.textBox_File.Size = new System.Drawing.Size(200, 21);
+            this.textBox_File.TabIndex = 6;
+            // 
+            // comboBox_Village
+            // 
+            this.comboBox_Village.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Village.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox_Village.FormattingEnabled = true;
+            this.comboBox_Village.Location = new System.Drawing.Point(110, 110);
+            this.comboBox_Village.Name = "comboBox_Village";
+            this.comboBox_Village.Size = new System.Drawing.Size(199, 23);
+            this.comboBox_Village.TabIndex = 5;
             // 
             // label4
             // 
@@ -134,29 +141,39 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "选择文件:";
             // 
-            // textBox_File
+            // label3
             // 
-            this.textBox_File.Location = new System.Drawing.Point(109, 188);
-            this.textBox_File.Name = "textBox_File";
-            this.textBox_File.Size = new System.Drawing.Size(200, 21);
-            this.textBox_File.TabIndex = 6;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Location = new System.Drawing.Point(43, 113);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 15);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "自然村:";
             // 
-            // button_Browse
+            // comboBox_VillageCommittee
             // 
-            this.button_Browse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button_Browse.Image = ((System.Drawing.Image)(resources.GetObject("button_Browse.Image")));
-            this.button_Browse.Location = new System.Drawing.Point(314, 180);
-            this.button_Browse.Name = "button_Browse";
-            this.button_Browse.Size = new System.Drawing.Size(35, 30);
-            this.button_Browse.TabIndex = 7;
-            this.button_Browse.UseVisualStyleBackColor = true;
-            this.button_Browse.Click += new System.EventHandler(this.button_Browse_Click);
+            this.comboBox_VillageCommittee.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_VillageCommittee.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.comboBox_VillageCommittee.FormattingEnabled = true;
+            this.comboBox_VillageCommittee.Location = new System.Drawing.Point(110, 69);
+            this.comboBox_VillageCommittee.Name = "comboBox_VillageCommittee";
+            this.comboBox_VillageCommittee.Size = new System.Drawing.Size(199, 23);
+            this.comboBox_VillageCommittee.TabIndex = 3;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(43, 72);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 15);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "村委会:";
             // 
             // button_Upload
             // 
             this.button_Upload.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Upload.Image = ((System.Drawing.Image)(resources.GetObject("button_Upload.Image")));
-            this.button_Upload.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button_Upload.Location = new System.Drawing.Point(44, 249);
             this.button_Upload.Name = "button_Upload";
             this.button_Upload.Size = new System.Drawing.Size(96, 43);
@@ -170,8 +187,6 @@
             // 
             this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
-            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button_Exit.Location = new System.Drawing.Point(233, 249);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(96, 43);
@@ -180,23 +195,6 @@
             this.button_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button_Exit.UseVisualStyleBackColor = true;
             this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(28, 150);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(75, 15);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "文档作者:";
-            // 
-            // textBox_Author
-            // 
-            this.textBox_Author.Location = new System.Drawing.Point(110, 149);
-            this.textBox_Author.Name = "textBox_Author";
-            this.textBox_Author.Size = new System.Drawing.Size(199, 21);
-            this.textBox_Author.TabIndex = 9;
             // 
             // UploadFileForm
             // 
@@ -211,6 +209,7 @@
             this.Name = "UploadFileForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "上传文件";
+            this.Load += new System.EventHandler(this.UploadFileForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -223,9 +222,9 @@
         private System.Windows.Forms.ComboBox comboBox_Township;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox_VillageCommittee;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox_Village;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox_File;
         private System.Windows.Forms.Button button_Browse;

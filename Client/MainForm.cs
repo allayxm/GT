@@ -24,6 +24,19 @@ namespace JXDL.Client
     public partial class MainForm : Form
     {
         Timer m_HeartbeatTimer = null;
+        /// <summary>
+        /// 乡镇及街道要素
+        /// </summary>
+        IFeatureLayer m_TownshipFeatureLayer = null;
+        /// <summary>
+        /// 村委会要素
+        /// </summary>
+        IFeatureLayer m_VillageCommitteeFeatureLayer = null;
+        /// <summary>
+        /// 自然村要素
+        /// </summary>
+        IFeatureLayer m_VillageFeatureLayer = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -75,10 +88,10 @@ namespace JXDL.Client
         }
 
 
-        void test()
-        {
-            
-        }
+        //void test()
+        //{
+        //    getTownshipDict();
+        //}
         //void init_Map(int background)
         //{
         //    IAGSServerObjectName pServerObjectName = GetMapServer(Program.MapDBAddress, Program.MapDBName, false);
@@ -340,8 +353,8 @@ namespace JXDL.Client
             vPropSet.SetProperty("PASSWORD", Program.MapDBPassword);
             vPropSet.SetProperty("VERSION", "SDE.DEFAULT");
             vPropSet.SetProperty("AUTHENTICATION_MODE", "DBMS");
-
             axMapControl1.ClearLayers();
+
             IWorkspace vWorkspace = vWorkspaceFactory.Open(vPropSet, 0);
             IFeatureWorkspace vFeatWS = vWorkspace as IFeatureWorkspace;
             for( int i=0;i<Program.MapTables.Length;i++)
@@ -352,15 +365,19 @@ namespace JXDL.Client
                     IFeatureLayer vLayerFeature = new FeatureLayerClass();
                     vLayerFeature.FeatureClass = vFeatureClass;
                     vLayerFeature.Name = Program.MapTables[i];
-
-                    //IGeoFeatureLayer geoFeatureLayer = (IGeoFeatureLayer)vLayerFeature;
-                    //ISimpleRenderer simpleRenderer = (ISimpleRenderer)geoFeatureLayer.Renderer;
-                    //IFillSymbol pFillSymbol = new SimpleFillSymbolClass();
-                    //pFillSymbol.Color = Color.Green;
-                    //simpleRenderer.Symbol = (ISymbol)pFillSymbol;
-
                     axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
-
+                    switch(Program.MapTables[i])
+                    {
+                        case "sde.SDE.乡镇街道":
+                            m_TownshipFeatureLayer = vLayerFeature;
+                            break;
+                        case "sde.SDE.村委会":
+                            m_VillageCommitteeFeatureLayer = vLayerFeature;
+                            break;
+                        case "sde.SDE.自然村":
+                            m_VillageFeatureLayer = vLayerFeature;
+                            break;
+                    }
                 }
             }
             axMapControl1.BackColor = Color.FromArgb(background);
@@ -487,5 +504,16 @@ namespace JXDL.Client
             int i = e.button;
             
         }
+
+        private void ToolStripMenuItem_Doc_Input_Click(object sender, EventArgs e)
+        {
+            UploadFileForm vUploadFileForm = new UploadFileForm();
+            vUploadFileForm.TownshipFeatureLayer = m_TownshipFeatureLayer;
+            vUploadFileForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
+            vUploadFileForm.VillageFeatureLayer = m_VillageFeatureLayer;
+            vUploadFileForm.ShowDialog();
+        }
+
+       
     }
 }

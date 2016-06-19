@@ -64,7 +64,7 @@ namespace JXDL.ClientBusiness
         }
 
         #region 上传文件
-        public void UploadFile(int UserID,string Token,string[] Files,string[] Authors,string[] AreaCodeList )
+        public void UploadFiles(int UserID,string Token,string[] Files,string[] Authors,string[] AreaCodeList )
         {
             string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
             UploadFileStruct vUFStruct = new UploadFileStruct();
@@ -88,6 +88,31 @@ namespace JXDL.ClientBusiness
             List<ByteArrayContent> vFormDatas = GetFormDataByteArrayContent(vCollection);
             List<ByteArrayContent> vFiles = GetFileByteArrayContent(Files);
             
+            HttpPostFile(vUrl, vFormDatas, vFiles);
+        }
+
+        public void UploadFile(int UserID, string Token, string File, string Author, string AreaCode)
+        {
+            string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
+            UploadFileStruct vUFStruct = new UploadFileStruct();
+            vUFStruct.UsersAuthor = new UserAuthorSturct();
+            vUFStruct.UsersAuthor.UserID = UserID;
+            vUFStruct.UsersAuthor.Token = Token;
+
+            vUFStruct.Files = new IntrefaceStruct.FileInfo[1];
+            vUFStruct.Files[0] = new IntrefaceStruct.FileInfo();
+            vUFStruct.Files[0].FileName = Path.GetFileName(File);
+            vUFStruct.Files[0].Author = Author;
+            vUFStruct.Files[0].AreaCode = AreaCode;
+            
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string vJsonStr = vJSC.Serialize(vUFStruct);
+            NameValueCollection vCollection = new NameValueCollection();
+            vCollection.Add("Json", vJsonStr);
+
+            List<ByteArrayContent> vFormDatas = GetFormDataByteArrayContent(vCollection);
+            List<ByteArrayContent> vFiles = GetFileByteArrayContent( new string[] { File });
+
             HttpPostFile(vUrl, vFormDatas, vFiles);
         }
 
