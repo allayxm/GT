@@ -90,6 +90,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -106,6 +107,12 @@
     </Compile>
     <Compile Include="ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayFilesForm.Designer.cs">
+      <DependentUpon>DisplayFilesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FeaturesSelectForm.cs">
       <SubType>Form</SubType>
@@ -141,6 +148,9 @@
     </Compile>
     <EmbeddedResource Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayFilesForm.resx">
+      <DependentUpon>DisplayFilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FeaturesSelectForm.resx">
       <DependentUpon>FeaturesSelectForm.cs</DependentUpon>
@@ -187,6 +197,10 @@
     <ProjectReference Include="..\ClientBusiness\ClientBusiness.csproj">
       <Project>{ad954379-13b6-400f-8e12-942ac1f46d5d}</Project>
       <Name>ClientBusiness</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IntrefaceStruct\IntrefaceStruct.csproj">
+      <Project>{0939aa0a-2e65-4b68-adcf-f35943092a9a}</Project>
+      <Name>IntrefaceStruct</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

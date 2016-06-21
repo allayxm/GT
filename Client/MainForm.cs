@@ -397,7 +397,6 @@ namespace JXDL.Client
             //IFeatureLayer zrcLayerFeature = new FeatureLayerClass();
             //zrcLayerFeature.FeatureClass = zrcFeatureClass;
 
-
             //axMapControl1.Map.AddLayer(xjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(cjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(zrcLayerFeature as ILayer);
@@ -406,21 +405,38 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
-            //MessageBox.Show("Is OK");
-            //axMapControl1.Map.FeatureSelection.coun
             ISelection pSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
             pEnumFeatureSetup.AllFields = true;
             IEnumFeature pEnumFeature = pSelection as IEnumFeature;
             IFeature pFeature = pEnumFeature.Next();
+            List<string> vAreaCodeList = new List<string>();
             while (pFeature != null)
             {
+                int vXZDMIndex = 0;
                 string vName = pFeature.Class.AliasName;
-                Console.Write("Name:"+vName);
-                Console.WriteLine(pFeature.get_Value(2));
+                switch( vName)
+                {
+                    case Program.TownshipTableName:
+                        vXZDMIndex = pFeature.Fields.FindField(Program.TownshipCodeName);
+                        break;
+                    case Program.VillageCommitteeTableName:
+                        vXZDMIndex = pFeature.Fields.FindField(Program.VillageCommitteeCodeName);
+                        break;
+                    case Program.VillageTableName:
+                        vXZDMIndex = pFeature.Fields.FindField(Program.VillageCodeName);
+                        break;
+                }
+                //Console.Write("Name:" + vName);
+                string vCode = (string)pFeature.get_Value(vXZDMIndex);
+                vCode = System.Web.HttpUtility.UrlEncode(vCode);
+                vAreaCodeList.Add( vCode );
                 pFeature = pEnumFeature.Next();
             }
+
+            DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
+            vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
+            vDisplayFilesForm.ShowDialog();
         }
 
         private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
@@ -513,7 +529,5 @@ namespace JXDL.Client
             vUploadFileForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vUploadFileForm.ShowDialog();
         }
-
-       
     }
 }

@@ -18,8 +18,18 @@ namespace JXDL.Client
         public static string MapDBPassword;
         #endregion
 
-        public static string[] MapTables = new string[] { "sde.SDE.乡镇街道", "sde.SDE.村委会", "sde.SDE.自然村" };
+        #region 地图名称
+        public const string TownshipTableName = "sde.SDE.乡镇街道";
+        public const string TownshipCodeName = "XZDM";
 
+        public const string VillageCommitteeTableName = "sde.SDE.村委会";
+        public const string VillageCommitteeCodeName = "CWHDM";
+
+        public const string VillageTableName = "sde.SDE.自然村";
+        public const string VillageCodeName = "ZRCDM";
+
+        public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName };
+        #endregion
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>

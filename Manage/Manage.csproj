@@ -906,10 +906,13 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App\DownloadFileController.cs" />
+    <Compile Include="App\GetFileListController.cs" />
     <Compile Include="App\HeartbeatController.cs" />
     <Compile Include="App\LoginController.cs" />
     <Compile Include="App\LogoutController.cs" />

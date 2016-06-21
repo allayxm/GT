@@ -21,6 +21,22 @@ namespace JXDL.ClientBusiness
             m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
         }
 
+        public JXDL.IntrefaceStruct.FileInfo[] GetFiles( string[] AreaCodeArray)
+        {
+            JXDL.IntrefaceStruct.FileInfo[] vFileInfoList = null;
+            string vUrl = string.Format("{0}/Api/GetFileList", m_RemotingServerAddress);
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            string vPostData = vJSC.Serialize(AreaCodeArray);
+           
+            string vResult = HttpPost(vUrl,  vPostData);
+            //string vResult = HttpGet(vUrl, string.Format("AreaStrCode={0}", AreaStrCode) );
+            if ( vResult != null && vResult != "\"\"" && vResult!= "\"[]\"")
+            {
+                vFileInfoList = vJSC.Deserialize<JXDL.IntrefaceStruct.FileInfo[]>(vResult);
+            }
+            return vFileInfoList;
+        }
+
         public UserInfo Login( string UserName,string Password )
         {
             string vUrl = string.Format("{0}/Api/Login", m_RemotingServerAddress);
@@ -64,7 +80,8 @@ namespace JXDL.ClientBusiness
         }
 
         #region 上传文件
-        public void UploadFiles(int UserID,string Token,string[] Files,string[] Authors,string[] AreaCodeList )
+        public bool UploadFiles(int UserID,string Token,string[] Files,string[] Authors,
+            string[] AreaCodeList,string[] UnitNameList )
         {
             string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
             UploadFileStruct vUFStruct = new UploadFileStruct();
@@ -79,6 +96,7 @@ namespace JXDL.ClientBusiness
                 vUFStruct.Files[i].FileName = Path.GetFileName( Files[i] );
                 vUFStruct.Files[i].Author = Authors[i];
                 vUFStruct.Files[i].AreaCode = AreaCodeList[i];
+                vUFStruct.Files[i].UnitName = UnitNameList[i];
             }
             JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
             string vJsonStr = vJSC.Serialize(vUFStruct);
@@ -88,10 +106,12 @@ namespace JXDL.ClientBusiness
             List<ByteArrayContent> vFormDatas = GetFormDataByteArrayContent(vCollection);
             List<ByteArrayContent> vFiles = GetFileByteArrayContent(Files);
             
-            HttpPostFile(vUrl, vFormDatas, vFiles);
+            string vResult = HttpPostFile(vUrl, vFormDatas, vFiles);
+            return bool.Parse( vResult );
         }
 
-        public void UploadFile(int UserID, string Token, string File, string Author, string AreaCode)
+        public bool UploadFile(int UserID, string Token, string File, string Author, 
+            string AreaCode,string UnitName)
         {
             string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
             UploadFileStruct vUFStruct = new UploadFileStruct();
@@ -104,7 +124,9 @@ namespace JXDL.ClientBusiness
             vUFStruct.Files[0].FileName = Path.GetFileName(File);
             vUFStruct.Files[0].Author = Author;
             vUFStruct.Files[0].AreaCode = AreaCode;
-            
+            vUFStruct.Files[0].UnitName = UnitName;
+
+
             JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
             string vJsonStr = vJSC.Serialize(vUFStruct);
             NameValueCollection vCollection = new NameValueCollection();
@@ -113,7 +135,8 @@ namespace JXDL.ClientBusiness
             List<ByteArrayContent> vFormDatas = GetFormDataByteArrayContent(vCollection);
             List<ByteArrayContent> vFiles = GetFileByteArrayContent( new string[] { File });
 
-            HttpPostFile(vUrl, vFormDatas, vFiles);
+            string vResult = HttpPostFile(vUrl, vFormDatas, vFiles);
+            return bool.Parse(vResult);
         }
 
         /// <summary>
@@ -304,7 +327,7 @@ namespace JXDL.ClientBusiness
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.ContentLength = Encoding.UTF8.GetByteCount(postDataStr);
+            //request.ContentLength = Encoding.UTF8.GetByteCount(postDataStr);
             //request.CookieContainer = cookie;
             Stream myRequestStream = request.GetRequestStream();
             StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("gb2312"));

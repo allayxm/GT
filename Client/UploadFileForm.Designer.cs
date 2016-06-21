@@ -65,6 +65,7 @@
             this.comboBox_Township.Name = "comboBox_Township";
             this.comboBox_Township.Size = new System.Drawing.Size(199, 23);
             this.comboBox_Township.TabIndex = 1;
+            this.comboBox_Township.SelectedIndexChanged += new System.EventHandler(this.comboBox_Township_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -107,6 +108,7 @@
             // button_Browse
             // 
             this.button_Browse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button_Browse.Image = ((System.Drawing.Image)(resources.GetObject("button_Browse.Image")));
             this.button_Browse.Location = new System.Drawing.Point(314, 180);
             this.button_Browse.Name = "button_Browse";
             this.button_Browse.Size = new System.Drawing.Size(35, 30);
@@ -160,6 +162,7 @@
             this.comboBox_VillageCommittee.Name = "comboBox_VillageCommittee";
             this.comboBox_VillageCommittee.Size = new System.Drawing.Size(199, 23);
             this.comboBox_VillageCommittee.TabIndex = 3;
+            this.comboBox_VillageCommittee.SelectedIndexChanged += new System.EventHandler(this.comboBox_VillageCommittee_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -174,6 +177,8 @@
             // button_Upload
             // 
             this.button_Upload.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Upload.Image = ((System.Drawing.Image)(resources.GetObject("button_Upload.Image")));
+            this.button_Upload.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button_Upload.Location = new System.Drawing.Point(44, 249);
             this.button_Upload.Name = "button_Upload";
             this.button_Upload.Size = new System.Drawing.Size(96, 43);
@@ -187,6 +192,8 @@
             // 
             this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
+            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button_Exit.Location = new System.Drawing.Point(233, 249);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(96, 43);

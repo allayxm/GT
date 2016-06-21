@@ -13,27 +13,7 @@ using ESRI.ArcGIS.Geodatabase;
 
 namespace JXDL.Client
 {
-    public class ComboBoxListItem
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-
-        public ComboBoxListItem(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public ComboBoxListItem()
-        {
-
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
-    }
+  
     public partial class UploadFileForm : Form
     {
 
@@ -98,103 +78,110 @@ namespace JXDL.Client
                 return;
             }
 
-            string vAreaCode = getSelectedAreaCode();
+            string vAreaCode = "";
+            string vUnitName = "";
+            getSelectedAreaCode(ref vAreaCode,ref vUnitName );
             if (vAreaCode == "")
             {
                 MessageBox.Show("请选择需要上传文件的单位", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            vRemoteInterface.UploadFile(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.Token,
-                vFilePath,vAuthor,vAreaCode);
-            MessageBox.Show("文件上传成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            bool vResult = vRemoteInterface.UploadFile(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.Token,
+                vFilePath,vAuthor,vAreaCode,vUnitName);
+            if (vResult)
+            {
+                MessageBox.Show("文件上传成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox_File.Text = "";
+            }
+            else
+                MessageBox.Show("文件上传失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        string getSelectedAreaCode()
+        void getSelectedAreaCode( ref string AreaCode,ref string UnitName )
         {
-            string vAreaCode = "";
-
-            string vTownship = (string)comboBox_Township.SelectedValue;
-            if (vTownship != "" )
+            string vTownship = (string)comboBox_Township.Text;
+            if (vTownship!=null && vTownship != "" && vTownship != "请选择" )
             {
-                vAreaCode = (string)comboBox_Township.SelectedValue;
+                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem).Key ;
+                UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
             }
 
-            string vVillageCommittee = (string)comboBox_VillageCommittee.SelectedValue;
-            if ( vVillageCommittee != "" )
+            string vVillageCommittee = (string)comboBox_VillageCommittee.Text;
+            if (vVillageCommittee!=null && vVillageCommittee != "" &&  vVillageCommittee != "请选择" )
             {
-                vAreaCode = (string)comboBox_Township.SelectedValue;
+                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem ).Key;
+                UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
             }
 
-            string vVillage = (string)comboBox_Village.SelectedValue;
-            if ( vVillage != "")
+            string vVillage = (string)comboBox_Village.Text;
+            if (vVillage!=null && vVillage!="" && vVillage != "请选择")
             {
-                vAreaCode = (string)comboBox_Village.SelectedValue;
+                AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Key;
+                UnitName = ((ComboBoxListItem)comboBox_Village.SelectedItem).Value;
             }
-            return vAreaCode;
         }
 
         private void UploadFileForm_Load(object sender, EventArgs e)
         {
             ComboBoxListItem[] vTownshipDict = getTownshipDict();
             foreach (var vTempTownship in vTownshipDict)
+            {
                 comboBox_Township.Items.Add(vTempTownship);
-
+                comboBox_Township.SelectedIndex = 0;
+            }
         }
 
-        Dictionary<string, string> getVillageDict(string villageCommitteeCode)
+        ComboBoxListItem[] getVillageDict(string villageCommitteeCode)
         {
-            Dictionary<string, string> vVillageDict = new Dictionary<string, string>();
+            List<ComboBoxListItem> vVillageDict = new List<ComboBoxListItem>();
+            vVillageDict.Add(new ComboBoxListItem("请选择", "请选择"));
             if (VillageFeatureLayer != null)
             {
-                for (int i = 0; i < VillageFeatureLayer.FeatureClass.Fields.FieldCount; i++)
+                IQueryFilter vQueryFilter = new QueryFilterClass();
+                vQueryFilter.WhereClause = (string.Format("CWHDM = '{0}'", villageCommitteeCode));
+                IFeatureCursor vFeatureCursor = VillageFeatureLayer.FeatureClass.Search(vQueryFilter, true);
+                IFeature vFeature = vFeatureCursor.NextFeature();
+                while (vFeature != null)
                 {
-                    //var vFeatures = m_VillageFeatureLayer.FeatureClass.GetFeatures(null, true);
-                    IQueryFilter vQueryFilter = new QueryFilterClass();
-                    vQueryFilter.WhereClause = (string.Format("CWHDM = '{0}'", villageCommitteeCode));
-                    IFeatureCursor vFeatureCursor = VillageFeatureLayer.FeatureClass.Search(vQueryFilter, true);
-                    IFeature vFeature = vFeatureCursor.NextFeature();
-                    while (vFeature != null)
-                    {
-                        int vXZDMIndex = vFeature.Fields.FindField("Text");
-                        int VNameIndex = vFeature.Fields.FindField("Text");
-                        string vXZDM = vFeature.get_Value(vXZDMIndex).ToString();
-                        string vName = vFeature.get_Value(VNameIndex).ToString();
-                        vVillageDict.Add(vXZDM, vName);
-                    }
+                    int vXZDMIndex = vFeature.Fields.FindField("ZRCDM");
+                    int VNameIndex = vFeature.Fields.FindField("Text");
+                    string vXZDM = vFeature.get_Value(vXZDMIndex).ToString();
+                    string vName = vFeature.get_Value(VNameIndex).ToString();
+                    vVillageDict.Add(new ComboBoxListItem(vXZDM, vName));
+                    vFeature = vFeatureCursor.NextFeature();
                 }
             }
-            return vVillageDict;
+            return vVillageDict.ToArray();
         }
 
-        Dictionary<string, string> getVillageCommitteeDict(string townshipCode)
+        ComboBoxListItem[] getVillageCommitteeDict(string townshipCode)
         {
-            Dictionary<string, string> vVillageCommitteeDict = new Dictionary<string, string>();
+            List<ComboBoxListItem> vVillageCommitteeDict = new List<ComboBoxListItem>();
+            vVillageCommitteeDict.Add(new ComboBoxListItem("请选择", "请选择"));
             if (VillageCommitteeFeatureLayer != null)
             {
-
-                for (int i = 0; i < VillageCommitteeFeatureLayer.FeatureClass.Fields.FieldCount; i++)
+                IQueryFilter vQueryFilter = new QueryFilterClass();
+                vQueryFilter.WhereClause = (string.Format("XZDM = '{0}'", townshipCode));
+                IFeatureCursor vFeatureCursor = VillageCommitteeFeatureLayer.FeatureClass.Search(vQueryFilter, true);
+                IFeature vFeature = vFeatureCursor.NextFeature();
+                while (vFeature != null)
                 {
-                    //var vFeatures = m_VillageCommitteeFeatureLayer.FeatureClass.GetFeatures(null, true);
-                    IQueryFilter vQueryFilter = new QueryFilterClass();
-                    vQueryFilter.WhereClause = (string.Format("XZDM = '{0}'", townshipCode));
-                    IFeatureCursor vFeatureCursor = VillageCommitteeFeatureLayer.FeatureClass.Search(vQueryFilter, true);
-                    IFeature vFeature = vFeatureCursor.NextFeature();
-                    while (vFeature != null)
-                    {
-                        int vXZDMIndex = vFeature.Fields.FindField("CWHDM");
-                        int VNameIndex = vFeature.Fields.FindField("村委会_dwg");
-                        string vXZDM = vFeature.get_Value(vXZDMIndex).ToString();
-                        string vName = vFeature.get_Value(VNameIndex).ToString();
-                        vVillageCommitteeDict.Add(vXZDM, vName);
-                    }
+                    int vXZDMIndex = vFeature.Fields.FindField("CWHDM");
+                    int VNameIndex = vFeature.Fields.FindField("村委会_dwg");
+                    string vXZDM = vFeature.get_Value(vXZDMIndex).ToString();
+                    string vName = vFeature.get_Value(VNameIndex).ToString();
+                    vVillageCommitteeDict.Add(new ComboBoxListItem(vXZDM, vName));
+                    vFeature = vFeatureCursor.NextFeature();
                 }
-            }
-            return vVillageCommitteeDict;
+            } 
+            return vVillageCommitteeDict.ToArray();
         }
 
         ComboBoxListItem[] getTownshipDict()
         {
             List<ComboBoxListItem> vTownshipList = new List<ComboBoxListItem>();
+            vTownshipList.Add( new ComboBoxListItem("请选择", "请选择"));
             Dictionary<string, string> vTownshipDict = new Dictionary<string, string>();
             if (TownshipFeatureLayer != null)
             {
@@ -213,6 +200,38 @@ namespace JXDL.Client
                 }
             }
             return vTownshipList.ToArray();
+        }
+
+        private void comboBox_Township_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_Township.SelectedItem;
+            if (vSelectedItem.Value!= "请选择")
+            {
+                string vCode = vSelectedItem.Key;
+                ComboBoxListItem[] vVillageCommitteeList = getVillageCommitteeDict(vCode);
+                comboBox_VillageCommittee.Items.Clear();
+                foreach (ComboBoxListItem vTempVillageCommittee in vVillageCommitteeList)
+                {
+                    comboBox_VillageCommittee.Items.Add(vTempVillageCommittee);
+                    comboBox_VillageCommittee.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void comboBox_VillageCommittee_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem;
+            if (vSelectedItem.Value != "请选择")
+            {
+                string vCode = vSelectedItem.Key;
+                ComboBoxListItem[] vVillageList = getVillageDict(vCode);
+                comboBox_Village.Items.Clear();
+                foreach (ComboBoxListItem vVillage in vVillageList)
+                {
+                    comboBox_Village.Items.Add(vVillage);
+                    comboBox_Village.SelectedIndex = 0;
+                }
+            }
         }
     }
 }

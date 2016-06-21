@@ -34,8 +34,9 @@ namespace JXDL.Manage.App
         }
 
         // POST: api/UploadFile
-        public async Task<Dictionary<string, string>> Post(int id = 0)
+        public async Task<bool> Post(int id = 0)
         {
+            bool vResult = false;
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -65,7 +66,10 @@ namespace JXDL.Manage.App
                         byte[] vBody = new byte[vStream.Length];
                         vStream.Read(vBody, 0, vBody.Length);
                         FilesManage vFilesManage = new FilesManage();
-                        vFilesManage.AddFile(value.UsersAuthor.UserID, vFileInfo.AreaCode, vFileInfo.FileName, vFileInfo.Author, vBody);
+                        vResult = vFilesManage.AddFile(value.UsersAuthor.UserID, vFileInfo.AreaCode, vFileInfo.UnitName,
+                            vFileInfo.FileName, vFileInfo.Author, vBody);
+                        if (!vResult)
+                            break;
                     }
                 }
             }
@@ -73,10 +77,8 @@ namespace JXDL.Manage.App
             {
                 throw;
             }
-            return vDic;
+            return vResult;
         }
-
-     
 
         // DELETE: api/UploadFile/5
         public void Delete(int id)
