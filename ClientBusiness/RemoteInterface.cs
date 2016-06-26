@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System;
+using System.Web;
 using System.Net.Http;
 using JXDL.ClientBusiness;
 using System.Web.Script.Serialization;
@@ -15,10 +16,44 @@ namespace JXDL.ClientBusiness
     public class RemoteInterface
     {
         string m_RemotingServerAddress = "";
+        readonly int m_UserID;
+        readonly string m_UserName;
+        readonly string m_Token;
+        public RemoteInterface( int UserID,string UserName,string Token )
+        {
+            ConfigFile vConfigFile = new ConfigFile();
+            m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
+            m_UserID = UserID;
+            m_UserName = UserName;
+            m_Token = Token;
+        }
         public RemoteInterface()
         {
             ConfigFile vConfigFile = new ConfigFile();
             m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
+        }
+
+        public void DeleteFile( int FileID )
+        {
+            string vUrl = string.Format("{0}/Api/DeleteFile", m_RemotingServerAddress);
+            string vPostData = string.Format("ID={0}&UserID={1}&UserName={2}", FileID, m_UserID, m_UserName);
+            HttpDelete(vUrl, vPostData);
+        }
+
+        public JXDL.IntrefaceStruct.FileInfo[] QueryFile(string Township, string VillageCommittee, string Village,
+            string Author, string FileName)
+        {
+            JXDL.IntrefaceStruct.FileInfo[] vFileInfoList = null;
+            string vUrl = string.Format("{0}/Api/QueryFile", m_RemotingServerAddress);
+            string vPostData = string.Format("UserID={0}&UserName={1}&Township={2}&VillageCommittee={3}&Village={4}&Author={5}&FileName={6}",m_UserID,m_UserName,Township,
+                VillageCommittee, Village, HttpUtility.UrlEncode(Author), HttpUtility.UrlEncode(FileName));
+            string vResult = HttpGet(vUrl, vPostData);
+            if (vResult != null && vResult != "" && vResult != "[]")
+            {
+                JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+                vFileInfoList = vJSC.Deserialize<JXDL.IntrefaceStruct.FileInfo[]>(vResult);
+            }
+            return vFileInfoList;
         }
 
         public JXDL.IntrefaceStruct.FileInfo[] GetFiles( string[] AreaCodeArray)
@@ -30,9 +65,16 @@ namespace JXDL.ClientBusiness
            
             string vResult = HttpPost(vUrl,  vPostData);
             //string vResult = HttpGet(vUrl, string.Format("AreaStrCode={0}", AreaStrCode) );
-            if ( vResult != null && vResult != "\"\"" && vResult!= "\"[]\"")
+            if ( vResult != null && vResult != "" && vResult!= "[]")
             {
                 vFileInfoList = vJSC.Deserialize<JXDL.IntrefaceStruct.FileInfo[]>(vResult);
+                foreach( JXDL.IntrefaceStruct.FileInfo vTempFileInfo in vFileInfoList)
+                {
+                    vTempFileInfo.Author   = HttpUtility.UrlDecode(vTempFileInfo.Author);
+                    vTempFileInfo.AreaCode = HttpUtility.UrlDecode(vTempFileInfo.AreaCode);
+                    vTempFileInfo.FileName = HttpUtility.UrlDecode(vTempFileInfo.FileName);
+                    vTempFileInfo.UnitName = HttpUtility.UrlDecode(vTempFileInfo.UnitName);
+                }
             }
             return vFileInfoList;
         }
@@ -80,14 +122,14 @@ namespace JXDL.ClientBusiness
         }
 
         #region 上传文件
-        public bool UploadFiles(int UserID,string Token,string[] Files,string[] Authors,
+        public bool UploadFiles(string[] Files,string[] Authors,
             string[] AreaCodeList,string[] UnitNameList )
         {
             string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
             UploadFileStruct vUFStruct = new UploadFileStruct();
             vUFStruct.UsersAuthor = new UserAuthorSturct();
-            vUFStruct.UsersAuthor.UserID = UserID;
-            vUFStruct.UsersAuthor.Token = Token;
+            vUFStruct.UsersAuthor.UserID = m_UserID;
+            vUFStruct.UsersAuthor.Token = m_Token;
 
             vUFStruct.Files = new IntrefaceStruct.FileInfo[Files.Length];
             for( int i=0;i<Files.Length;i++)
@@ -110,14 +152,15 @@ namespace JXDL.ClientBusiness
             return bool.Parse( vResult );
         }
 
-        public bool UploadFile(int UserID, string Token, string File, string Author, 
+        public bool UploadFile(string File, string Author, 
             string AreaCode,string UnitName)
         {
             string vUrl = string.Format("{0}/Api/UploadFile", m_RemotingServerAddress);
             UploadFileStruct vUFStruct = new UploadFileStruct();
             vUFStruct.UsersAuthor = new UserAuthorSturct();
-            vUFStruct.UsersAuthor.UserID = UserID;
-            vUFStruct.UsersAuthor.Token = Token;
+            vUFStruct.UsersAuthor.UserID = m_UserID;
+            vUFStruct.UsersAuthor.Token = m_Token;
+            vUFStruct.UsersAuthor.UserName = m_UserName;
 
             vUFStruct.Files = new IntrefaceStruct.FileInfo[1];
             vUFStruct.Files[0] = new IntrefaceStruct.FileInfo();
@@ -215,9 +258,9 @@ namespace JXDL.ClientBusiness
 
         #region 下载文件
 
-        public  bool DownloadFile(int FileID, string SaveFileName)
+        public  bool DownloadFile(int FileID,string SaveFileName)
         {
-            string vDownUrl = string.Format("{0}/Api/DownloadFile?FileID={1}", m_RemotingServerAddress, FileID);
+            string vDownUrl = string.Format("{0}/Api/DownloadFile?FileID={1}&UserID={2}&UserName={3}", m_RemotingServerAddress, FileID,m_UserID,HttpUtility.UrlEncode(m_UserName));
         
             bool flag = false;
             //打开上次下载的文件

@@ -51,12 +51,12 @@ namespace JXDL.Client
                 {
                     ConfigFile vConfigFile = new ConfigFile();
                     Program.LoginUserInfo = vLoginForm.LoginUserInfo;
-                    RemoteInterface vRemoteInterface = new RemoteInterface();
+                    RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
                     vRemoteInterface.GetMapServer(ref Program.MapDBAddress, ref Program.MapDBName,ref Program.MapDBUserName,ref Program.MapDBPassword);
                     Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
                     init_Menu();
                     init_Heartbeat();
-                    init_Map(vConfigFile.MapBackgroundColor);
+                    init_Map(vConfigFile.MapBackgroundColor,vConfigFile.TownshipBackgroundColor,vConfigFile.VillageCommitteeBackgroundColor,vConfigFile.VillageBackgroundColor);
                 }
                 else
                 {
@@ -289,16 +289,29 @@ namespace JXDL.Client
 
         private void M_HeartbeatTimer_Tick(object sender, EventArgs e)
         {
-            RemoteInterface vRemoteInterface = new RemoteInterface();
+            RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
             vRemoteInterface.Heartbeat(Program.LoginUserInfo);
         }
 
         private void ToolStripMenuItem_System_Setup_Click(object sender, EventArgs e)
         {
+            ConfigFile vConfigFile = new ConfigFile();
             SystemConfigForm vSystemConfigForm = new SystemConfigForm();
+            vSystemConfigForm.DownlaodPath = vConfigFile.DownloadPath;
+            vSystemConfigForm.MapBackgroundColor = vConfigFile.MapBackgroundColor;
+            vSystemConfigForm.TownshipBackgroundColor = vConfigFile.TownshipBackgroundColor;
+            vSystemConfigForm.VillageCommitteeBackgroundColor = vConfigFile.VillageCommitteeBackgroundColor;
+            vSystemConfigForm.VillageBackgroundColor = vConfigFile.VillageBackgroundColor;
+
             if ( vSystemConfigForm.ShowDialog() == DialogResult.OK )
             {
-                axMapControl1.BackColor = Color.FromArgb(vSystemConfigForm.SelectColor);
+                vConfigFile.MapBackgroundColor = vSystemConfigForm.MapBackgroundColor;
+                vConfigFile.TownshipBackgroundColor = vSystemConfigForm.TownshipBackgroundColor;
+                vConfigFile.VillageCommitteeBackgroundColor = vSystemConfigForm.VillageCommitteeBackgroundColor;
+                vConfigFile.VillageBackgroundColor = vSystemConfigForm.VillageBackgroundColor;
+                vConfigFile.Save();
+                changeMapColor(vConfigFile.MapBackgroundColor, vConfigFile.TownshipBackgroundColor,
+                    vConfigFile.VillageCommitteeBackgroundColor, vConfigFile.VillageBackgroundColor);
             }
             vSystemConfigForm.Close();
             vSystemConfigForm.Dispose();
@@ -317,8 +330,11 @@ namespace JXDL.Client
         /// </summary>
         void exit()
         {
-            RemoteInterface vRemoteInterface = new RemoteInterface();
-            vRemoteInterface.Logout(Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
+            if (Program.LoginUserInfo.ID != null )
+            {
+                RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
+                vRemoteInterface.Logout(Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
+            }
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -340,7 +356,8 @@ namespace JXDL.Client
         }
 
 
-        private void init_Map( int background)
+        private void init_Map( int background, int townshipBackgroundColor,
+            int villageCommitteeBackgroundColor,int villageBackgroundColor)
         {
             IWorkspaceFactory vWorkspaceFactory = new SdeWorkspaceFactoryClass();
             
@@ -366,21 +383,31 @@ namespace JXDL.Client
                     vLayerFeature.FeatureClass = vFeatureClass;
                     vLayerFeature.Name = Program.MapTables[i];
                     axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
-                    switch(Program.MapTables[i])
+                  
+                    switch (Program.MapTables[i])
                     {
                         case "sde.SDE.乡镇街道":
                             m_TownshipFeatureLayer = vLayerFeature;
+                            m_TownshipFeatureLayer.MaximumScale = Program.Township_MaximumScale;
+                            m_TownshipFeatureLayer.MinimumScale = Program.Township_MinimumScale;
+                            showAnnotationByScale(m_TownshipFeatureLayer, "街道", Program.Township_Annotation_MaximumScale, Program.Township_Annotation_MinimumScale);
                             break;
                         case "sde.SDE.村委会":
                             m_VillageCommitteeFeatureLayer = vLayerFeature;
+                            m_VillageCommitteeFeatureLayer.MaximumScale = Program.VillageCommittee_MaximumScale;
+                            m_VillageCommitteeFeatureLayer.MinimumScale = Program.VillageCommittee_MinimumScale;
+                            showAnnotationByScale(m_VillageCommitteeFeatureLayer, "村委会_dwg", Program.VillageCommittee_Annotation_MaximumScale, Program.VillageCommittee_Annotation_MinimumScale);
                             break;
                         case "sde.SDE.自然村":
                             m_VillageFeatureLayer = vLayerFeature;
+                            m_VillageFeatureLayer.MaximumScale = Program.Village_MaximumScale;
+                            m_VillageFeatureLayer.MinimumScale = Program.Village_MinimumScale;
+                            showAnnotationByScale(m_VillageFeatureLayer, "Text", Program.Village_Annotation_MaximumScale, Program.Village_Annotation_MinimumScale);
                             break;
                     }
                 }
             }
-            axMapControl1.BackColor = Color.FromArgb(background);
+            changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
             axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();
 
@@ -401,6 +428,66 @@ namespace JXDL.Client
             //axMapControl1.Map.AddLayer(cjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(zrcLayerFeature as ILayer);
 
+        }
+
+        void changeMapColor(int background, int townshipBackgroundColor,
+            int villageCommitteeBackgroundColor, int villageBackgroundColor)
+        {
+            axMapControl1.BackColor = Color.FromArgb(background);
+
+            IGeoFeatureLayer vGeoFeatureLayer;
+            ISimpleRenderer vSimpleRenderer;
+            IFillSymbol vFillSymbol;
+            Color vColorRgb;
+
+            if (m_TownshipFeatureLayer != null)
+            {
+                vGeoFeatureLayer = (IGeoFeatureLayer)m_TownshipFeatureLayer;
+                vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+                vFillSymbol = new SimpleFillSymbolClass();
+                vColorRgb = Color.FromArgb(townshipBackgroundColor);
+                IRgbColor vColor = new RgbColorClass();
+                vColor.Red = vColorRgb.R;
+                vColor.Green = vColorRgb.G;
+                vColor.Blue = vColorRgb.B;
+                vFillSymbol.Color = vColor;
+                vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+            }
+
+            if (m_VillageCommitteeFeatureLayer != null)
+            {
+                vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageCommitteeFeatureLayer;
+                vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+                vFillSymbol = new SimpleFillSymbolClass();
+             
+                vColorRgb = Color.FromArgb(villageCommitteeBackgroundColor);
+                IRgbColor vColor = new RgbColorClass();
+                vColor.Red = vColorRgb.R;
+                vColor.Green = vColorRgb.G;
+                vColor.Blue = vColorRgb.B;
+                vFillSymbol.Color = vColor;
+                vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+            }
+
+            if (m_VillageFeatureLayer != null)
+            {
+                vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageFeatureLayer;
+                vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+                ISimpleMarkerSymbol vSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
+                
+                vColorRgb = Color.FromArgb(villageBackgroundColor);
+                IRgbColor vColor = new RgbColorClass();
+                vColor.Red = vColorRgb.R;
+                vColor.Green = vColorRgb.G;
+                vColor.Blue = vColorRgb.B;
+                vSimpleMarkerSymbol.Color = vColor;
+                //设置pSimpleMarkerSymbol对象的符号类型，选择钻石
+                vSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
+                //设置pSimpleMarkerSymbol对象大小，设置为５
+                vSimpleMarkerSymbol.Size = 5;
+                vSimpleRenderer.Symbol = (ISymbol)vSimpleMarkerSymbol;
+            }
+            axMapControl1.Refresh();
         }
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
@@ -433,10 +520,16 @@ namespace JXDL.Client
                 vAreaCodeList.Add( vCode );
                 pFeature = pEnumFeature.Next();
             }
-
-            DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
-            vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
-            vDisplayFilesForm.ShowDialog();
+            if (vAreaCodeList.Count > 0)
+            {
+                DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
+                vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
+                vDisplayFilesForm.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("选择的单位没有文档数据","信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
@@ -528,6 +621,79 @@ namespace JXDL.Client
             vUploadFileForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
             vUploadFileForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vUploadFileForm.ShowDialog();
+            
+        }
+
+        public void showAnnotationByScale(IFeatureLayer featureLayer,string annotationField,double maximumScale,double minimumScale)
+        {
+            
+            //IFeatureLayer FeatureLayer = pMap.get_Layer(0) as IFeatureLayer;
+            IGeoFeatureLayer pGeoFeatureLayer = featureLayer as IGeoFeatureLayer;
+            //创建标注集接口，可以对标注进行添加、删除、查询、排序等操作
+            IAnnotateLayerPropertiesCollection pAnnotateLayerPropertiesCollection = new AnnotateLayerPropertiesCollectionClass();
+            pAnnotateLayerPropertiesCollection = pGeoFeatureLayer.AnnotationProperties;
+            pAnnotateLayerPropertiesCollection.Clear();
+            //创建标注的颜色
+            IRgbColor pRgbColor = new RgbColorClass();
+            pRgbColor.Red = 255;
+            pRgbColor.Green = 0;
+            pRgbColor.Blue = 0;
+            //创建标注的字体样式
+            ITextSymbol pTextSymbol = new TextSymbolClass();
+            pTextSymbol.Color = pRgbColor;
+            pTextSymbol.Size = 12;
+            pTextSymbol.Font.Name = "宋体";
+            //定义 ILineLabelPosition接口，用来管理line features的标注属性，指定标注和线要素的位置关系
+            ILineLabelPosition pLineLabelPosition = new LineLabelPositionClass();
+            pLineLabelPosition.Parallel = false;
+            pLineLabelPosition.Perpendicular = true;
+            pLineLabelPosition.InLine = true;
+            //定义 ILineLabelPlacementPriorities接口用来控制标注冲突
+            ILineLabelPlacementPriorities pLineLabelPlacementPriorities = new LineLabelPlacementPrioritiesClass();
+            pLineLabelPlacementPriorities.AboveStart = 5;
+            pLineLabelPlacementPriorities.BelowAfter = 4;
+            //定义 IBasicOverposterLayerProperties 接口实现 LineLabelPosition 和 LineLabelPlacementPriorities对象的控制
+            IBasicOverposterLayerProperties pBasicOverposterLayerProperties = new BasicOverposterLayerPropertiesClass();
+            pBasicOverposterLayerProperties.LineLabelPlacementPriorities = pLineLabelPlacementPriorities;
+            pBasicOverposterLayerProperties.LineLabelPosition = pLineLabelPosition;
+            pBasicOverposterLayerProperties.FeatureType = esriBasicOverposterFeatureType.esriOverposterPolygon;
+            //创建标注对象
+            ILabelEngineLayerProperties pLabelEngineLayerProperties = new LabelEngineLayerPropertiesClass();
+            //设置标注符号
+            pLabelEngineLayerProperties.Symbol = pTextSymbol;
+            pLabelEngineLayerProperties.BasicOverposterLayerProperties = pBasicOverposterLayerProperties;
+            //声明标注的Expression是否为Simple
+            pLabelEngineLayerProperties.IsExpressionSimple = true;
+            //设置标注字段
+            pLabelEngineLayerProperties.Expression = "["+annotationField+"]";
+            //定义IAnnotateLayerTransformationProperties 接口用来控制feature layer的display of dynamic labels
+            IAnnotateLayerTransformationProperties pAnnotateLayerTransformationProperties = pLabelEngineLayerProperties as IAnnotateLayerTransformationProperties;
+            //设置标注参考比例尺
+            pAnnotateLayerTransformationProperties.ReferenceScale = maximumScale;
+            //定义IAnnotateLayerProperties接口，决定FeatureLayer动态标注信息
+            IAnnotateLayerProperties pAnnotateLayerProperties = pLabelEngineLayerProperties as IAnnotateLayerProperties;
+            //设置显示标注最大比例尺
+            pAnnotateLayerProperties.AnnotationMaximumScale = maximumScale;
+            //设置显示标注的最小比例
+            pAnnotateLayerProperties.AnnotationMinimumScale = minimumScale;
+            //决定要标注的要素
+            //pAnnotateLayerProperties.WhereClause = annotationField;
+            //pAnnotateLayerProperties.WhereClause = "DIQU<>'宿州市'";
+            //将创建好的标注对象添加到标注集对象中
+            pAnnotateLayerPropertiesCollection.Add(pAnnotateLayerProperties);
+            //声明标注是否显示
+            pGeoFeatureLayer.DisplayAnnotation = true;
+            ////刷新视图
+            //this.axMapControl1.Refresh();
+        }
+
+        private void ToolStripMenuItem_Doc_Edit_Click(object sender, EventArgs e)
+        {
+            FileManageForm vFileManageForm = new FileManageForm();
+            vFileManageForm.TownshipFeatureLayer = m_TownshipFeatureLayer;
+            vFileManageForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
+            vFileManageForm.VillageFeatureLayer = m_VillageFeatureLayer;
+            vFileManageForm.ShowDialog();
         }
     }
 }

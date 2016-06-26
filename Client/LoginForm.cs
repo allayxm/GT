@@ -27,17 +27,24 @@ namespace JXDL.Client
             }
             else
             {
-                RemoteInterface vRemoteInterface = new RemoteInterface();
-                UserInfo vUserInfo = vRemoteInterface.Login(textBox_UserName.Text, textBox_Password.Text);
-                if (vUserInfo.ID!=null && vUserInfo.ID != 0)
+                try
                 {
-                    LoginUserInfo = vUserInfo;
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    RemoteInterface vRemoteInterface = new RemoteInterface();
+                    UserInfo vUserInfo = vRemoteInterface.Login(textBox_UserName.Text, textBox_Password.Text);
+                    if (vUserInfo.ID != null && vUserInfo.ID != 0)
+                    {
+                        LoginUserInfo = vUserInfo;
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("用户名或密码错误", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                else
+                catch ( Exception ex)
                 {
-                    MessageBox.Show("用户名或密码错误", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

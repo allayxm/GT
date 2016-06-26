@@ -30,6 +30,24 @@ namespace JXDL.Client
 
         public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName };
         #endregion
+
+        #region 地图图层显示比例尺
+        public static double Township_MaximumScale = 200000;
+        public static double Township_MinimumScale = 0;
+        public static double Township_Annotation_MaximumScale = 200000;
+        public static double Township_Annotation_MinimumScale = 0;
+
+
+        public static double VillageCommittee_MaximumScale = 0;
+        public static double VillageCommittee_MinimumScale = 190000;
+        public static double VillageCommittee_Annotation_MaximumScale = 125000;
+        public static double VillageCommittee_Annotation_MinimumScale = 150000;
+
+        public static double Village_MaximumScale = 0;
+        public static double Village_MinimumScale = 100000;
+        public static double Village_Annotation_MaximumScale = 0;
+        public static double Village_Annotation_MinimumScale = 100000;
+        #endregion
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>

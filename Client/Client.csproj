@@ -120,6 +120,12 @@
     <Compile Include="FeaturesSelectForm.Designer.cs">
       <DependentUpon>FeaturesSelectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileManageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileManageForm.Designer.cs">
+      <DependentUpon>FileManageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FeaturesSelectForm.resx">
       <DependentUpon>FeaturesSelectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileManageForm.resx">
+      <DependentUpon>FileManageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

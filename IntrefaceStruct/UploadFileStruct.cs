@@ -19,6 +19,7 @@ namespace JXDL.IntrefaceStruct
         public string Author { get; set; }
         public string AreaCode { get; set; }
         public string UnitName { get; set; }
+        public DateTime UploadTime { get; set; }
 
     }
 }

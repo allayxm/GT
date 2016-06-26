@@ -54,6 +54,10 @@
       <Project>{fad8e9af-e87d-45e3-99b8-cd3e3360b682}</Project>
       <Name>DBMiddleWareLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IntrefaceStruct\IntrefaceStruct.csproj">
+      <Project>{0939aa0a-2e65-4b68-adcf-f35943092a9a}</Project>
+      <Name>IntrefaceStruct</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ManageEFModel\ManageEFModel.csproj">
       <Project>{7f64e787-ae1e-41a6-ab55-0396ac83180c}</Project>
       <Name>ManageEFModel</Name>

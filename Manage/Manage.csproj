@@ -911,6 +911,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\DeleteFileController.cs" />
     <Compile Include="App\DownloadFileController.cs" />
     <Compile Include="App\GetFileListController.cs" />
     <Compile Include="App\HeartbeatController.cs" />
@@ -918,6 +919,7 @@
     <Compile Include="App\LogoutController.cs" />
     <Compile Include="App\MapConfigController.cs" />
     <Compile Include="App\MultipartFormDataMemoryStreamProvider.cs" />
+    <Compile Include="App\QueryFileController.cs" />
     <Compile Include="App\UploadFileController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />

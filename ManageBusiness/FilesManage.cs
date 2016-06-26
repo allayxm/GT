@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using JXDL.ManageEFModel;
+using JXDL.IntrefaceStruct;
 
 namespace JXDL.ManageBusiness
 {
@@ -47,12 +48,47 @@ namespace JXDL.ManageBusiness
                 string vAreaStrCode = "";
                 foreach( string vTempArray in AreaCodeArray)
                 {
-                    vAreaStrCode += System.Web.HttpUtility.UrlDecode(vTempArray) + ",";
+                    vAreaStrCode += string.Format("'{0}',", System.Web.HttpUtility.UrlDecode(vTempArray));// System.Web.HttpUtility.UrlDecode(vTempArray) + ",";
                 }
                 if (vAreaStrCode != "")
                     vAreaStrCode = vAreaStrCode.Remove(vAreaStrCode.Length - 1);
-                vResult = m_BasicDBClass.SelectCustomEx<UploadFilesEF>( string.Format( "Select ID,AreaCode,UnitName,[FileName],UserID,UploadTime,Author From UploadFiles where AreaCode in ('{0}') order by AreaCode, UnitName", vAreaStrCode) );
+                vResult = m_BasicDBClass.SelectCustomEx<UploadFilesEF>( string.Format( "Select ID,AreaCode,UnitName,[FileName],UserID,UploadTime,Author From UploadFiles where AreaCode in ({0}) order by AreaCode, UnitName", vAreaStrCode) );
             }
+            return vResult;
+        }
+
+        public UploadFilesEF[] QueryFile(string Township, string VillageCommittee, string Village,
+            string Author, string FileName)
+        {
+            UploadFilesEF[] vResult = null;
+            string vAreaCode = "";
+            if (Township != "")
+                vAreaCode = Township;
+            else if (VillageCommittee != "")
+                vAreaCode = VillageCommittee;
+            else if (Village != "")
+                vAreaCode = Village;
+            string vSql = "Select ID,AreaCode,UnitName,[FileName],UserID,UploadTime,Author From UploadFiles";
+            string vSqlCondition = "";
+            if (vAreaCode!=null && vAreaCode != "")
+                vSqlCondition += string.Format("AreaCode like '{0}%'", vAreaCode);
+            if (Author!=null && Author != "")
+            {
+                if (vSqlCondition=="")
+                    vSqlCondition += string.Format("Author like '%{0}%'", Author);
+                else
+                    vSqlCondition += string.Format(" and Author like '%{0}%'", Author);
+            }
+            if (FileName!=null && FileName != "")
+            {
+                if ( vSqlCondition=="")
+                    vSqlCondition += string.Format("FileName like '%{0}%'", FileName);
+                else
+                    vSqlCondition += string.Format(" and FileName like '%{0}%'", FileName);
+            }
+            if (vSqlCondition != "")
+                vSql += " Where "+vSqlCondition;
+            vResult = m_BasicDBClass.SelectCustomEx<UploadFilesEF>(vSql);
             return vResult;
         }
 

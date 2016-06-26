@@ -85,21 +85,21 @@
             // ToolStripMenuItem_System_Setup
             // 
             this.ToolStripMenuItem_System_Setup.Name = "ToolStripMenuItem_System_Setup";
-            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Setup.Text = "系统设置";
             this.ToolStripMenuItem_System_Setup.Click += new System.EventHandler(this.ToolStripMenuItem_System_Setup_Click);
             // 
             // ToolStripMenuItem_System_Logout
             // 
             this.ToolStripMenuItem_System_Logout.Name = "ToolStripMenuItem_System_Logout";
-            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Logout.Text = "注销";
             this.ToolStripMenuItem_System_Logout.Click += new System.EventHandler(this.ToolStripMenuItem_System_Logout_Click);
             // 
             // ToolStripMenuItem_System_Exit
             // 
             this.ToolStripMenuItem_System_Exit.Name = "ToolStripMenuItem_System_Exit";
-            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Exit.Text = "退出";
             this.ToolStripMenuItem_System_Exit.Click += new System.EventHandler(this.ToolStripMenuItem_System_Exit_Click);
             // 
@@ -128,6 +128,7 @@
             this.ToolStripMenuItem_Doc_Edit.Name = "ToolStripMenuItem_Doc_Edit";
             this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Edit.Text = "管理编辑";
+            this.ToolStripMenuItem_Doc_Edit.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Edit_Click);
             // 
             // ToolStripMenuItem_Doc_Query
             // 

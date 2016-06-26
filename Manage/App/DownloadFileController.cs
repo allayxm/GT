@@ -20,7 +20,7 @@ namespace JXDL.Manage.App
         }
 
         // GET: api/DownloadFile/5
-        public HttpResponseMessage Get(int FileID)
+        public HttpResponseMessage Get(int FileID,int UserID,string UserName)
         {
             try
             {
@@ -38,6 +38,8 @@ namespace JXDL.Manage.App
                     {
                         FileName = vUploadFile.FileName
                     };
+                    UserOperateLog vUserOperateLog = new UserOperateLog();
+                    vUserOperateLog.WriteLog(UserID, UserName, string.Format("下载文件,文件名[{0}]", vUploadFile.FileName));
                     return response;
                 }
                 else

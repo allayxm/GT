@@ -44,27 +44,29 @@ namespace JXDL.Manage.App
         }
 
         // POST: api/GetFileList
-        public string Post([FromBody]string[] AreaCodeArray)
+        public FileInfo[] Post([FromBody]string[] AreaCodeArray)
         {
             FilesManage vFilesManage = new FilesManage();
             UploadFilesEF[] vFiles = vFilesManage.GetFilesFormArea(AreaCodeArray);
-            string vJson = "";
+            FileInfo[] vFileInfoArray = null;
             if (vFiles != null)
             {
-                FileInfo[] vFileInfoArray = new FileInfo[vFiles.Length];
+                vFileInfoArray = new FileInfo[vFiles.Length];
                 for (int i = 0; i < vFileInfoArray.Length; i++)
                 {
+                    vFileInfoArray[i] = new FileInfo();
                     vFileInfoArray[i].ID = vFiles[i].ID.Value;
-                    vFileInfoArray[i].AreaCode = vFiles[i].AreaCode;
-                    vFileInfoArray[i].Author = vFiles[i].Author;
-                    vFileInfoArray[i].FileName = vFiles[i].FileName;
-                    vFileInfoArray[i].UnitName = vFiles[i].UnitName;
+                    vFileInfoArray[i].AreaCode = System.Web.HttpUtility.UrlEncode( vFiles[i].AreaCode );
+                    vFileInfoArray[i].Author   = System.Web.HttpUtility.UrlEncode( vFiles[i].Author );
+                    vFileInfoArray[i].FileName = System.Web.HttpUtility.UrlEncode( vFiles[i].FileName );
+                    vFileInfoArray[i].UnitName = System.Web.HttpUtility.UrlEncode( vFiles[i].UnitName );
+                    vFileInfoArray[i].UploadTime = vFiles[i].UploadTime;
                 }
-                JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
-                vJSC.MaxJsonLength = Int32.MaxValue;
-                vJson = vJSC.Serialize(vFileInfoArray);
+                //JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+                //vJSC.MaxJsonLength = Int32.MaxValue;
+                //vJson = vJSC.Serialize(vFileInfoArray);
             }
-            return vJson;
+            return vFileInfoArray;
         }
 
         // PUT: api/GetFileList/5

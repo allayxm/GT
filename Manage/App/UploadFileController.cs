@@ -69,7 +69,14 @@ namespace JXDL.Manage.App
                         vResult = vFilesManage.AddFile(value.UsersAuthor.UserID, vFileInfo.AreaCode, vFileInfo.UnitName,
                             vFileInfo.FileName, vFileInfo.Author, vBody);
                         if (!vResult)
+                        {
                             break;
+                        }
+                        else
+                        {
+                            UserOperateLog vUserOperateLog = new UserOperateLog();
+                            vUserOperateLog.WriteLog(value.UsersAuthor.UserID, value.UsersAuthor.UserName,string.Format( "上传文件，文件名[{0}]", vFileInfo.FileName));
+                        }
                     }
                 }
             }

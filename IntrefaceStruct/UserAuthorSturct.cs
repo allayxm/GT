@@ -9,6 +9,7 @@ namespace JXDL.IntrefaceStruct
     public class UserAuthorSturct
     {
         public int UserID;
+        public string UserName;
         public string Token;
     }
 }

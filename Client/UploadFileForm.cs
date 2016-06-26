@@ -35,7 +35,6 @@ namespace JXDL.Client
 
         private void button_Exit_Click(object sender, EventArgs e)
         {
-            
             Close();
         }
 
@@ -56,7 +55,8 @@ namespace JXDL.Client
 
         private void button_Upload_Click(object sender, EventArgs e)
         {
-            RemoteInterface vRemoteInterface = new RemoteInterface();
+            RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value,
+                Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
             int vUserID = Program.LoginUserInfo.ID.Value;
             string vToken = Program.LoginUserInfo.Token;
 
@@ -86,9 +86,7 @@ namespace JXDL.Client
                 MessageBox.Show("请选择需要上传文件的单位", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            bool vResult = vRemoteInterface.UploadFile(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.Token,
-                vFilePath,vAuthor,vAreaCode,vUnitName);
+            bool vResult = vRemoteInterface.UploadFile( vFilePath,vAuthor,vAreaCode,vUnitName);
             if (vResult)
             {
                 MessageBox.Show("文件上传成功", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -107,7 +105,7 @@ namespace JXDL.Client
                 UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
             }
 
-            string vVillageCommittee = (string)comboBox_VillageCommittee.Text;
+            string vVillageCommittee = comboBox_VillageCommittee.Text;
             if (vVillageCommittee!=null && vVillageCommittee != "" &&  vVillageCommittee != "请选择" )
             {
                 AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem ).Key;
