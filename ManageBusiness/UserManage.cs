@@ -82,9 +82,8 @@ namespace JXDL.ManageBusiness
 
         public UsersEF GetUserInfo( int UserID )
         {
-            UsersEF vUserEF = new UsersEF();
             UsersEF vData =  m_BasicDBClass.SelectRecordByPrimaryKeyEx<UsersEF>(UserID);
-            return vUserEF;
+            return vData;
         }
 
         public UsersEF GetUserInfo( string UserName )

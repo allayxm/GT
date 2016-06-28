@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using JXDL.IntrefaceStruct;
+using System.Data;
 
 namespace JXDL.ClientBusiness
 {
@@ -33,28 +34,72 @@ namespace JXDL.ClientBusiness
             m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
         }
 
-        public void DeleteFile( int FileID )
+        public bool DeleteFile( int FileID )
         {
             string vUrl = string.Format("{0}/Api/DeleteFile", m_RemotingServerAddress);
             string vPostData = string.Format("ID={0}&UserID={1}&UserName={2}", FileID, m_UserID, m_UserName);
-            HttpDelete(vUrl, vPostData);
+            string vResult = HttpGet(vUrl, vPostData);
+            return vResult.ToUpper() == "TRUE" ? true : false;
         }
 
-        public JXDL.IntrefaceStruct.FileInfo[] QueryFile(string Township, string VillageCommittee, string Village,
+        public DataTable QueryFile(string Township, string VillageCommittee, string Village,
             string Author, string FileName)
         {
             JXDL.IntrefaceStruct.FileInfo[] vFileInfoList = null;
             string vUrl = string.Format("{0}/Api/QueryFile", m_RemotingServerAddress);
-            string vPostData = string.Format("UserID={0}&UserName={1}&Township={2}&VillageCommittee={3}&Village={4}&Author={5}&FileName={6}",m_UserID,m_UserName,Township,
-                VillageCommittee, Village, HttpUtility.UrlEncode(Author), HttpUtility.UrlEncode(FileName));
+            string vPostData = string.Format("UserID={0}&UserName={1}&Township={2}&VillageCommittee={3}&Village={4}&Author={5}&FileName={6}",m_UserID, HttpUtility.UrlEncode(m_UserName), HttpUtility.UrlEncode(Township),
+                HttpUtility.UrlEncode(VillageCommittee), HttpUtility.UrlEncode(Village), HttpUtility.UrlEncode(Author), HttpUtility.UrlEncode(FileName));
             string vResult = HttpGet(vUrl, vPostData);
             if (vResult != null && vResult != "" && vResult != "[]")
             {
                 JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
                 vFileInfoList = vJSC.Deserialize<JXDL.IntrefaceStruct.FileInfo[]>(vResult);
             }
-            return vFileInfoList;
+           
+            return convertFileInfoToDataTable(vFileInfoList);
         }
+
+        DataTable convertFileInfoToDataTable(JXDL.IntrefaceStruct.FileInfo[] FileInfoList)
+        {
+            DataTable vFileInfoTable = createFileInfoDataTable();
+            if (FileInfoList != null)
+            {
+                foreach (JXDL.IntrefaceStruct.FileInfo vTempFileInfo in FileInfoList)
+                {
+                    DataRow vNewRow = vFileInfoTable.NewRow();
+                    vNewRow["ID"] = vTempFileInfo.ID;
+                    vNewRow["FileName"] = vTempFileInfo.FileName;
+                    vNewRow["Author"] = vTempFileInfo.Author;
+                    vNewRow["AreaCode"] = vTempFileInfo.AreaCode;
+                    vNewRow["UnitName"] = vTempFileInfo.UnitName;
+                    vNewRow["UploadTime"] = vTempFileInfo.UploadTime;
+                    vFileInfoTable.Rows.Add(vNewRow);
+                }
+            }
+            vFileInfoTable.AcceptChanges();
+            return vFileInfoTable;
+        }
+
+        //public int ID { get; set; }
+        //public string FileName { get; set; }
+        //public string Author { get; set; }
+        //public string AreaCode { get; set; }
+        //public string UnitName { get; set; }
+        //public DateTime UploadTime { get; set; }
+
+        DataTable createFileInfoDataTable()
+        {
+            DataTable vNewTable = new DataTable("FileInfo");
+            vNewTable.Columns.Add("ID",typeof(int));
+            vNewTable.Columns.Add("FileName", typeof(string));
+            vNewTable.Columns.Add("Author", typeof(string));
+            vNewTable.Columns.Add("AreaCode", typeof(string));
+            vNewTable.Columns.Add("UnitName", typeof(string));
+            vNewTable.Columns.Add("UploadTime", typeof(DateTime));
+            vNewTable.AcceptChanges();
+            return vNewTable;
+        }
+        
 
         public JXDL.IntrefaceStruct.FileInfo[] GetFiles( string[] AreaCodeArray)
         {
@@ -270,18 +315,19 @@ namespace JXDL.ClientBusiness
             //判断要下载的文件夹是否存在
             if (File.Exists(SaveFileName))
             {
+                File.Delete(SaveFileName);
                 //打开要下载的文件
-                FStream = File.OpenWrite(SaveFileName);
+                //FStream = File.OpenWrite(SaveFileName);
                 //获取已经下载的长度
-                SPosition = FStream.Length;
-                FStream.Seek(SPosition, SeekOrigin.Current);
+                //SPosition = FStream.Length;
+                //FStream.Seek(SPosition, SeekOrigin.Current);
             }
-            else
-            {
+            //else
+            //{
                 //文件不保存创建一个文件
                 FStream = new FileStream(SaveFileName, FileMode.Create);
                 SPosition = 0;
-            }
+            //}
             try
             {
                 //打开网络连接
@@ -320,9 +366,9 @@ namespace JXDL.ClientBusiness
         string HttpDelete(string Url, string postDataStr)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
-            request.Method = "Delete";
+            request.Method = "DELETE";
             request.ContentType = "application/json";
-            request.ContentLength = Encoding.UTF8.GetByteCount(postDataStr);
+            //request.ContentLength = Encoding.UTF8.GetByteCount(postDataStr);
             //request.CookieContainer = cookie;
             Stream myRequestStream = request.GetRequestStream();
             StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("gb2312"));

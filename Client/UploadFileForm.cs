@@ -108,8 +108,8 @@ namespace JXDL.Client
             string vVillageCommittee = comboBox_VillageCommittee.Text;
             if (vVillageCommittee!=null && vVillageCommittee != "" &&  vVillageCommittee != "请选择" )
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem ).Key;
-                UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
+                AreaCode = ( (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem ).Key;
+                UnitName = ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Value;
             }
 
             string vVillage = (string)comboBox_Village.Text;

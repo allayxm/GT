@@ -72,6 +72,7 @@ namespace JXDL.Client
                     string vName = vFeature.get_Value(VNameIndex).ToString();
                     vVillageCommitteeDict.Add(new ComboBoxListItem(vXZDM, vName));
                     vFeature = vFeatureCursor.NextFeature();
+                    
                 }
             }
             return vVillageCommitteeDict.ToArray();
@@ -112,10 +113,14 @@ namespace JXDL.Client
             if (vTownship != "" || vVillageCommittee!="" || vVillage!="" || vAuthor != "" || vFileName!="")
             {
                 RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName,Program.LoginUserInfo.Token);
-                FileInfo[] vQueryReuslt = vRemoteInterface.QueryFile(vTownship, vVillageCommittee, vVillage, vAuthor, vFileName);
-                dataGridView_FileList.AutoGenerateColumns = false;
-                dataGridView_FileList.DataSource = vQueryReuslt;
-                
+                DataTable vQueryReuslt = vRemoteInterface.QueryFile(vTownship, vVillageCommittee, vVillage, vAuthor, vFileName);
+                if (vQueryReuslt != null && vQueryReuslt.Rows.Count > 0)
+                    dataGridView_FileList.DataSource = vQueryReuslt;
+                else
+                {
+                    dataGridView_FileList.DataSource = null;
+                    MessageBox.Show("没有符合条件的数据", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             else
             {
@@ -123,14 +128,31 @@ namespace JXDL.Client
             }
         }
 
+        private void DataGridView_FileList_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
         private void FileManageForm_Load(object sender, EventArgs e)
         {
             ComboBoxListItem[] vTownshipDict = getTownshipDict();
+            switch ( Program.LoginUserInfo.Power.Value )
+            {
+                case 2:
+                case 3:
+                    Column_Delete.Visible = true;
+                    break;
+                default:
+                    Column_Delete.Visible = false;
+                    break;
+            }
             foreach (var vTempTownship in vTownshipDict)
             {
                 comboBox_Township.Items.Add(vTempTownship);
                 comboBox_Township.SelectedIndex = 0;
             }
+            dataGridView_FileList.DataError += DataGridView_FileList_DataError;
+            dataGridView_FileList.AutoGenerateColumns = false;
         }
 
         private void comboBox_VillageCommittee_SelectedIndexChanged(object sender, EventArgs e)
@@ -172,30 +194,43 @@ namespace JXDL.Client
 
         private void dataGridView_FileList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
-            FileInfo[] vDatsSource = (FileInfo[])dataGridView_FileList.DataSource;
-            int vFileID = vDatsSource[e.RowIndex].ID;
-            string vFileName = vDatsSource[e.RowIndex].FileName;
-            if (e.ColumnIndex == 4)
+            if (e.RowIndex != -1)
             {
-                ConfigFile vConfigFile = new ConfigFile();
-                string vDownloadPath = string.Format(@"{0}\{1}", vConfigFile.DownloadPath, vFileName);
-
-                if (vRemoteInterface.DownloadFile(vFileID, vDownloadPath))
+                RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
+                DataTable vDatsSource = (DataTable)dataGridView_FileList.DataSource;
+                int vFileID = (int)vDatsSource.Rows[e.RowIndex]["ID"];
+                string vFileName = (string)vDatsSource.Rows[e.RowIndex]["FileName"];
+                if (e.ColumnIndex == 4)
                 {
-                    if (MessageBox.Show("文件下载成功，是否打开?", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                    ConfigFile vConfigFile = new ConfigFile();
+                    string vDownloadPath = string.Format(@"{0}\{1}", vConfigFile.DownloadPath, vFileName);
+
+                    if (vRemoteInterface.DownloadFile(vFileID, vDownloadPath))
                     {
-                        System.Diagnostics.Process.Start(vDownloadPath);
+                        if (MessageBox.Show("文件下载成功，是否打开?", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                        {
+                            System.Diagnostics.Process.Start(vDownloadPath);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("文件下载失败!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                else
+                if (e.ColumnIndex == 5)
                 {
-                    MessageBox.Show("文件下载失败!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (MessageBox.Show("是否确认删除", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                    {
+                        if (vRemoteInterface.DeleteFile(vFileID))
+                        {
+                            dataGridView_FileList.Rows.RemoveAt(e.RowIndex);
+                        }
+                        else
+                        {
+                            MessageBox.Show("删除文件失败!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
-            }
-            if (e.ColumnIndex == 5)
-            {
-                vRemoteInterface.DeleteFile(vFileID);
             }
         }
     }

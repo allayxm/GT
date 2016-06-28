@@ -17,9 +17,13 @@ namespace JXDL.Manage.App
         }
 
         // GET: api/DeleteFile/5
-        public string Get(int id)
+        public bool Get(int id, int UserID, string UserName)
         {
-            return "value";
+            FilesManage vFilesManage = new FilesManage();
+            bool vResult = vFilesManage.DeleteFile(id);
+            UserOperateLog vUserOperateLog = new UserOperateLog();
+            vUserOperateLog.WriteLog(UserID, UserName, string.Format("删除编号为{0}的文件", id));
+            return vResult;
         }
 
         // POST: api/DeleteFile
@@ -33,12 +37,9 @@ namespace JXDL.Manage.App
         }
 
         // DELETE: api/DeleteFile/5
-        public void Delete(int id,int UserID,string UserName )
+        public void Delete(int id )
         {
-            FilesManage vFilesManage = new FilesManage();
-            vFilesManage.DeleteFile(id);
-            UserOperateLog vUserOperateLog = new UserOperateLog();
-            vUserOperateLog.WriteLog(UserID, UserName,string.Format("删除编号为{0}的文件",id));
+           
         }
     }
 }

@@ -15,10 +15,17 @@ namespace Manage
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "DeleteApi",
+                routeTemplate: "api/{controller}/{id}/UserID/UserName",
+                defaults: new { id = RouteParameter.Optional, UserID = RouteParameter.Optional, UserName = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
         }
     }
 }

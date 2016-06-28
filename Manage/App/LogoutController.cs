@@ -42,6 +42,7 @@ namespace JXDL.Manage.App
         // DELETE: api/Logout/5
         public void Delete(int id)
         {
+
         }
     }
 }

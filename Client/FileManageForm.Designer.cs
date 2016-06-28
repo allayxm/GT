@@ -206,6 +206,8 @@
             this.dataGridView_FileList.ReadOnly = true;
             this.dataGridView_FileList.RowTemplate.Height = 23;
             this.dataGridView_FileList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_FileList.ShowEditingIcon = false;
+            this.dataGridView_FileList.ShowRowErrors = false;
             this.dataGridView_FileList.Size = new System.Drawing.Size(802, 309);
             this.dataGridView_FileList.TabIndex = 1;
             this.dataGridView_FileList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_FileList_CellClick);
@@ -216,6 +218,7 @@
             this.Column_FileName.HeaderText = "文件名";
             this.Column_FileName.Name = "Column_FileName";
             this.Column_FileName.ReadOnly = true;
+            this.Column_FileName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Column_FileName.Width = 260;
             // 
             // Column_Unit
@@ -224,6 +227,7 @@
             this.Column_Unit.HeaderText = "所属单位";
             this.Column_Unit.Name = "Column_Unit";
             this.Column_Unit.ReadOnly = true;
+            this.Column_Unit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Column_Unit.Width = 130;
             // 
             // Column_Author
@@ -232,6 +236,7 @@
             this.Column_Author.HeaderText = "作者";
             this.Column_Author.Name = "Column_Author";
             this.Column_Author.ReadOnly = true;
+            this.Column_Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Column_Date
             // 
@@ -239,6 +244,7 @@
             this.Column_Date.HeaderText = "上传日期";
             this.Column_Date.Name = "Column_Date";
             this.Column_Date.ReadOnly = true;
+            this.Column_Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Column_Download
             // 
