@@ -116,7 +116,7 @@ namespace JXDL.Client
             if (vVillage!=null && vVillage!="" && vVillage != "请选择")
             {
                 AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Key;
-                UnitName = ((ComboBoxListItem)comboBox_Village.SelectedItem).Value;
+                UnitName += ((ComboBoxListItem)comboBox_Village.SelectedItem).Value;
             }
         }
 

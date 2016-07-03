@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DisplayFilesForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dataGridView_FileList = new System.Windows.Forms.DataGridView();
+            this.button_Exit = new System.Windows.Forms.Button();
             this.Column_FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Download = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.button_Exit = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_FileList)).BeginInit();
             this.SuspendLayout();
@@ -75,13 +75,28 @@
             this.dataGridView_FileList.TabIndex = 0;
             this.dataGridView_FileList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_FileList_CellClick);
             // 
+            // button_Exit
+            // 
+            this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
+            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Exit.Location = new System.Drawing.Point(311, 359);
+            this.button_Exit.Name = "button_Exit";
+            this.button_Exit.Size = new System.Drawing.Size(96, 43);
+            this.button_Exit.TabIndex = 5;
+            this.button_Exit.Text = "退　出";
+            this.button_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Exit.UseVisualStyleBackColor = true;
+            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
+            // 
             // Column_FileName
             // 
             this.Column_FileName.DataPropertyName = "FileName";
             this.Column_FileName.HeaderText = "文件名";
             this.Column_FileName.Name = "Column_FileName";
             this.Column_FileName.ReadOnly = true;
-            this.Column_FileName.Width = 260;
+            this.Column_FileName.Width = 230;
             // 
             // Column_Unit
             // 
@@ -89,7 +104,7 @@
             this.Column_Unit.HeaderText = "所属单位";
             this.Column_Unit.Name = "Column_Unit";
             this.Column_Unit.ReadOnly = true;
-            this.Column_Unit.Width = 130;
+            this.Column_Unit.Width = 160;
             // 
             // Column_Author
             // 
@@ -114,21 +129,6 @@
             this.Column_Download.Name = "Column_Download";
             this.Column_Download.ReadOnly = true;
             this.Column_Download.Text = "下载";
-            // 
-            // button_Exit
-            // 
-            this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
-            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Exit.Location = new System.Drawing.Point(311, 359);
-            this.button_Exit.Name = "button_Exit";
-            this.button_Exit.Size = new System.Drawing.Size(96, 43);
-            this.button_Exit.TabIndex = 5;
-            this.button_Exit.Text = "退　出";
-            this.button_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Exit.UseVisualStyleBackColor = true;
-            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
             // 
             // DisplayFilesForm
             // 

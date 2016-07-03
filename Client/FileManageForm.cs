@@ -221,7 +221,7 @@ namespace JXDL.Client
                 {
                     if (MessageBox.Show("是否确认删除", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                     {
-                        if (vRemoteInterface.DeleteFile(vFileID))
+                        if (vRemoteInterface.DeleteFile(vFileID, vFileName))
                         {
                             dataGridView_FileList.Rows.RemoveAt(e.RowIndex);
                         }

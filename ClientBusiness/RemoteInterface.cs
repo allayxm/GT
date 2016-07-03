@@ -34,10 +34,10 @@ namespace JXDL.ClientBusiness
             m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
         }
 
-        public bool DeleteFile( int FileID )
+        public bool DeleteFile( int FileID,string FileName )
         {
             string vUrl = string.Format("{0}/Api/DeleteFile", m_RemotingServerAddress);
-            string vPostData = string.Format("ID={0}&UserID={1}&UserName={2}", FileID, m_UserID, m_UserName);
+            string vPostData = string.Format("ID={0}&UserID={1}&UserName={2}&FileName={3}", FileID, m_UserID,HttpUtility.UrlEncode(m_UserName),HttpUtility.UrlEncode( FileName));
             string vResult = HttpGet(vUrl, vPostData);
             return vResult.ToUpper() == "TRUE" ? true : false;
         }

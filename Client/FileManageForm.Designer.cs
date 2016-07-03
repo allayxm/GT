@@ -92,7 +92,7 @@
             // 
             // textBox_File
             // 
-            this.textBox_File.Location = new System.Drawing.Point(337, 76);
+            this.textBox_File.Location = new System.Drawing.Point(339, 76);
             this.textBox_File.Name = "textBox_File";
             this.textBox_File.Size = new System.Drawing.Size(161, 24);
             this.textBox_File.TabIndex = 13;
@@ -101,11 +101,11 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(256, 77);
+            this.label4.Location = new System.Drawing.Point(258, 77);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 15);
             this.label4.TabIndex = 12;
-            this.label4.Text = "选择文件:";
+            this.label4.Text = "文档名称:";
             // 
             // textBox_Author
             // 
@@ -129,7 +129,7 @@
             this.comboBox_Village.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Village.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox_Village.FormattingEnabled = true;
-            this.comboBox_Village.Location = new System.Drawing.Point(580, 27);
+            this.comboBox_Village.Location = new System.Drawing.Point(582, 27);
             this.comboBox_Village.Name = "comboBox_Village";
             this.comboBox_Village.Size = new System.Drawing.Size(161, 23);
             this.comboBox_Village.TabIndex = 7;
@@ -139,7 +139,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(513, 32);
+            this.label3.Location = new System.Drawing.Point(515, 32);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 15);
             this.label3.TabIndex = 6;
@@ -150,7 +150,7 @@
             this.comboBox_VillageCommittee.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_VillageCommittee.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox_VillageCommittee.FormattingEnabled = true;
-            this.comboBox_VillageCommittee.Location = new System.Drawing.Point(337, 27);
+            this.comboBox_VillageCommittee.Location = new System.Drawing.Point(339, 27);
             this.comboBox_VillageCommittee.Name = "comboBox_VillageCommittee";
             this.comboBox_VillageCommittee.Size = new System.Drawing.Size(161, 23);
             this.comboBox_VillageCommittee.TabIndex = 5;
@@ -160,7 +160,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(270, 32);
+            this.label2.Location = new System.Drawing.Point(272, 32);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 15);
             this.label2.TabIndex = 4;
@@ -219,7 +219,7 @@
             this.Column_FileName.Name = "Column_FileName";
             this.Column_FileName.ReadOnly = true;
             this.Column_FileName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column_FileName.Width = 260;
+            this.Column_FileName.Width = 230;
             // 
             // Column_Unit
             // 
@@ -228,7 +228,7 @@
             this.Column_Unit.Name = "Column_Unit";
             this.Column_Unit.ReadOnly = true;
             this.Column_Unit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column_Unit.Width = 130;
+            this.Column_Unit.Width = 160;
             // 
             // Column_Author
             // 
