@@ -22,13 +22,21 @@ namespace JXDL.ManageBusiness
             if (vTable.Rows.Count > 0)
             {
                 CommClass.ConvertDataRowToStruct(ref vUserEF, vTable.Rows[0]);
-                vUserEF.LateLoginTime = DateTime.Now;
-                vUserEF.Token = DateTime.Now.ToString("mmssyyyyMMddHH");
-                if (m_BasicDBClass.UpdateRecord(vUserEF))
+                if ((DateTime.Now - vUserEF.LateLoginTime).Value.TotalSeconds >= 60 ||  vUserEF.Online == false )
                 {
-                    UserOperateLog vUserOperateLog = new UserOperateLog();
-                    vUserOperateLog.WriteLog(vUserEF.ID.Value, vUserEF.UserName, "用户登录");
-                    vResult = vUserEF;
+                    vUserEF.LateLoginTime = DateTime.Now;
+                    vUserEF.Token = DateTime.Now.ToString("mmssyyyyMMddHH");
+                    if (m_BasicDBClass.UpdateRecord(vUserEF))
+                    {
+                        UserOperateLog vUserOperateLog = new UserOperateLog();
+                        vUserOperateLog.WriteLog(vUserEF.ID.Value, vUserEF.UserName, "用户登录");
+                        updateOnlineState(vUserEF.ID.Value, true);
+                        vResult = vUserEF;
+                    }
+                }
+               else
+                {
+                    vResult.ID = -1;
                 }
             }
             vTable.Clear();
@@ -36,6 +44,13 @@ namespace JXDL.ManageBusiness
             return vResult;
         }
 
+
+        void updateOnlineState( int userID,bool state)
+        {
+            UsersEF vRecord = new UsersEF();
+            vRecord.Online = state;
+            m_BasicDBClass.UpdateRecord<UsersEF>(vRecord, userID);
+        }
         public bool Logout( string UserName,string Token )
         {
             bool vResult = false;
@@ -47,6 +62,7 @@ namespace JXDL.ManageBusiness
             {
                 UserOperateLog vLog = new UserOperateLog();
                 vLog.WriteLog(vQueryData[0].ID.Value, UserName, "用户退出");
+                updateOnlineState(vQueryData[0].ID.Value, false);
                 vResult = true;
             }
             return vResult;
@@ -138,6 +154,7 @@ namespace JXDL.ManageBusiness
             {
                 UsersEF vHeartBeat = new UsersEF();
                 vHeartBeat.LateLoginTime = DateTime.Now;
+                updateOnlineState(UserID, true);
                 vResult = m_BasicDBClass.UpdateRecord(vHeartBeat,UserID);
             }
             return vResult;

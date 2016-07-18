@@ -913,6 +913,7 @@
   <ItemGroup>
     <Compile Include="App\DeleteFileController.cs" />
     <Compile Include="App\DownloadFileController.cs" />
+    <Compile Include="App\FileNumberStatisticsController.cs" />
     <Compile Include="App\GetFileListController.cs" />
     <Compile Include="App\HeartbeatController.cs" />
     <Compile Include="App\LoginController.cs" />

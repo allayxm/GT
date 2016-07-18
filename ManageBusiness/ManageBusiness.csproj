@@ -45,6 +45,7 @@
     <Compile Include="Business.cs" />
     <Compile Include="FilesManage.cs" />
     <Compile Include="MapServer.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="UserManage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserOperateLog.cs" />

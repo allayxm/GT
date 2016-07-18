@@ -65,7 +65,7 @@
       <HintPath>D:\Program Files (x86)\ArcGIS\DeveloperKit10.2\DotNet\ESRI.ArcGIS.Geodatabase.dll</HintPath>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Geometry, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.GISClient, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -91,6 +91,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -113,6 +114,12 @@
     </Compile>
     <Compile Include="DisplayFilesForm.Designer.cs">
       <DependentUpon>DisplayFilesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EagleEyeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EagleEyeForm.Designer.cs">
+      <DependentUpon>EagleEyeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FeaturesSelectForm.cs">
       <SubType>Form</SubType>
@@ -140,6 +147,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatisticsReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StatisticsReportForm.Designer.cs">
+      <DependentUpon>StatisticsReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SystemConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +170,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DisplayFilesForm.resx">
       <DependentUpon>DisplayFilesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EagleEyeForm.resx">
+      <DependentUpon>EagleEyeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FeaturesSelectForm.resx">
       <DependentUpon>FeaturesSelectForm.cs</DependentUpon>
@@ -180,6 +196,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="StatisticsReportForm.resx">
+      <DependentUpon>StatisticsReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SystemConfigForm.resx">
       <DependentUpon>SystemConfigForm.cs</DependentUpon>
     </EmbeddedResource>

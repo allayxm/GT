@@ -8,12 +8,12 @@ namespace JXDL.ClientBusiness
 {
     public class ComboBoxListItem
     {
-        public string Key { get; set; }
+        public string Name { get; set; }
         public string Value { get; set; }
 
-        public ComboBoxListItem(string key, string value)
+        public ComboBoxListItem(string value,string name)
         {
-            Key = key;
+            Name = name;
             Value = value;
         }
 
@@ -24,7 +24,7 @@ namespace JXDL.ClientBusiness
 
         public override string ToString()
         {
-            return Value;
+            return Name;
         }
     }
 }

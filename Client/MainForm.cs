@@ -37,6 +37,15 @@ namespace JXDL.Client
         /// </summary>
         IFeatureLayer m_VillageFeatureLayer = null;
 
+        /// <summary>
+        /// 鹰眼要素
+        /// </summary>
+        IFeatureLayer m_EagleEyeFeatureClass = null;
+
+        /// <summary>
+        /// 鹰眼对话框
+        /// </summary>
+        EagleEyeForm m_EagleEyeForm = null;
         public MainForm()
         {
             InitializeComponent();
@@ -234,12 +243,14 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
                     ToolStripMenuItem_Doc_Setup.Enabled = false;
+                    
 
                     ToolStripMenuItem_Pic_Anayle.Enabled = false;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
+                    ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
                 case 2:
                     ToolStripMenuItem_System_Setup.Enabled = true;
@@ -258,6 +269,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Pic_Map.Enabled = false;
                     ToolStripMenuItem_Pic_Anayle.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
+                    ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
                 case 3:
                     ToolStripMenuItem_System_Setup.Enabled = true;
@@ -275,6 +287,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Pic_Layer.Enabled = true;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
+                    ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
             }
         }
@@ -377,6 +390,11 @@ namespace JXDL.Client
             for( int i=0;i<Program.MapTables.Length;i++)
             {
                 IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
+                if (Program.MapTables[i] == "sde.SDE.乡镇街道")
+                {
+                    m_EagleEyeFeatureClass = new FeatureLayerClass();
+                    m_EagleEyeFeatureClass.FeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
+                }
                 if (vFeatureClass != null)
                 {
                     IFeatureLayer vLayerFeature = new FeatureLayerClass();
@@ -412,6 +430,10 @@ namespace JXDL.Client
             axMapControl1.Refresh();
 
             axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
+
+            m_EagleEyeForm = new EagleEyeForm();
+            m_EagleEyeForm.MainMapControl = axMapControl1;
+            m_EagleEyeForm.TownshipFeatureLayer = m_EagleEyeFeatureClass;
             //IFeatureClass xjmFeatureClass = vFeatWS.OpenFeatureClass("县界面");
             //IFeatureLayer xjmLayerFeature = new FeatureLayerClass();
             //xjmLayerFeature.FeatureClass = xjmFeatureClass;
@@ -694,6 +716,25 @@ namespace JXDL.Client
             vFileManageForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
             vFileManageForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vFileManageForm.ShowDialog();
+        }
+
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ToolStripMenuItem_EagleEye_Click(object sender, EventArgs e)
+        {
+            m_EagleEyeForm.Show();
+        }
+
+        private void ToolStripMenuItem_Doc_Report_Click(object sender, EventArgs e)
+        {
+            StatisticsReportForm vStatisticsReportForm = new StatisticsReportForm();
+            vStatisticsReportForm.TownshipFeatureLayer = m_TownshipFeatureLayer;
+            vStatisticsReportForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
+            vStatisticsReportForm.VillageFeatureLayer = m_VillageFeatureLayer;
+            vStatisticsReportForm.ShowDialog();
         }
     }
 }

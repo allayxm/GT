@@ -24,5 +24,7 @@ namespace JXDL.ManageEFModel
         public bool? IsUse { get; set; }
         [ColumnAttrib("Power")]
         public int? Power { get; set; }
+        [ColumnAttrib("Online")]
+        public bool? Online { get; set; }
     }
 }

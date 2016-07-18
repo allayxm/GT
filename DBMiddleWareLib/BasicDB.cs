@@ -798,7 +798,6 @@ namespace MXKJ.DBMiddleWareLib
             return result;
         }
 
-
         public virtual bool UpdateRecord<T>(T Record)
         {
             initTableParam(Record);
@@ -1737,7 +1736,8 @@ namespace MXKJ.DBMiddleWareLib
         /// 表名是否为动态
         /// </summary>
         bool m_IsDynamic = false; 
-        
+
+
         public TableAttrib(string TableName,string PrimaryKey)
         {
             m_TableName = string.Format("{0}", TableName);
@@ -1791,7 +1791,15 @@ namespace MXKJ.DBMiddleWareLib
         /// 是否为视图行
         /// </summary>
         bool m_IsViewColumn = false;
+        /// <summary>
+        /// 行名称
+        /// </summary>
         string m_ColumnName = string.Empty;
+
+        /// <summary>
+        /// 值是否改变
+        /// </summary>
+        bool m_IsChanged = false;
 
         public ColumnAttrib(string ColumnName)
         {

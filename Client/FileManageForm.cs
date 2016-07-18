@@ -93,7 +93,7 @@ namespace JXDL.Client
                     ComboBoxListItem vNewItme = new ComboBoxListItem();
                     int vXZDMIndex = vFeature.Fields.FindField("XZDM");
                     int VNameIndex = vFeature.Fields.FindField("街道");
-                    vNewItme.Key = vFeature.get_Value(vXZDMIndex).ToString();
+                    vNewItme.Name = vFeature.get_Value(vXZDMIndex).ToString();
                     vNewItme.Value = vFeature.get_Value(VNameIndex).ToString();
                     vTownshipList.Add(vNewItme);
                     vFeature = vFeatures.NextFeature();
@@ -105,9 +105,9 @@ namespace JXDL.Client
 
         private void button_Query_Click(object sender, EventArgs e)
         {
-            string vTownship = comboBox_Township.Text != "请选择" ? ((ComboBoxListItem)comboBox_Township.SelectedItem).Key : "" ;
-            string vVillageCommittee = comboBox_VillageCommittee.Items.Count >0&& comboBox_VillageCommittee .Text !="请选择"? ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Key:"";
-            string vVillage = comboBox_Village.Items.Count > 0&& comboBox_Village.Text!="请选择" ? ((ComboBoxListItem)comboBox_Village.SelectedItem).Key : "";
+            string vTownship = comboBox_Township.Text != "请选择" ? ((ComboBoxListItem)comboBox_Township.SelectedItem).Name : "" ;
+            string vVillageCommittee = comboBox_VillageCommittee.Items.Count >0&& comboBox_VillageCommittee .Text !="请选择"? ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Name:"";
+            string vVillage = comboBox_Village.Items.Count > 0&& comboBox_Village.Text!="请选择" ? ((ComboBoxListItem)comboBox_Village.SelectedItem).Name : "";
             string vAuthor = textBox_Author.Text;
             string vFileName = textBox_File.Text;
             if (vTownship != "" || vVillageCommittee!="" || vVillage!="" || vAuthor != "" || vFileName!="")
@@ -160,7 +160,7 @@ namespace JXDL.Client
             ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem;
             if (vSelectedItem.Value != "请选择")
             {
-                string vCode = vSelectedItem.Key;
+                string vCode = vSelectedItem.Name;
                 ComboBoxListItem[] vVillageList = getVillageDict(vCode);
                 comboBox_Village.Items.Clear();
                 foreach (ComboBoxListItem vVillage in vVillageList)
@@ -181,7 +181,7 @@ namespace JXDL.Client
             ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_Township.SelectedItem;
             if (vSelectedItem.Value != "请选择")
             {
-                string vCode = vSelectedItem.Key;
+                string vCode = vSelectedItem.Name;
                 ComboBoxListItem[] vVillageCommitteeList = getVillageCommitteeDict(vCode);
                 comboBox_VillageCommittee.Items.Clear();
                 foreach (ComboBoxListItem vTempVillageCommittee in vVillageCommitteeList)

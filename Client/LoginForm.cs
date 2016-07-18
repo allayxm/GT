@@ -33,9 +33,16 @@ namespace JXDL.Client
                     UserInfo vUserInfo = vRemoteInterface.Login(textBox_UserName.Text, textBox_Password.Text);
                     if (vUserInfo.ID != null && vUserInfo.ID != 0)
                     {
-                        LoginUserInfo = vUserInfo;
-                        DialogResult = DialogResult.OK;
-                        Close();
+                        if (vUserInfo.ID != -1)
+                        {
+                            LoginUserInfo = vUserInfo;
+                            DialogResult = DialogResult.OK;
+                            Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("该用户已在其它机器上登陆或没有正常退出，请在1分钟后重新尝试登陆", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     else
                     {

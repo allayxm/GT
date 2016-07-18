@@ -34,6 +34,21 @@ namespace JXDL.ClientBusiness
             m_RemotingServerAddress = vConfigFile.RemotingServerAddress;
         }
 
+        #region 地区文档数据统计
+        public FileNumberStatisticsStruct[] FileNumberStatistics( string AreaStr)
+        {
+            FileNumberStatisticsStruct[] vFileNumberStatisticsData = null;
+            string vUrl = string.Format("{0}/Api/FileNumberStatistics", m_RemotingServerAddress);
+            string vPostData = string.Format("AreaCodes={0}", HttpUtility.UrlEncode(AreaStr));
+            string vResult = HttpGet(vUrl, vPostData);
+            vResult = HttpUtility.UrlDecode(vResult);
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            vFileNumberStatisticsData = vJSC.Deserialize<FileNumberStatisticsStruct[]>(vResult);
+            return vFileNumberStatisticsData;
+        }
+        #endregion
+
+        #region 删除文件
         public bool DeleteFile( int FileID,string FileName )
         {
             string vUrl = string.Format("{0}/Api/DeleteFile", m_RemotingServerAddress);
@@ -41,7 +56,9 @@ namespace JXDL.ClientBusiness
             string vResult = HttpGet(vUrl, vPostData);
             return vResult.ToUpper() == "TRUE" ? true : false;
         }
+        #endregion
 
+        #region 文件查询
         public DataTable QueryFile(string Township, string VillageCommittee, string Village,
             string Author, string FileName)
         {
@@ -80,6 +97,7 @@ namespace JXDL.ClientBusiness
             return vFileInfoTable;
         }
 
+
         //public int ID { get; set; }
         //public string FileName { get; set; }
         //public string Author { get; set; }
@@ -99,8 +117,9 @@ namespace JXDL.ClientBusiness
             vNewTable.AcceptChanges();
             return vNewTable;
         }
-        
+        #endregion
 
+        #region 通过区域代码获取对应文件信息
         public JXDL.IntrefaceStruct.FileInfo[] GetFiles( string[] AreaCodeArray)
         {
             JXDL.IntrefaceStruct.FileInfo[] vFileInfoList = null;
@@ -123,7 +142,9 @@ namespace JXDL.ClientBusiness
             }
             return vFileInfoList;
         }
+        #endregion
 
+        #region 登陆
         public UserInfo Login( string UserName,string Password )
         {
             string vUrl = string.Format("{0}/Api/Login", m_RemotingServerAddress);
@@ -133,7 +154,9 @@ namespace JXDL.ClientBusiness
             UserInfo vUserInfo = vJSC.Deserialize<UserInfo>(vResult);
             return vUserInfo;
         }
+        #endregion
 
+        #region 登出
         public bool Logout( string UserName,string Token )
         {
             string vUrl = string.Format("{0}/Api/Logout", m_RemotingServerAddress);
@@ -143,7 +166,9 @@ namespace JXDL.ClientBusiness
             string vResult = HttpPost(vUrl, vPostData);
             return vJSC.Deserialize<bool>(vResult);
         }
+        #endregion
 
+        #region 获取地图服务器配置信息
         public void GetMapServer(ref string MapServerAddress,ref string MapDBName,
             ref string DBUserName,ref string DBPassword )
         {
@@ -157,7 +182,9 @@ namespace JXDL.ClientBusiness
             DBUserName = vMapConfig[2];
             DBPassword = vMapConfig[3];
         }
+        #endregion
 
+        #region 心跳包
         public void Heartbeat( UserInfo LoginUserInfo)
         {
             string vUrl = string.Format("{0}/Api/Heartbeat", m_RemotingServerAddress);
@@ -165,6 +192,7 @@ namespace JXDL.ClientBusiness
             string vPostData = vJSC.Serialize(LoginUserInfo);
             string vResult = HttpPut(vUrl, vPostData);
         }
+        #endregion
 
         #region 上传文件
         public bool UploadFiles(string[] Files,string[] Authors,
@@ -302,7 +330,6 @@ namespace JXDL.ClientBusiness
         #endregion
 
         #region 下载文件
-
         public  bool DownloadFile(int FileID,string SaveFileName)
         {
             string vDownUrl = string.Format("{0}/Api/DownloadFile?FileID={1}&UserID={2}&UserName={3}", m_RemotingServerAddress, FileID,m_UserID,HttpUtility.UrlEncode(m_UserName));
@@ -363,6 +390,7 @@ namespace JXDL.ClientBusiness
         }
         #endregion
 
+        #region Http操作协议
         string HttpDelete(string Url, string postDataStr)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
@@ -434,7 +462,6 @@ namespace JXDL.ClientBusiness
 
             return retString;
         }
-
         string HttpGet(string Url, string postDataStr)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url + (postDataStr == "" ? "" : "?") + postDataStr);
@@ -508,5 +535,6 @@ namespace JXDL.ClientBusiness
             }
             return flag;
         }
+        #endregion
     }
 }

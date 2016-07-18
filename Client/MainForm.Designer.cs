@@ -46,6 +46,7 @@
             this.ToolStripMenuItem_Pic_Map = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Anayle = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_EagleEye = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
@@ -141,6 +142,7 @@
             this.ToolStripMenuItem_Doc_Report.Name = "ToolStripMenuItem_Doc_Report";
             this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
+            this.ToolStripMenuItem_Doc_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Report_Click);
             // 
             // ToolStripMenuItem_Doc_Setup
             // 
@@ -156,7 +158,8 @@
             this.ToolStripMenuItem_Pic_Browse,
             this.ToolStripMenuItem_Pic_Map,
             this.ToolStripMenuItem_Pic_Anayle,
-            this.ToolStripMenuItem_Pic_Statistics});
+            this.ToolStripMenuItem_Pic_Statistics,
+            this.ToolStripMenuItem_EagleEye});
             this.ToolStripMenuItem_Pic.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Pic.Image")));
             this.ToolStripMenuItem_Pic.Name = "ToolStripMenuItem_Pic";
             this.ToolStripMenuItem_Pic.Size = new System.Drawing.Size(97, 24);
@@ -191,6 +194,13 @@
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
             this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
+            // 
+            // ToolStripMenuItem_EagleEye
+            // 
+            this.ToolStripMenuItem_EagleEye.Name = "ToolStripMenuItem_EagleEye";
+            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_EagleEye.Text = "鹰眼地图";
+            this.ToolStripMenuItem_EagleEye.Click += new System.EventHandler(this.ToolStripMenuItem_EagleEye_Click);
             // 
             // ToolStripMenuItem_About
             // 
@@ -255,6 +265,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.menuStrip_Main.ResumeLayout(false);
             this.menuStrip_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
@@ -289,6 +300,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Anayle;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Statistics;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_EagleEye;
     }
 }
 

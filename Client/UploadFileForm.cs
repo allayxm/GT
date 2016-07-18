@@ -101,21 +101,21 @@ namespace JXDL.Client
             string vTownship = (string)comboBox_Township.Text;
             if (vTownship!=null && vTownship != "" && vTownship != "请选择" )
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem).Key ;
+                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem).Name ;
                 UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
             }
 
             string vVillageCommittee = comboBox_VillageCommittee.Text;
             if (vVillageCommittee!=null && vVillageCommittee != "" &&  vVillageCommittee != "请选择" )
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem ).Key;
+                AreaCode = ( (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem ).Name;
                 UnitName = ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Value;
             }
 
             string vVillage = (string)comboBox_Village.Text;
             if (vVillage!=null && vVillage!="" && vVillage != "请选择")
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Key;
+                AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Name;
                 UnitName += ((ComboBoxListItem)comboBox_Village.SelectedItem).Value;
             }
         }
@@ -191,8 +191,8 @@ namespace JXDL.Client
                     ComboBoxListItem vNewItme = new ComboBoxListItem();
                     int vXZDMIndex = vFeature.Fields.FindField("XZDM");
                     int VNameIndex = vFeature.Fields.FindField("街道");
-                    vNewItme.Key  = vFeature.get_Value(vXZDMIndex).ToString();
-                    vNewItme.Value = vFeature.get_Value(VNameIndex).ToString();
+                    vNewItme.Name  = vFeature.get_Value(VNameIndex).ToString();
+                    vNewItme.Value = vFeature.get_Value(vXZDMIndex).ToString();
                     vTownshipList.Add(vNewItme);
                     vFeature = vFeatures.NextFeature();
                 }
@@ -205,7 +205,7 @@ namespace JXDL.Client
             ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_Township.SelectedItem;
             if (vSelectedItem.Value!= "请选择")
             {
-                string vCode = vSelectedItem.Key;
+                string vCode = vSelectedItem.Value;
                 ComboBoxListItem[] vVillageCommitteeList = getVillageCommitteeDict(vCode);
                 comboBox_VillageCommittee.Items.Clear();
                 foreach (ComboBoxListItem vTempVillageCommittee in vVillageCommitteeList)
@@ -221,7 +221,7 @@ namespace JXDL.Client
             ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem;
             if (vSelectedItem.Value != "请选择")
             {
-                string vCode = vSelectedItem.Key;
+                string vCode = vSelectedItem.Value;
                 ComboBoxListItem[] vVillageList = getVillageDict(vCode);
                 comboBox_Village.Items.Clear();
                 foreach (ComboBoxListItem vVillage in vVillageList)
