@@ -39,7 +39,7 @@ namespace JXDL.ClientBusiness
         {
             FileNumberStatisticsStruct[] vFileNumberStatisticsData = null;
             string vUrl = string.Format("{0}/Api/FileNumberStatistics", m_RemotingServerAddress);
-            string vPostData = string.Format("AreaCodes={0}", HttpUtility.UrlEncode(AreaStr));
+            string vPostData = string.Format("UserID={0}&UserName={1}&AreaCodes={2}",m_UserID,m_UserName, HttpUtility.UrlEncode(AreaStr));
             string vResult = HttpGet(vUrl, vPostData);
             vResult = HttpUtility.UrlDecode(vResult);
             JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();

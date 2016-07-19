@@ -233,6 +233,7 @@ namespace JXDL.Client
         {
             switch( Program.LoginUserInfo.Power)
             {
+                //村民
                 case 1:
                     ToolStripMenuItem_System_Setup.Enabled = true;
                     ToolStripMenuItem_System_Logout.Enabled = true;
@@ -242,8 +243,6 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Input.Enabled = false;
                     ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
-                    ToolStripMenuItem_Doc_Setup.Enabled = false;
-                    
 
                     ToolStripMenuItem_Pic_Anayle.Enabled = false;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
@@ -252,6 +251,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
+                //村委会
                 case 2:
                     ToolStripMenuItem_System_Setup.Enabled = true;
                     ToolStripMenuItem_System_Logout.Enabled = true;
@@ -259,11 +259,9 @@ namespace JXDL.Client
 
                     ToolStripMenuItem_Doc_Edit.Enabled = true;
                     ToolStripMenuItem_Doc_Input.Enabled = true;
-                    ToolStripMenuItem_Doc_Query.Enabled = true;
+                    ToolStripMenuItem_Doc_Query.Enabled = false;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
-                    ToolStripMenuItem_Doc_Setup.Enabled = true;
 
-                    
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
                     ToolStripMenuItem_Pic_Map.Enabled = false;
@@ -271,6 +269,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
+                //政府及城建部门
                 case 3:
                     ToolStripMenuItem_System_Setup.Enabled = true;
                     ToolStripMenuItem_System_Logout.Enabled = true;
@@ -278,9 +277,8 @@ namespace JXDL.Client
 
                     ToolStripMenuItem_Doc_Edit.Enabled = true;
                     ToolStripMenuItem_Doc_Input.Enabled = true;
-                    ToolStripMenuItem_Doc_Query.Enabled = true;
+                    ToolStripMenuItem_Doc_Query.Enabled = false;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
-                    ToolStripMenuItem_Doc_Setup.Enabled = true;
 
                     ToolStripMenuItem_Pic_Anayle.Enabled = true;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
@@ -735,6 +733,15 @@ namespace JXDL.Client
             vStatisticsReportForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
             vStatisticsReportForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vStatisticsReportForm.ShowDialog();
+        }
+
+        private void ToolStripMenuItem_Doc_Query_Click(object sender, EventArgs e)
+        {
+            FileManageForm vFileManageForm = new FileManageForm();
+            vFileManageForm.TownshipFeatureLayer = m_TownshipFeatureLayer;
+            vFileManageForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
+            vFileManageForm.VillageFeatureLayer = m_VillageFeatureLayer;
+            vFileManageForm.ShowDialog();
         }
     }
 }

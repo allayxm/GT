@@ -150,6 +150,7 @@ namespace JXDL.Client
             string vAreaCodeStr = "";
             string vTownshipValue = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
             string vVillageCommitteeValue = ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Value;
+            ComboBoxListItem vFatherItem = null;
             if (vTownshipValue=="0")
             {
                 vTitle = "丰城市资料上传统计";
@@ -161,27 +162,40 @@ namespace JXDL.Client
             }
             else if (vVillageCommitteeValue== "0")
             {
-                vTitle =  string.Format( "{0}资料上传统计", ((ComboBoxListItem)comboBox_Township.SelectedItem).Name);
+                vFatherItem = (ComboBoxListItem)comboBox_Township.SelectedItem;
+                vTitle =  string.Format( "{0}资料上传统计", vFatherItem.Name);
+                vAreaCodeStr = string.Format("{0},{1}|", vFatherItem.Value, vFatherItem.Name);
                 foreach ( ComboBoxListItem vTempItem in comboBox_VillageCommittee.Items )
                 {
                     if (vTempItem.Value!="0")
-                        vAreaCodeStr += string.Format("{0},{1}|", vTempItem.Value, vTempItem.Name); ;
+                        vAreaCodeStr += string.Format("{0},{1}|", vTempItem.Value, vTempItem.Name);
                 }
             }
             else
             {
-                vTitle = string.Format("{0}资料上传统计", ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Name);
+                vFatherItem = (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem;
+                vTitle = string.Format("{0}资料上传统计", vFatherItem.Name);
+                vAreaCodeStr = string.Format("{0},{1}|", vFatherItem.Value, vFatherItem.Name);
                 ComboBoxListItem[] vVillageDict = getVillageDict(vVillageCommitteeValue);
                 foreach (ComboBoxListItem vTempItem in vVillageDict)
                 {
-                    vAreaCodeStr += string.Format("{0},{1}|", vTempItem.Value, vTempItem.Name); ;
+                    vAreaCodeStr += string.Format("{0},{1}|", vTempItem.Value, vTempItem.Name);
                 }
             }
             if (vAreaCodeStr != "")
             {
                 vAreaCodeStr = vAreaCodeStr.Remove(vAreaCodeStr.Length - 1);
-                RemoteInterface vRemoteInterface = new RemoteInterface();
+                RemoteInterface vRemoteInterface = new RemoteInterface( Program.LoginUserInfo.ID.Value,Program.LoginUserInfo.UserName,Program.LoginUserInfo.Token );
                 var vStatisticsResut = vRemoteInterface.FileNumberStatistics(vAreaCodeStr).Where(m => m.FileNumber > 0);
+                if (vTownshipValue != "0")
+                {
+                    FileNumberStatisticsStruct vFatherData = vStatisticsResut.Where(m => m.AreaCode == vFatherItem.Value).FirstOrDefault();
+                    if (vFatherData!=null && vFatherData.FileNumber != 0 )
+                    {
+                        int vSum = vStatisticsResut.Where(m => m.AreaCode != vFatherItem.Value).Sum(m => m.FileNumber);
+                        vFatherData.FileNumber -= vSum;
+                    }
+                }
                 //DataTable vTable = convertToDataTable(vStatisticsResut);
                 if (vStatisticsResut.Count() > 0)
                 {

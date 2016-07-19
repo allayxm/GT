@@ -39,7 +39,6 @@
             this.ToolStripMenuItem_Doc_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Query = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Doc_Report = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_Doc_Setup = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Layer = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Browse = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,21 +85,21 @@
             // ToolStripMenuItem_System_Setup
             // 
             this.ToolStripMenuItem_System_Setup.Name = "ToolStripMenuItem_System_Setup";
-            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Setup.Text = "系统设置";
             this.ToolStripMenuItem_System_Setup.Click += new System.EventHandler(this.ToolStripMenuItem_System_Setup_Click);
             // 
             // ToolStripMenuItem_System_Logout
             // 
             this.ToolStripMenuItem_System_Logout.Name = "ToolStripMenuItem_System_Logout";
-            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Logout.Text = "注销";
             this.ToolStripMenuItem_System_Logout.Click += new System.EventHandler(this.ToolStripMenuItem_System_Logout_Click);
             // 
             // ToolStripMenuItem_System_Exit
             // 
             this.ToolStripMenuItem_System_Exit.Name = "ToolStripMenuItem_System_Exit";
-            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_System_Exit.Text = "退出";
             this.ToolStripMenuItem_System_Exit.Click += new System.EventHandler(this.ToolStripMenuItem_System_Exit_Click);
             // 
@@ -110,8 +109,7 @@
             this.ToolStripMenuItem_Doc_Input,
             this.ToolStripMenuItem_Doc_Edit,
             this.ToolStripMenuItem_Doc_Query,
-            this.ToolStripMenuItem_Doc_Report,
-            this.ToolStripMenuItem_Doc_Setup});
+            this.ToolStripMenuItem_Doc_Report});
             this.ToolStripMenuItem_Doc.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Doc.Image")));
             this.ToolStripMenuItem_Doc.Name = "ToolStripMenuItem_Doc";
             this.ToolStripMenuItem_Doc.Size = new System.Drawing.Size(97, 24);
@@ -136,6 +134,7 @@
             this.ToolStripMenuItem_Doc_Query.Name = "ToolStripMenuItem_Doc_Query";
             this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Query.Text = "信息查询";
+            this.ToolStripMenuItem_Doc_Query.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Query_Click);
             // 
             // ToolStripMenuItem_Doc_Report
             // 
@@ -143,13 +142,6 @@
             this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
             this.ToolStripMenuItem_Doc_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Report_Click);
-            // 
-            // ToolStripMenuItem_Doc_Setup
-            // 
-            this.ToolStripMenuItem_Doc_Setup.Name = "ToolStripMenuItem_Doc_Setup";
-            this.ToolStripMenuItem_Doc_Setup.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Doc_Setup.Text = "系统设置";
-            this.ToolStripMenuItem_Doc_Setup.Visible = false;
             // 
             // ToolStripMenuItem_Pic
             // 
@@ -293,7 +285,6 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Doc_Edit;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Doc_Query;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Doc_Report;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Doc_Setup;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Layer;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Browse;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Map;

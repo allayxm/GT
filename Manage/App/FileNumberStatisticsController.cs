@@ -20,9 +20,19 @@ namespace JXDL.Manage.App
         }
 
         // GET: api/FileNumberStatistics/5
-        public FileNumberStatisticsStruct[] Get(string AreaCodes)
+        public FileNumberStatisticsStruct[] Get(int UserID, string UserName,string AreaCodes)
         {
             AreaCodes = System.Web.HttpUtility.UrlDecode(AreaCodes);
+            UserOperateLog vUserOperateLog = new UserOperateLog();
+            string vAreaName = "";
+            string[] vAreaArray = AreaCodes.Split('|');
+            foreach (string vTempAera in vAreaArray)
+            {
+                string[] vSplitArea = vTempAera.Split(',');
+                if (vSplitArea.Length == 2)
+                    vAreaName += vSplitArea[1]+"、";
+            }
+            vUserOperateLog.WriteLog(UserID, UserName, string.Format("统计数据,区域包括：{0}", vAreaName));
             Statistics vStatistics = new Statistics();
             return vStatistics.FileNumberStatistics(AreaCodes);
         }

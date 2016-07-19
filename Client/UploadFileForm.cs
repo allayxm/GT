@@ -101,22 +101,22 @@ namespace JXDL.Client
             string vTownship = (string)comboBox_Township.Text;
             if (vTownship!=null && vTownship != "" && vTownship != "请选择" )
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem).Name ;
-                UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Value;
+                AreaCode = ( (ComboBoxListItem)comboBox_Township.SelectedItem).Value ;
+                UnitName = ((ComboBoxListItem)comboBox_Township.SelectedItem).Name;
             }
 
             string vVillageCommittee = comboBox_VillageCommittee.Text;
             if (vVillageCommittee!=null && vVillageCommittee != "" &&  vVillageCommittee != "请选择" )
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem ).Name;
-                UnitName = ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Value;
+                AreaCode = ( (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem ).Value;
+                UnitName = ((ComboBoxListItem)comboBox_VillageCommittee.SelectedItem).Name;
             }
 
             string vVillage = (string)comboBox_Village.Text;
             if (vVillage!=null && vVillage!="" && vVillage != "请选择")
             {
-                AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Name;
-                UnitName += ((ComboBoxListItem)comboBox_Village.SelectedItem).Value;
+                AreaCode = ( (ComboBoxListItem)comboBox_Village.SelectedItem ).Value;
+                UnitName += ((ComboBoxListItem)comboBox_Village.SelectedItem).Name;
             }
         }
 

@@ -62,11 +62,11 @@ namespace JXDL.ManageBusiness
         {
             UploadFilesEF[] vResult = null;
             string vAreaCode = "";
-            if (Township != "")
+            if (Township!=null && Township != "")
                 vAreaCode = Township;
-            else if (VillageCommittee != "")
+            if (VillageCommittee!=null && VillageCommittee != "")
                 vAreaCode = VillageCommittee;
-            else if (Village != "")
+            if (Village!=null && Village != "")
                 vAreaCode = Village;
             string vSql = "Select ID,AreaCode,UnitName,[FileName],UserID,UploadTime,Author From UploadFiles";
             string vSqlCondition = "";
