@@ -22,7 +22,7 @@ namespace JXDL.ManageBusiness
             if (vTable.Rows.Count > 0)
             {
                 CommClass.ConvertDataRowToStruct(ref vUserEF, vTable.Rows[0]);
-                if ((DateTime.Now - vUserEF.LateLoginTime).Value.TotalSeconds >= 60 ||  vUserEF.Online == false )
+                if (vUserEF.LateLoginTime == null || (DateTime.Now - vUserEF.LateLoginTime).Value.TotalSeconds >= 60 ||  vUserEF.Online == false )
                 {
                     vUserEF.LateLoginTime = DateTime.Now;
                     vUserEF.Token = DateTime.Now.ToString("mmssyyyyMMddHH");

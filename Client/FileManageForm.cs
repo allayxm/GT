@@ -202,7 +202,7 @@ namespace JXDL.Client
                 DataTable vDatsSource = (DataTable)dataGridView_FileList.DataSource;
                 int vFileID = (int)vDatsSource.Rows[e.RowIndex]["ID"];
                 string vFileName = (string)vDatsSource.Rows[e.RowIndex]["FileName"];
-                if (e.ColumnIndex == 4)
+                if (e.ColumnIndex == 5)
                 {
                     ConfigFile vConfigFile = new ConfigFile();
                     string vDownloadPath = string.Format(@"{0}\{1}", vConfigFile.DownloadPath, vFileName);
@@ -219,7 +219,7 @@ namespace JXDL.Client
                         MessageBox.Show("文件下载失败!", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                if (e.ColumnIndex == 5)
+                if (e.ColumnIndex == 6)
                 {
                     if (MessageBox.Show("是否确认删除", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                     {

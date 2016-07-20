@@ -12,4 +12,11 @@ namespace JXDL.IntrefaceStruct
         public string UnitName { get; set; }
         public int FileNumber { get; set; }
     }
+    
+    public class StatisticsParamtStruct
+    {
+        public int UserID { get; set; }
+        public string UserName { get; set; }
+        public string AreaCodes { get; set; }
+    }
 }

@@ -38,8 +38,21 @@ namespace JXDL.Manage.App
         }
 
         // POST: api/FileNumberStatistics
-        public void Post([FromBody]string value)
+        public FileNumberStatisticsStruct[] Post([FromBody]StatisticsParamtStruct QueryParam)
         {
+            string AreaCodes = System.Web.HttpUtility.UrlDecode(QueryParam.AreaCodes);
+            UserOperateLog vUserOperateLog = new UserOperateLog();
+            string vAreaName = "";
+            string[] vAreaArray = AreaCodes.Split('|');
+            foreach (string vTempAera in vAreaArray)
+            {
+                string[] vSplitArea = vTempAera.Split(',');
+                if (vSplitArea.Length == 2)
+                    vAreaName += vSplitArea[1] + "、";
+            }
+            vUserOperateLog.WriteLog(QueryParam.UserID, QueryParam.UserName, string.Format("统计数据,区域包括：{0}", vAreaName));
+            Statistics vStatistics = new Statistics();
+            return vStatistics.FileNumberStatistics(AreaCodes);
         }
 
         // PUT: api/FileNumberStatistics/5

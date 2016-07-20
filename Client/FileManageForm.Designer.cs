@@ -44,6 +44,7 @@
             this.comboBox_Township = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView_FileList = new System.Windows.Forms.DataGridView();
+            this.Column_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -193,6 +194,7 @@
             this.dataGridView_FileList.AllowUserToDeleteRows = false;
             this.dataGridView_FileList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView_FileList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column_ID,
             this.Column_FileName,
             this.Column_Unit,
             this.Column_Author,
@@ -212,6 +214,14 @@
             this.dataGridView_FileList.TabIndex = 1;
             this.dataGridView_FileList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_FileList_CellClick);
             // 
+            // Column_ID
+            // 
+            this.Column_ID.DataPropertyName = "ID";
+            this.Column_ID.HeaderText = "序号";
+            this.Column_ID.Name = "Column_ID";
+            this.Column_ID.ReadOnly = true;
+            this.Column_ID.Width = 40;
+            // 
             // Column_FileName
             // 
             this.Column_FileName.DataPropertyName = "FileName";
@@ -219,7 +229,7 @@
             this.Column_FileName.Name = "Column_FileName";
             this.Column_FileName.ReadOnly = true;
             this.Column_FileName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column_FileName.Width = 230;
+            this.Column_FileName.Width = 190;
             // 
             // Column_Unit
             // 
@@ -302,6 +312,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button_Query;
         private System.Windows.Forms.DataGridView dataGridView_FileList;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Unit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Author;

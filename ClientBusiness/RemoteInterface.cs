@@ -37,13 +37,19 @@ namespace JXDL.ClientBusiness
         #region 地区文档数据统计
         public FileNumberStatisticsStruct[] FileNumberStatistics( string AreaStr)
         {
+            JavaScriptSerializer vJSS = new JavaScriptSerializer();
             FileNumberStatisticsStruct[] vFileNumberStatisticsData = null;
+
             string vUrl = string.Format("{0}/Api/FileNumberStatistics", m_RemotingServerAddress);
-            string vPostData = string.Format("UserID={0}&UserName={1}&AreaCodes={2}",m_UserID,m_UserName, HttpUtility.UrlEncode(AreaStr));
-            string vResult = HttpGet(vUrl, vPostData);
+            StatisticsParamtStruct vPostParam = new StatisticsParamtStruct();
+            vPostParam.UserID = m_UserID;
+            vPostParam.UserName = m_UserName;
+            vPostParam.AreaCodes = HttpUtility.UrlEncode(AreaStr);
+            string vPostData = vJSS.Serialize(vPostParam);
+            //string vPostData = string.Format("UserID={0}&UserName={1}&AreaCodes={2}",m_UserID,m_UserName, HttpUtility.UrlEncode(AreaStr));
+            string vResult = HttpPost(vUrl, vPostData);
             vResult = HttpUtility.UrlDecode(vResult);
-            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
-            vFileNumberStatisticsData = vJSC.Deserialize<FileNumberStatisticsStruct[]>(vResult);
+            vFileNumberStatisticsData = vJSS.Deserialize<FileNumberStatisticsStruct[]>(vResult);
             return vFileNumberStatisticsData;
         }
         #endregion
