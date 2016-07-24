@@ -250,5 +250,10 @@ namespace JXDL.Client
             }
             return vResult;
         }
+
+        private void button_Print_Click(object sender, EventArgs e)
+        {
+            chart_Statistics.Printing.Print(false);
+        }
     }
 }

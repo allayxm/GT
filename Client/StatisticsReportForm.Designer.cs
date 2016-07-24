@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatisticsReportForm));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatisticsReportForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button_Statistics = new System.Windows.Forms.Button();
             this.comboBox_VillageCommittee = new System.Windows.Forms.ComboBox();
@@ -41,6 +41,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chart_Statistics = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button_Print = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart_Statistics)).BeginInit();
@@ -48,6 +49,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button_Print);
             this.groupBox1.Controls.Add(this.button_Statistics);
             this.groupBox1.Controls.Add(this.comboBox_VillageCommittee);
             this.groupBox1.Controls.Add(this.label2);
@@ -162,6 +164,20 @@
             title1.Name = "Title1";
             this.chart_Statistics.Titles.Add(title1);
             // 
+            // button_Print
+            // 
+            this.button_Print.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Print.Image = ((System.Drawing.Image)(resources.GetObject("button_Print.Image")));
+            this.button_Print.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Print.Location = new System.Drawing.Point(675, 15);
+            this.button_Print.Name = "button_Print";
+            this.button_Print.Size = new System.Drawing.Size(90, 46);
+            this.button_Print.TabIndex = 15;
+            this.button_Print.Text = "打　印";
+            this.button_Print.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Print.UseVisualStyleBackColor = true;
+            this.button_Print.Click += new System.EventHandler(this.button_Print_Click);
+            // 
             // StatisticsReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -193,5 +209,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button_Statistics;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart_Statistics;
+        private System.Windows.Forms.Button button_Print;
     }
 }

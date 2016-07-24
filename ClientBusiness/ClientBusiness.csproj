@@ -33,11 +33,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetPrint, Version=5.2.4824.19564, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dll\DotNetPrint.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,6 +54,9 @@
   <ItemGroup>
     <Compile Include="ComboBoxListItem.cs" />
     <Compile Include="ConfigFile.cs" />
+    <Compile Include="DataGridPrint.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FeatureStruct.cs" />
     <Compile Include="RemoteInterface.cs" />
     <Compile Include="SystemManage.cs" />
@@ -59,6 +68,9 @@
       <Project>{0939aa0a-2e65-4b68-adcf-f35943092a9a}</Project>
       <Name>IntrefaceStruct</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dll\DotNetPrint.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

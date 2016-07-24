@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
 using JXDL.ClientBusiness;
-using JXDL.IntrefaceStruct;
 
 namespace JXDL.Client
 {
@@ -234,6 +233,27 @@ namespace JXDL.Client
                     }
                 }
             }
+        }
+
+        private void button_Print_Click(object sender, EventArgs e)
+        {
+            DataGridPrint vDataGridPrint = new DataGridPrint();
+            vDataGridPrint.NewPrint(dataGridView_FileList, getPrintTitle());
+        }
+
+        string getPrintTitle()
+        {
+            string vTitle = "丰城市文档数据查询";
+            ComboBoxListItem vTownshipListItem = (ComboBoxListItem)comboBox_Township.SelectedItem;
+            ComboBoxListItem vVillageCommitteeListItem = (ComboBoxListItem)comboBox_VillageCommittee.SelectedItem;
+            ComboBoxListItem vVillageListItem = (ComboBoxListItem)comboBox_Village.SelectedItem;
+            if (vTownshipListItem!=null && vTownshipListItem.Value != "请选择")
+                vTitle = string.Format("丰城市{0}文档数据查询", vTownshipListItem.Name);
+            if (vVillageCommitteeListItem!=null && vVillageCommitteeListItem.Value != "请选择")
+                vTitle = string.Format("丰城市{0}文档数据查询", vVillageCommitteeListItem.Name);
+            if (vVillageListItem!=null && vVillageListItem.Value != "请选择")
+                vTitle = string.Format("丰城市{0}{1}村文档数据查询",vVillageCommitteeListItem.Name, vVillageListItem.Name);
+            return vTitle;
         }
     }
 }

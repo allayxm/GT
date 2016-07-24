@@ -51,6 +51,9 @@
     <ApplicationIcon>Earth.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetPrint">
+      <HintPath>..\ClientBusiness\Dll\DotNetPrint.dll</HintPath>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.3DAnalyst, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
