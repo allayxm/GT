@@ -36,7 +36,7 @@ namespace JXDL.ClientBusiness
             IsGroupNewRowID = true; //'新组行号从1开始重新编号
             PaperLandscape = true; //'纵向打印
             IsImmediatePrint = true;
-            IsImmediatePrintShowPrintDialog = false;
+            IsImmediatePrintShowPrintDialog = true;
             Print(dgv, false);// '也可用dgvprint1.print(d1,true),此时会显示一个打印参数设置窗口
         }
 

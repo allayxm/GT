@@ -238,7 +238,13 @@ namespace JXDL.Client
         private void button_Print_Click(object sender, EventArgs e)
         {
             DataGridPrint vDataGridPrint = new DataGridPrint();
+            Column_Download.Visible = false;
+            if ( Program.LoginUserInfo.Power.Value == 2 || Program.LoginUserInfo.Power.Value== 3)
+                Column_Delete.Visible = false;
             vDataGridPrint.NewPrint(dataGridView_FileList, getPrintTitle());
+            Column_Download.Visible = true;
+            if (Program.LoginUserInfo.Power.Value == 2 || Program.LoginUserInfo.Power.Value == 3)
+                Column_Delete.Visible = true;
         }
 
         string getPrintTitle()

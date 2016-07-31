@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileManageForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileManageForm));
             this.groupBox_Query = new System.Windows.Forms.GroupBox();
+            this.button_Print = new System.Windows.Forms.Button();
             this.button_Query = new System.Windows.Forms.Button();
             this.textBox_File = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
             this.Column_Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Download = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Column_Delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.button_Print = new System.Windows.Forms.Button();
             this.groupBox_Query.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_FileList)).BeginInit();
             this.SuspendLayout();
@@ -78,6 +78,20 @@
             this.groupBox_Query.TabIndex = 0;
             this.groupBox_Query.TabStop = false;
             this.groupBox_Query.Text = "查询条件";
+            // 
+            // button_Print
+            // 
+            this.button_Print.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Print.Image = ((System.Drawing.Image)(resources.GetObject("button_Print.Image")));
+            this.button_Print.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Print.Location = new System.Drawing.Point(647, 63);
+            this.button_Print.Name = "button_Print";
+            this.button_Print.Size = new System.Drawing.Size(96, 43);
+            this.button_Print.TabIndex = 15;
+            this.button_Print.Text = "打  印";
+            this.button_Print.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Print.UseVisualStyleBackColor = true;
+            this.button_Print.Click += new System.EventHandler(this.button_Print_Click);
             // 
             // button_Query
             // 
@@ -218,7 +232,7 @@
             // 
             // Column_ID
             // 
-            this.Column_ID.DataPropertyName = "ID";
+            this.Column_ID.DataPropertyName = "XH";
             this.Column_ID.HeaderText = "序号";
             this.Column_ID.Name = "Column_ID";
             this.Column_ID.ReadOnly = true;
@@ -280,20 +294,6 @@
             this.Column_Delete.Text = "删除";
             this.Column_Delete.Width = 80;
             // 
-            // button_Print
-            // 
-            this.button_Print.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Print.Image = ((System.Drawing.Image)(resources.GetObject("button_Print.Image")));
-            this.button_Print.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Print.Location = new System.Drawing.Point(647, 63);
-            this.button_Print.Name = "button_Print";
-            this.button_Print.Size = new System.Drawing.Size(96, 43);
-            this.button_Print.TabIndex = 15;
-            this.button_Print.Text = "打  印";
-            this.button_Print.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Print.UseVisualStyleBackColor = true;
-            this.button_Print.Click += new System.EventHandler(this.button_Print_Click);
-            // 
             // FileManageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -328,6 +328,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button_Query;
         private System.Windows.Forms.DataGridView dataGridView_FileList;
+        private System.Windows.Forms.Button button_Print;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Unit;
@@ -335,6 +336,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Date;
         private System.Windows.Forms.DataGridViewButtonColumn Column_Download;
         private System.Windows.Forms.DataGridViewButtonColumn Column_Delete;
-        private System.Windows.Forms.Button button_Print;
     }
 }

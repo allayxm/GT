@@ -631,7 +631,6 @@ namespace JXDL.Client
         private void axToolbarControl1_OnMouseUp(object sender, IToolbarControlEvents_OnMouseUpEvent e)
         {
             int i = e.button;
-            
         }
 
         private void ToolStripMenuItem_Doc_Input_Click(object sender, EventArgs e)
@@ -742,6 +741,11 @@ namespace JXDL.Client
             vFileManageForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
             vFileManageForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vFileManageForm.ShowDialog();
+        }
+
+        private void axToolbarControl1_OnItemClick(object sender, IToolbarControlEvents_OnItemClickEvent e)
+        {
+            int vIndex = e.index;
         }
     }
 }

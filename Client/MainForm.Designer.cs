@@ -118,28 +118,28 @@
             // ToolStripMenuItem_Doc_Input
             // 
             this.ToolStripMenuItem_Doc_Input.Name = "ToolStripMenuItem_Doc_Input";
-            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_Doc_Input.Text = "信息输入";
             this.ToolStripMenuItem_Doc_Input.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Input_Click);
             // 
             // ToolStripMenuItem_Doc_Edit
             // 
             this.ToolStripMenuItem_Doc_Edit.Name = "ToolStripMenuItem_Doc_Edit";
-            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_Doc_Edit.Text = "管理编辑";
             this.ToolStripMenuItem_Doc_Edit.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Edit_Click);
             // 
             // ToolStripMenuItem_Doc_Query
             // 
             this.ToolStripMenuItem_Doc_Query.Name = "ToolStripMenuItem_Doc_Query";
-            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_Doc_Query.Text = "信息查询";
             this.ToolStripMenuItem_Doc_Query.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Query_Click);
             // 
             // ToolStripMenuItem_Doc_Report
             // 
             this.ToolStripMenuItem_Doc_Report.Name = "ToolStripMenuItem_Doc_Report";
-            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(138, 24);
             this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
             this.ToolStripMenuItem_Doc_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Report_Click);
             // 
@@ -229,6 +229,7 @@
             this.axToolbarControl1.Size = new System.Drawing.Size(678, 28);
             this.axToolbarControl1.TabIndex = 2;
             this.axToolbarControl1.OnMouseUp += new ESRI.ArcGIS.Controls.IToolbarControlEvents_Ax_OnMouseUpEventHandler(this.axToolbarControl1_OnMouseUp);
+            this.axToolbarControl1.OnItemClick += new ESRI.ArcGIS.Controls.IToolbarControlEvents_Ax_OnItemClickEventHandler(this.axToolbarControl1_OnItemClick);
             this.axToolbarControl1.MouseCaptureChanged += new System.EventHandler(this.axToolbarControl1_MouseCaptureChanged);
             // 
             // axMapControl1

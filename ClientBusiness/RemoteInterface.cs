@@ -78,8 +78,14 @@ namespace JXDL.ClientBusiness
                 JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
                 vFileInfoList = vJSC.Deserialize<JXDL.IntrefaceStruct.FileInfo[]>(vResult);
             }
-           
-            return convertFileInfoToDataTable(vFileInfoList);
+            DataTable vTable = new DataTable();
+            vTable = convertFileInfoToDataTable(vFileInfoList);
+            vTable.Columns.Add(new DataColumn("XH",typeof(int)));
+            vTable.AcceptChanges();
+            for (int i = 0; i < vTable.Rows.Count; i++)
+                vTable.Rows[i]["XH"] = i+1;
+            vTable.AcceptChanges();
+            return vTable;
         }
 
         DataTable convertFileInfoToDataTable(JXDL.IntrefaceStruct.FileInfo[] FileInfoList)

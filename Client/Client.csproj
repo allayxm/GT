@@ -151,6 +151,12 @@
     <Compile Include="FileManageForm.Designer.cs">
       <DependentUpon>FileManageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LayerManageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LayerManageForm.Designer.cs">
+      <DependentUpon>LayerManageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,6 +203,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileManageForm.resx">
       <DependentUpon>FileManageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LayerManageForm.resx">
+      <DependentUpon>LayerManageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
