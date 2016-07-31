@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MXKJ.DBMiddleWareLib;
+using System.Data;
 using JXDL.ManageEFModel;
 
 
@@ -31,6 +32,11 @@ namespace JXDL.ManageBusiness
             vSystemEF.ItemValue4 = DBPassword;
 
             return m_BasicDBClass.UpdateRecord(vSystemEF, "ItemName='MapServer'");
+        }
+
+        public DataTable GetLayers()
+        {
+            return m_BasicDBClass.SelectAllRecords<LayersEFModel>();
         }
     }
 }

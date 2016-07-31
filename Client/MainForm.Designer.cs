@@ -160,37 +160,38 @@
             // ToolStripMenuItem_Pic_Layer
             // 
             this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
-            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
+            this.ToolStripMenuItem_Pic_Layer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Layer_Click);
             // 
             // ToolStripMenuItem_Pic_Browse
             // 
             this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
-            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
             // 
             // ToolStripMenuItem_Pic_Map
             // 
             this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
-            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
             // 
             // ToolStripMenuItem_Pic_Anayle
             // 
             this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
-            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
-            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
             // 
             // ToolStripMenuItem_EagleEye
             // 
             this.ToolStripMenuItem_EagleEye.Name = "ToolStripMenuItem_EagleEye";
-            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_EagleEye.Text = "鹰眼地图";
             this.ToolStripMenuItem_EagleEye.Click += new System.EventHandler(this.ToolStripMenuItem_EagleEye_Click);
             // 
@@ -228,9 +229,7 @@
             this.axToolbarControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axToolbarControl1.OcxState")));
             this.axToolbarControl1.Size = new System.Drawing.Size(678, 28);
             this.axToolbarControl1.TabIndex = 2;
-            this.axToolbarControl1.OnMouseUp += new ESRI.ArcGIS.Controls.IToolbarControlEvents_Ax_OnMouseUpEventHandler(this.axToolbarControl1_OnMouseUp);
             this.axToolbarControl1.OnItemClick += new ESRI.ArcGIS.Controls.IToolbarControlEvents_Ax_OnItemClickEventHandler(this.axToolbarControl1_OnItemClick);
-            this.axToolbarControl1.MouseCaptureChanged += new System.EventHandler(this.axToolbarControl1_MouseCaptureChanged);
             // 
             // axMapControl1
             // 
@@ -258,7 +257,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.menuStrip_Main.ResumeLayout(false);
             this.menuStrip_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();

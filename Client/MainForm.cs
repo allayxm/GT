@@ -18,6 +18,8 @@ using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.SystemUI;
 using ESRI.ArcGIS.Display;
+using JXDL.IntrefaceStruct;
+
 
 namespace JXDL.Client
 {
@@ -42,6 +44,9 @@ namespace JXDL.Client
         /// </summary>
         IFeatureLayer m_EagleEyeFeatureClass = null;
 
+        int m_ToolButtonIndex;
+
+        LayerStruct[] m_Lyaers;
         /// <summary>
         /// 鹰眼对话框
         /// </summary>
@@ -385,6 +390,7 @@ namespace JXDL.Client
 
             IWorkspace vWorkspace = vWorkspaceFactory.Open(vPropSet, 0);
             IFeatureWorkspace vFeatWS = vWorkspace as IFeatureWorkspace;
+            //初始化行政区域图层
             for( int i=0;i<Program.MapTables.Length;i++)
             {
                 IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
@@ -424,7 +430,29 @@ namespace JXDL.Client
                 }
             }
             changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
-            axMapControl1.Extent = axMapControl1.FullExtent;
+
+            ////加载资源图层
+            RemoteInterface vRemoteInterface = new RemoteInterface();
+            m_Lyaers = vRemoteInterface.GetLayers();
+            foreach (LayerStruct vTempLayer in m_Lyaers)
+            {
+                try
+                {
+                    IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(string.Format("sde.{0}", vTempLayer.Name));
+                    IFeatureLayer vLayerFeature = new FeatureLayerClass();
+                    vLayerFeature.MaximumScale = Program.Village_MaximumScale;
+                    vLayerFeature.MinimumScale = Program.Village_MinimumScale;
+                    vLayerFeature.FeatureClass = vFeatureClass;
+                    vLayerFeature.Name = vTempLayer.Name;
+                    axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
+                }
+                catch 
+                {
+                    MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            //axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();
 
             axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
@@ -548,7 +576,8 @@ namespace JXDL.Client
             }
             else
             {
-                MessageBox.Show("选择的单位没有文档数据","信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if ( m_ToolButtonIndex != 7 )
+                    MessageBox.Show("选择的单位没有文档数据","信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -598,40 +627,34 @@ namespace JXDL.Client
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ILayer zrcLayer = null;
-            for ( int i=0;i< axMapControl1.LayerCount;i++)
-            {
-                ILayer layer =  axMapControl1.get_Layer(i);
-                if ( layer.Name == "sde.DBO.自然村点")
-                {
-                    zrcLayer = layer;
-                    break;
-                }
-            }
-            IFeatureLayer featureLayer = zrcLayer as IFeatureLayer;
-            IFeatureClass featureClss = featureLayer.FeatureClass;
-            IQueryFilter queryFilter = new QueryFilterClass();
-            IFeatureCursor featureCursor;
-            IFeature feature = null;
-            queryFilter.WhereClause = ("RefName = '芳山'");
-            featureCursor = featureClss.Search(queryFilter, true);
-            feature = featureCursor.NextFeature();
-            if (feature!=null )
-            {
-                axMapControl1.Map.SelectFeature(zrcLayer, feature);
-                axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection,null,null);
-            }
+            //ILayer zrcLayer = null;
+            //for ( int i=0;i< axMapControl1.LayerCount;i++)
+            //{
+            //    ILayer layer =  axMapControl1.get_Layer(i);
+            //    if ( layer.Name == "sde.DBO.自然村点")
+            //    {
+            //        zrcLayer = layer;
+            //        break;
+            //    }
+            //}
+            //IFeatureLayer featureLayer = zrcLayer as IFeatureLayer;
+            //IFeatureClass featureClss = featureLayer.FeatureClass;
+            //IQueryFilter queryFilter = new QueryFilterClass();
+            //IFeatureCursor featureCursor;
+            //IFeature feature = null;
+            //queryFilter.WhereClause = ("RefName = '芳山'");
+            //featureCursor = featureClss.Search(queryFilter, true);
+            //feature = featureCursor.NextFeature();
+            //if (feature!=null )
+            //{
+            //    axMapControl1.Map.SelectFeature(zrcLayer, feature);
+            //    axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection,null,null);
+            //}
+
+            RemoteInterface vRemoteInterface = new RemoteInterface();
+            var aa =  vRemoteInterface.GetLayers();
         }
 
-        private void axToolbarControl1_MouseCaptureChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void axToolbarControl1_OnMouseUp(object sender, IToolbarControlEvents_OnMouseUpEvent e)
-        {
-            int i = e.button;
-        }
 
         private void ToolStripMenuItem_Doc_Input_Click(object sender, EventArgs e)
         {
@@ -715,11 +738,6 @@ namespace JXDL.Client
             vFileManageForm.ShowDialog();
         }
 
-        private void MainForm_ResizeEnd(object sender, EventArgs e)
-        {
-
-        }
-
         private void ToolStripMenuItem_EagleEye_Click(object sender, EventArgs e)
         {
             m_EagleEyeForm.Show();
@@ -745,7 +763,24 @@ namespace JXDL.Client
 
         private void axToolbarControl1_OnItemClick(object sender, IToolbarControlEvents_OnItemClickEvent e)
         {
-            int vIndex = e.index;
+            m_ToolButtonIndex = e.index;
+        }
+
+        private void ToolStripMenuItem_Pic_Layer_Click(object sender, EventArgs e)
+        {
+            LayerManageForm vLayerManageForm = new LayerManageForm();
+            vLayerManageForm.Layers = m_Lyaers;
+            if ( vLayerManageForm.ShowDialog() == DialogResult.OK )
+            {
+                for( int i=0;i<axMapControl1.Map.LayerCount;i++)
+                {
+                    string vName = axMapControl1.Map.Layer[i].Name;
+                    LayerStruct vLayer  = m_Lyaers.Where(m => m.Name == vName).FirstOrDefault();
+                    if ( vLayer!=null)
+                        axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
+                }
+                axMapControl1.Refresh();
+            }
         }
     }
 }

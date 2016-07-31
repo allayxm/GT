@@ -402,6 +402,17 @@ namespace JXDL.ClientBusiness
         }
         #endregion
 
+        #region 获取图层要素数据
+        public LayerStruct[] GetLayers()
+        {
+            string vUrl = string.Format("{0}/Api/GetLayers", m_RemotingServerAddress);
+            string vData = HttpGet(vUrl, "");
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return vJSC.Deserialize<LayerStruct[]>(vData);
+
+        }
+        #endregion
+
         #region Http操作协议
         string HttpDelete(string Url, string postDataStr)
         {
