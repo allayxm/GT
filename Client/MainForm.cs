@@ -18,6 +18,9 @@ using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.SystemUI;
 using ESRI.ArcGIS.Display;
+using ESRI.ArcGIS.AnalysisTools;
+using ESRI.ArcGIS.Geoprocessing;
+using ESRI.ArcGIS.Geoprocessor;
 using JXDL.IntrefaceStruct;
 
 
@@ -51,6 +54,14 @@ namespace JXDL.Client
         /// 鹰眼对话框
         /// </summary>
         EagleEyeForm m_EagleEyeForm = null;
+
+        /// <summary>
+        /// 缓冲区分析
+        /// </summary>
+        bool m_BufferAnayle = false;
+
+        readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory) ;
+
         public MainForm()
         {
             InitializeComponent();
@@ -455,7 +466,7 @@ namespace JXDL.Client
             //axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();
 
-            axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
+            //axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
 
             m_EagleEyeForm = new EagleEyeForm();
             m_EagleEyeForm.MainMapControl = axMapControl1;
@@ -540,6 +551,47 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
+            if (m_BufferAnayle)
+                bufferAnayle();
+            else
+                viewFiles();
+        }
+
+        void bufferAnayle()
+        {
+            Geoprocessor gp = new Geoprocessor();
+            //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
+            gp.OverwriteOutput = true;
+
+            ISelection pSelection = axMapControl1.Map.FeatureSelection;
+            IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
+            pEnumFeatureSetup.AllFields = true;
+            IEnumFeature pEnumFeature = pSelection as IEnumFeature;
+            IFeature pFeature = pEnumFeature.Next();
+            ESRI.ArcGIS.AnalysisTools.Buffer buffer = new ESRI.ArcGIS.AnalysisTools.Buffer(pSelection, m_BufferPath, 100);
+            IGeoProcessorResult results = null;
+            results = (IGeoProcessorResult)gp.Execute(buffer, null);
+            if (results.Status != esriJobStatus.esriJobSucceeded)
+                MessageBox.Show("缓冲区生成失败！");
+            else
+            {
+                this.DialogResult = DialogResult.OK;
+                MessageBox.Show("缓冲区生成成功！");
+            }
+
+        }
+
+        void viewFiles()
+        {
+            //IFeatureLayerDefinition pFeaturelyrdef = pFtSelection as IFeatureLayerDefinition;
+            //pFeaturelyrdef.DefinitionExpression = whereclause;
+            //IFeatureLayer pflay = pFeaturelyrdef.CreateSelectionLayer(selectionlayername, true, null, null);
+            //pflay.Visible = true;
+            //pflay.Name = selectionlayername;
+            //pflay.Selectable = true;
+            
+            
+
             ISelection pSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
             pEnumFeatureSetup.AllFields = true;
@@ -550,7 +602,7 @@ namespace JXDL.Client
             {
                 int vXZDMIndex = 0;
                 string vName = pFeature.Class.AliasName;
-                switch( vName)
+                switch (vName)
                 {
                     case Program.TownshipTableName:
                         vXZDMIndex = pFeature.Fields.FindField(Program.TownshipCodeName);
@@ -565,7 +617,7 @@ namespace JXDL.Client
                 //Console.Write("Name:" + vName);
                 string vCode = (string)pFeature.get_Value(vXZDMIndex);
                 vCode = System.Web.HttpUtility.UrlEncode(vCode);
-                vAreaCodeList.Add( vCode );
+                vAreaCodeList.Add(vCode);
                 pFeature = pEnumFeature.Next();
             }
             if (vAreaCodeList.Count > 0)
@@ -576,8 +628,8 @@ namespace JXDL.Client
             }
             else
             {
-                if ( m_ToolButtonIndex != 7 )
-                    MessageBox.Show("选择的单位没有文档数据","信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (m_ToolButtonIndex != 7)
+                    MessageBox.Show("选择的单位没有文档数据", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -781,6 +833,12 @@ namespace JXDL.Client
                 }
                 axMapControl1.Refresh();
             }
+        }
+
+        private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
+            m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
         }
     }
 }
