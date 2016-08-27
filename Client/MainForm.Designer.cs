@@ -181,6 +181,7 @@
             this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
             this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
+            this.ToolStripMenuItem_Pic_Anayle.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
@@ -240,6 +241,7 @@
             this.axMapControl1.Size = new System.Drawing.Size(678, 422);
             this.axMapControl1.TabIndex = 3;
             this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
+            this.axMapControl1.OnSelectionChanged += new System.EventHandler(this.AxMapControl1_OnSelectionChanged);
             // 
             // MainForm
             // 
