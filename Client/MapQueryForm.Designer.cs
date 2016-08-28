@@ -42,7 +42,7 @@
             this.treeView_Layer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_Layer.Location = new System.Drawing.Point(3, 17);
             this.treeView_Layer.Name = "treeView_Layer";
-            this.treeView_Layer.Size = new System.Drawing.Size(159, 358);
+            this.treeView_Layer.Size = new System.Drawing.Size(159, 409);
             this.treeView_Layer.TabIndex = 0;
             this.treeView_Layer.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Layer_AfterSelect);
             // 
@@ -52,7 +52,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(165, 378);
+            this.groupBox1.Size = new System.Drawing.Size(165, 429);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "图层";
@@ -63,7 +63,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(165, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(466, 378);
+            this.groupBox2.Size = new System.Drawing.Size(663, 429);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "要素信息";
@@ -75,14 +75,14 @@
             this.dataGridView_Data.Location = new System.Drawing.Point(3, 17);
             this.dataGridView_Data.Name = "dataGridView_Data";
             this.dataGridView_Data.RowTemplate.Height = 23;
-            this.dataGridView_Data.Size = new System.Drawing.Size(460, 358);
+            this.dataGridView_Data.Size = new System.Drawing.Size(657, 409);
             this.dataGridView_Data.TabIndex = 0;
             // 
             // MapQueryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 378);
+            this.ClientSize = new System.Drawing.Size(828, 429);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

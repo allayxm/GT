@@ -600,15 +600,10 @@ namespace JXDL.Client
             {
                 //int vXZDMIndex = 0;
                 string vName = pFeature.Class.AliasName;
-                if (  vSelectFeatures.ContainsKey(vName) )
-                {
-                    vSelectFeatures[vName].Add(pFeature);
-                }
-                else
-                {
-                    vSelectFeatures.Add(vName, new List<IFeature>() );
-                    vSelectFeatures[vName].Add(pFeature);
-                }
+                vName = vName.Remove(0, vName.LastIndexOf('.')+1);
+                if (  !vSelectFeatures.ContainsKey(vName) )
+                    vSelectFeatures.Add(vName, new List<IFeature>());
+                vSelectFeatures[vName].Add(pFeature);
                 pFeature = pEnumFeature.Next();
             }
             if (vSelectFeatures.Count > 0)
