@@ -175,6 +175,7 @@
             this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
             this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
+            this.ToolStripMenuItem_Pic_Map.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Map_Click);
             // 
             // ToolStripMenuItem_Pic_Anayle
             // 

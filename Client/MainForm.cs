@@ -60,7 +60,13 @@ namespace JXDL.Client
         /// </summary>
         bool m_BufferAnayle = false;
 
+        /// <summary>
+        /// 地图查询
+        /// </summary>
+        bool m_MapQuery = false;
+
         readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory) ;
+
 
         public MainForm()
         {
@@ -506,9 +512,9 @@ namespace JXDL.Client
                 vFillSymbol = new SimpleFillSymbolClass();
                 vColorRgb = Color.FromArgb(townshipBackgroundColor);
                 IRgbColor vColor = new RgbColorClass();
-                vColor.Red = vColorRgb.R;
+                vColor.Red   = vColorRgb.R;
                 vColor.Green = vColorRgb.G;
-                vColor.Blue = vColorRgb.B;
+                vColor.Blue  = vColorRgb.B;
                 vFillSymbol.Color = vColor;
                 vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
             }
@@ -551,8 +557,8 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
-            if (m_BufferAnayle)
-                bufferAnayle();
+            if (m_MapQuery)
+                mapQuery();
             else
                 viewFiles();
         }
@@ -581,6 +587,46 @@ namespace JXDL.Client
 
         }
 
+        void mapQuery()
+        {
+            Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
+            ISelection pSelection = axMapControl1.Map.FeatureSelection;
+            IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
+            pEnumFeatureSetup.AllFields = true;
+            IEnumFeature pEnumFeature = pSelection as IEnumFeature;
+            IFeature pFeature = pEnumFeature.Next();
+            //List<string> vAreaCodeList = new List<string>();
+            while (pFeature != null)
+            {
+                //int vXZDMIndex = 0;
+                string vName = pFeature.Class.AliasName;
+                if (  vSelectFeatures.ContainsKey(vName) )
+                {
+                    vSelectFeatures[vName].Add(pFeature);
+                }
+                else
+                {
+                    vSelectFeatures.Add(vName, new List<IFeature>() );
+                    vSelectFeatures[vName].Add(pFeature);
+                }
+                pFeature = pEnumFeature.Next();
+            }
+            if (vSelectFeatures.Count > 0)
+            {
+                MapQueryForm vMapQueryForm = new MapQueryForm();
+                vMapQueryForm.SelectFeatures = vSelectFeatures;
+                vMapQueryForm.ShowDialog();
+                //DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
+                //vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
+                //vDisplayFilesForm.ShowDialog();
+            }
+            else
+            {
+                if (m_ToolButtonIndex != 7)
+                    MessageBox.Show("没有需要任何图层", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         void viewFiles()
         {
             //IFeatureLayerDefinition pFeaturelyrdef = pFtSelection as IFeatureLayerDefinition;
@@ -589,8 +635,6 @@ namespace JXDL.Client
             //pflay.Visible = true;
             //pflay.Name = selectionlayername;
             //pflay.Selectable = true;
-            
-            
 
             ISelection pSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
@@ -715,12 +759,10 @@ namespace JXDL.Client
             vUploadFileForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
             vUploadFileForm.VillageFeatureLayer = m_VillageFeatureLayer;
             vUploadFileForm.ShowDialog();
-            
         }
 
         public void showAnnotationByScale(IFeatureLayer featureLayer,string annotationField,double maximumScale,double minimumScale)
         {
-            
             //IFeatureLayer FeatureLayer = pMap.get_Layer(0) as IFeatureLayer;
             IGeoFeatureLayer pGeoFeatureLayer = featureLayer as IGeoFeatureLayer;
             //创建标注集接口，可以对标注进行添加、删除、查询、排序等操作
@@ -839,6 +881,12 @@ namespace JXDL.Client
         {
             ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
             m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
+        }
+
+        private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_Pic_Map.Checked = !ToolStripMenuItem_Pic_Map.Checked;
+            m_MapQuery = ToolStripMenuItem_Pic_Map.Checked;
         }
     }
 }
