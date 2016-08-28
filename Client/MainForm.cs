@@ -22,7 +22,7 @@ using ESRI.ArcGIS.AnalysisTools;
 using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.Geoprocessor;
 using JXDL.IntrefaceStruct;
-
+using System.Runtime.InteropServices;
 
 namespace JXDL.Client
 {
@@ -65,7 +65,7 @@ namespace JXDL.Client
         /// </summary>
         bool m_MapQuery = false;
 
-        readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory) ;
+        readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory);
 
 
         public MainForm()
@@ -83,27 +83,27 @@ namespace JXDL.Client
                     ConfigFile vConfigFile = new ConfigFile();
                     Program.LoginUserInfo = vLoginForm.LoginUserInfo;
                     RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
-                    vRemoteInterface.GetMapServer(ref Program.MapDBAddress, ref Program.MapDBName,ref Program.MapDBUserName,ref Program.MapDBPassword);
+                    vRemoteInterface.GetMapServer(ref Program.MapDBAddress, ref Program.MapDBName, ref Program.MapDBUserName, ref Program.MapDBPassword);
                     Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
                     init_Menu();
                     init_Heartbeat();
-                    init_Map(vConfigFile.MapBackgroundColor,vConfigFile.TownshipBackgroundColor,vConfigFile.VillageCommitteeBackgroundColor,vConfigFile.VillageBackgroundColor);
+                    init_Map(vConfigFile.MapBackgroundColor, vConfigFile.TownshipBackgroundColor, vConfigFile.VillageCommitteeBackgroundColor, vConfigFile.VillageBackgroundColor);
                 }
                 else
                 {
                     Application.Exit();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        string getPowerName( int Power)
+        string getPowerName(int Power)
         {
             string vPowerName = "";
-            switch(Power)
+            switch (Power)
             {
                 case 1:
                     vPowerName = "村民";
@@ -191,7 +191,7 @@ namespace JXDL.Client
 
         //        ILayer pLayer = pCompositeLayer.get_Layer(i);
         //        axMapControl1.AddLayer(pLayer);
-                
+
         //    }
         //    //添加数据图层
 
@@ -253,7 +253,7 @@ namespace JXDL.Client
 
         void init_Menu()
         {
-            switch( Program.LoginUserInfo.Power)
+            switch (Program.LoginUserInfo.Power)
             {
                 //村民
                 case 1:
@@ -336,7 +336,7 @@ namespace JXDL.Client
             vSystemConfigForm.VillageCommitteeBackgroundColor = vConfigFile.VillageCommitteeBackgroundColor;
             vSystemConfigForm.VillageBackgroundColor = vConfigFile.VillageBackgroundColor;
 
-            if ( vSystemConfigForm.ShowDialog() == DialogResult.OK )
+            if (vSystemConfigForm.ShowDialog() == DialogResult.OK)
             {
                 vConfigFile.MapBackgroundColor = vSystemConfigForm.MapBackgroundColor;
                 vConfigFile.TownshipBackgroundColor = vSystemConfigForm.TownshipBackgroundColor;
@@ -352,7 +352,7 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_System_Exit_Click(object sender, EventArgs e)
         {
-            if ( MessageBox.Show("是否确认退出?","信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK )
+            if (MessageBox.Show("是否确认退出?", "信息", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 Application.Exit();
             }
@@ -363,7 +363,7 @@ namespace JXDL.Client
         /// </summary>
         void exit()
         {
-            if (Program.LoginUserInfo.ID != null )
+            if (Program.LoginUserInfo.ID != null)
             {
                 RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
                 vRemoteInterface.Logout(Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
@@ -389,15 +389,15 @@ namespace JXDL.Client
         }
 
 
-        private void init_Map( int background, int townshipBackgroundColor,
-            int villageCommitteeBackgroundColor,int villageBackgroundColor)
+        private void init_Map(int background, int townshipBackgroundColor,
+            int villageCommitteeBackgroundColor, int villageBackgroundColor)
         {
             IWorkspaceFactory vWorkspaceFactory = new SdeWorkspaceFactoryClass();
-            
+
             IPropertySet vPropSet = new PropertySetClass();
 
             vPropSet.SetProperty("SERVER", Program.MapDBAddress);
-            vPropSet.SetProperty("INSTANCE",string.Format( @"{0}:sqlserver:{1}",Program.MapDBName,Program.MapDBAddress));
+            vPropSet.SetProperty("INSTANCE", string.Format(@"{0}:sqlserver:{1}", Program.MapDBName, Program.MapDBAddress));
             vPropSet.SetProperty("DATABASE", Program.MapDBName);
             vPropSet.SetProperty("USER", Program.MapDBUserName);
             vPropSet.SetProperty("PASSWORD", Program.MapDBPassword);
@@ -408,7 +408,7 @@ namespace JXDL.Client
             IWorkspace vWorkspace = vWorkspaceFactory.Open(vPropSet, 0);
             IFeatureWorkspace vFeatWS = vWorkspace as IFeatureWorkspace;
             //初始化行政区域图层
-            for( int i=0;i<Program.MapTables.Length;i++)
+            for (int i = 0; i < Program.MapTables.Length; i++)
             {
                 IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
                 if (Program.MapTables[i] == "sde.SDE.乡镇街道")
@@ -422,7 +422,7 @@ namespace JXDL.Client
                     vLayerFeature.FeatureClass = vFeatureClass;
                     vLayerFeature.Name = Program.MapTables[i];
                     axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
-                  
+
                     switch (Program.MapTables[i])
                     {
                         case "sde.SDE.乡镇街道":
@@ -463,7 +463,7 @@ namespace JXDL.Client
                     vLayerFeature.Name = vTempLayer.Name;
                     axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
                 }
-                catch 
+                catch
                 {
                     MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -512,9 +512,9 @@ namespace JXDL.Client
                 vFillSymbol = new SimpleFillSymbolClass();
                 vColorRgb = Color.FromArgb(townshipBackgroundColor);
                 IRgbColor vColor = new RgbColorClass();
-                vColor.Red   = vColorRgb.R;
+                vColor.Red = vColorRgb.R;
                 vColor.Green = vColorRgb.G;
-                vColor.Blue  = vColorRgb.B;
+                vColor.Blue = vColorRgb.B;
                 vFillSymbol.Color = vColor;
                 vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
             }
@@ -524,7 +524,7 @@ namespace JXDL.Client
                 vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageCommitteeFeatureLayer;
                 vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
                 vFillSymbol = new SimpleFillSymbolClass();
-             
+
                 vColorRgb = Color.FromArgb(villageCommitteeBackgroundColor);
                 IRgbColor vColor = new RgbColorClass();
                 vColor.Red = vColorRgb.R;
@@ -539,7 +539,7 @@ namespace JXDL.Client
                 vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageFeatureLayer;
                 vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
                 ISimpleMarkerSymbol vSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
-                
+
                 vColorRgb = Color.FromArgb(villageBackgroundColor);
                 IRgbColor vColor = new RgbColorClass();
                 vColor.Red = vColorRgb.R;
@@ -600,8 +600,8 @@ namespace JXDL.Client
             {
                 //int vXZDMIndex = 0;
                 string vName = pFeature.Class.AliasName;
-                vName = vName.Remove(0, vName.LastIndexOf('.')+1);
-                if (  !vSelectFeatures.ContainsKey(vName) )
+                vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
+                if (!vSelectFeatures.ContainsKey(vName))
                     vSelectFeatures.Add(vName, new List<IFeature>());
                 vSelectFeatures[vName].Add(pFeature);
                 pFeature = pEnumFeature.Next();
@@ -700,7 +700,7 @@ namespace JXDL.Client
             //        MessageBox.Show("OK");
             //}
             //OpenDB();
-            
+
             //axMapControl1.BackColor = Color.Red;
         }
 
@@ -708,7 +708,7 @@ namespace JXDL.Client
         {
             //axMapControl1.MousePointer = esriControlsMousePointer.esriPointerCrosshair;
             //ISelection selection;
-            
+
             //ITool vTool=  axMapControl1.CurrentTool;
             //IGeometry geometry;
             //geometry = axMapControl1.TrackRectangle();
@@ -743,7 +743,7 @@ namespace JXDL.Client
             //}
 
             RemoteInterface vRemoteInterface = new RemoteInterface();
-            var aa =  vRemoteInterface.GetLayers();
+            var aa = vRemoteInterface.GetLayers();
         }
 
 
@@ -756,7 +756,7 @@ namespace JXDL.Client
             vUploadFileForm.ShowDialog();
         }
 
-        public void showAnnotationByScale(IFeatureLayer featureLayer,string annotationField,double maximumScale,double minimumScale)
+        public void showAnnotationByScale(IFeatureLayer featureLayer, string annotationField, double maximumScale, double minimumScale)
         {
             //IFeatureLayer FeatureLayer = pMap.get_Layer(0) as IFeatureLayer;
             IGeoFeatureLayer pGeoFeatureLayer = featureLayer as IGeoFeatureLayer;
@@ -796,7 +796,7 @@ namespace JXDL.Client
             //声明标注的Expression是否为Simple
             pLabelEngineLayerProperties.IsExpressionSimple = true;
             //设置标注字段
-            pLabelEngineLayerProperties.Expression = "["+annotationField+"]";
+            pLabelEngineLayerProperties.Expression = "[" + annotationField + "]";
             //定义IAnnotateLayerTransformationProperties 接口用来控制feature layer的display of dynamic labels
             IAnnotateLayerTransformationProperties pAnnotateLayerTransformationProperties = pLabelEngineLayerProperties as IAnnotateLayerTransformationProperties;
             //设置标注参考比例尺
@@ -859,13 +859,13 @@ namespace JXDL.Client
         {
             LayerManageForm vLayerManageForm = new LayerManageForm();
             vLayerManageForm.Layers = m_Lyaers;
-            if ( vLayerManageForm.ShowDialog() == DialogResult.OK )
+            if (vLayerManageForm.ShowDialog() == DialogResult.OK)
             {
-                for( int i=0;i<axMapControl1.Map.LayerCount;i++)
+                for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
                 {
                     string vName = axMapControl1.Map.Layer[i].Name;
-                    LayerStruct vLayer  = m_Lyaers.Where(m => m.Name == vName).FirstOrDefault();
-                    if ( vLayer!=null)
+                    LayerStruct vLayer = m_Lyaers.Where(m => m.Name == vName).FirstOrDefault();
+                    if (vLayer != null)
                         axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
                 }
                 axMapControl1.Refresh();
@@ -882,6 +882,75 @@ namespace JXDL.Client
         {
             ToolStripMenuItem_Pic_Map.Checked = !ToolStripMenuItem_Pic_Map.Checked;
             m_MapQuery = ToolStripMenuItem_Pic_Map.Checked;
+        }
+
+
+        public static IFeatureLayer CreateFeatureLayerInmemeory( string dataSetName, string aliasName, ISpatialReference spatialRef,
+            esriGeometryType geometryType, IFields propertyFields)
+        {
+            IWorkspaceFactory workspaceFactory =
+            new InMemoryWorkspaceFactoryClass();
+            IWorkspaceName workspaceName = workspaceFactory.Create(
+            "", "MyWorkspace", null, 0);
+            IName name = (IName)workspaceName;
+            IWorkspace inmemWor = (IWorkspace)name.Open();
+            IField oField = new FieldClass();
+            IFields oFields = new FieldsClass();
+            IFieldsEdit oFieldsEdit = null;
+            IFieldEdit oFieldEdit = null;
+            IFeatureClass oFeatureClass = null;
+            IFeatureLayer oFeatureLayer = null;
+            try
+            {
+                oFieldsEdit = oFields as IFieldsEdit;
+                oFieldEdit = oField as IFieldEdit;
+                for (int i = 0; i < propertyFields.FieldCount; i++)
+                {
+                    oFieldsEdit.AddField(propertyFields.get_Field(i));
+                }
+                IGeometryDef geometryDef = new GeometryDefClass();
+                IGeometryDefEdit geometryDefEdit = (IGeometryDefEdit)geometryDef;
+                geometryDefEdit.AvgNumPoints_2 = 5;
+                geometryDefEdit.GeometryType_2 = geometryType;
+                geometryDefEdit.GridCount_2 = 1;
+                geometryDefEdit.HasM_2 = false;
+                geometryDefEdit.HasZ_2 = false;
+                geometryDefEdit.SpatialReference_2 = spatialRef;
+                oFieldEdit.Name_2 = "SHAPE";
+                oFieldEdit.Type_2 = esriFieldType.esriFieldTypeGeometry;
+                oFieldEdit.GeometryDef_2 = geometryDef;
+                oFieldEdit.IsNullable_2 = true;
+                oFieldEdit.Required_2 = true;
+                oFieldsEdit.AddField(oField);
+                oFeatureClass = (inmemWor as IFeatureWorkspace).CreateFeatureClass(
+                dataSetName, oFields, null, null,
+                esriFeatureType.esriFTSimple, "SHAPE", "");
+                (oFeatureClass as IDataset).BrowseName = dataSetName;
+                oFeatureLayer = new FeatureLayerClass();
+                oFeatureLayer.Name = aliasName;
+                oFeatureLayer.FeatureClass = oFeatureClass;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try
+                {
+                    Marshal.ReleaseComObject(oField);
+                    Marshal.ReleaseComObject(oFields);
+                    Marshal.ReleaseComObject(oFieldsEdit);
+                    Marshal.ReleaseComObject(oFieldEdit);
+                    Marshal.ReleaseComObject(name);
+                    Marshal.ReleaseComObject(workspaceFactory);
+                    Marshal.ReleaseComObject(workspaceName);
+                    Marshal.ReleaseComObject(inmemWor);
+                    Marshal.ReleaseComObject(oFeatureClass);
+                }
+                catch { }
+                GC.Collect();
+            }
+            return oFeatureLayer;
         }
     }
 }

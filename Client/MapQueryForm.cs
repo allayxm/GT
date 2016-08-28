@@ -36,15 +36,15 @@ namespace JXDL.Client
                 LayerStruct vLayer = vLayers.Where(m => m.Name == TempDict.Key).FirstOrDefault();
                 if (vLayer != null)
                 {
-                    string vNodeName = string.Format("要素名称:{0} 要素类型:{1}", vLayer.Name, CommonUnit.ConvertLayerType(vLayer.Type ?? 0));
-                    treeView_Layer.Nodes.Add(TempDict.Key, vNodeName);
+                    string vNodeName = string.Format("图层:【{0}】 要素类型:【{1}】", vLayer.Expository, CommonUnit.ConvertLayerType(vLayer.Type ?? 0));
+                    treeView_Layer.Nodes.Add(TempDict.Key, vNodeName, vLayer.Type ?? 0);
                 }
             }
         }
 
         private void treeView_Layer_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            string vKey = (string)e.Node.Tag;
+            string vKey = e.Node.Name;
             if (  SelectFeatures[vKey].Count > 0 )
             {
                 DataTable vTable = createFeaturesTableStruct(SelectFeatures[vKey][0]);
@@ -53,8 +53,12 @@ namespace JXDL.Client
                     DataRow vNewRow = vTable.NewRow();
                     for( int j=0;j< vTable.Columns.Count;j++)
                     {
-                        object vFieldValue = SelectFeatures[vKey][i].get_Value(j);
-                        vNewRow[j] = vFieldValue;
+
+                        if (SelectFeatures[vKey][i].Fields.Field[j].Name != "Shape")
+                        {
+                            object vFieldValue = SelectFeatures[vKey][i].get_Value(j);
+                            vNewRow[j] = vFieldValue;
+                        }
                     }
                     vTable.Rows.Add(vNewRow);
                 }
@@ -69,7 +73,8 @@ namespace JXDL.Client
             for( int i=0;i<feature.Fields.FieldCount;i++ )
             {
                 IField vField = feature.Fields.get_Field(i);
-                vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
+                if (vField.AliasName != "Shape")
+                    vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
             }
             vTable.AcceptChanges();
             return vTable;
