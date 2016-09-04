@@ -29,7 +29,7 @@ namespace JXDL.ClientBusiness
         public int VillageCommitteeBackgroundColor { get; set; }
         public int VillageBackgroundColor { get; set; }
 
-
+        public Dictionary<string, int> LayerColor { get; set; } = new Dictionary<string, int>();
         #endregion
 
         #region 构造
@@ -38,11 +38,27 @@ namespace JXDL.ClientBusiness
             m_Configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             
             RemotingServerAddress = m_Configuration.AppSettings.Settings["RemotingServerAddress"].Value;
-            MapBackgroundColor = int.Parse( m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value );
+            MapBackgroundColor    = int.Parse( m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value );
             TownshipBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["TownshipBackgroundColor"].Value);
             VillageCommitteeBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["VillageCommitteeBackgroundColor"].Value);
             VillageBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["VillageBackgroundColor"].Value);
             DownloadPath = m_Configuration.AppSettings.Settings["DownloadPath"].Value;
+
+            string vLayerColor = m_Configuration.AppSettings.Settings["LayerColor"].Value;
+            string[] vLayerArray = vLayerColor.Split('|');
+            foreach( string vTempLayer in vLayerArray)
+            {
+                string[] vLayerData = vTempLayer.Split(',');
+                if (vLayerData.Length == 2 )
+                {
+                    if (LayerColor.ContainsKey(vLayerData[0]))
+                        LayerColor[vLayerData[0]] = int.Parse( vLayerData[1] );
+                    else
+                    {
+                        LayerColor.Add(vLayerData[0], int.Parse( vLayerData[1] ));
+                    }
+                }
+            }
         }
         #endregion
 
@@ -56,6 +72,16 @@ namespace JXDL.ClientBusiness
             m_Configuration.AppSettings.Settings["VillageCommitteeBackgroundColor"].Value = VillageCommitteeBackgroundColor.ToString();
             m_Configuration.AppSettings.Settings["VillageBackgroundColor"].Value = VillageBackgroundColor.ToString();
             m_Configuration.AppSettings.Settings["DownloadPath"].Value = DownloadPath;
+
+            string vLayerColor = "";
+            foreach ( var vTempLayerColor in LayerColor)
+            {
+                if (vLayerColor == "")
+                    vLayerColor += string.Format("{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
+                else
+                    vLayerColor += string.Format("|{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
+            }
+            m_Configuration.AppSettings.Settings["LayerColor"].Value = vLayerColor;
             m_Configuration.Save(ConfigurationSaveMode.Modified);
             System.Configuration.ConfigurationManager.RefreshSection("appSettings");
         }

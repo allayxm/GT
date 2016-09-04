@@ -22,6 +22,9 @@ namespace JXDL.Client
 
         public Dictionary<string, List<IFeature>> SelectFeatures = new Dictionary<string, List<IFeature>>();
 
+        public string LayerName { get; set; }
+        public int[] ObjectIDArray { get; set; } 
+
         private void MapQueryForm_Load(object sender, EventArgs e)
         {
             init();   
@@ -78,6 +81,64 @@ namespace JXDL.Client
             }
             vTable.AcceptChanges();
             return vTable;
+        }
+
+        private void button_Query_Click(object sender, EventArgs e)
+        {
+            string vKeyWord = textBox_KeyWord.Text;
+            if (vKeyWord != "")
+            {
+                int vOK = 0;
+                foreach (DataGridViewRow vTempRow in dataGridView_Data.Rows)
+                {
+                    bool vVisible = false;
+                    for (int i = 0; i < dataGridView_Data.Columns.Count; i++)
+                    {
+                        string vCellValue = vTempRow.Cells[i].Value.ToString()??"";
+                        if (vCellValue!="" && vCellValue.IndexOf(vKeyWord) != -1)
+                        {
+                            vVisible = true;
+                            vOK++;
+                            break;
+                        }
+                    }
+                    vTempRow.Visible = vVisible;
+                }
+                if (vOK > 0)
+                    button_Location.Enabled = true;
+                else
+                    button_Location.Enabled = false;
+            }
+            else
+            {
+                foreach (DataGridViewRow vTempRow in dataGridView_Data.Rows)
+                {
+                    vTempRow.Visible = true;
+                }
+                button_Location.Enabled = false;
+            }
+        }
+
+        private void button_Location_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Yes;
+            List<int> vObjectList = new List<int>();
+            foreach (DataGridViewRow vTempRow in dataGridView_Data.Rows)
+            {
+                if ( vTempRow.Visible )
+                {
+                    int vObjectID = (int)vTempRow.Cells["ObjectID"].Value;
+                    vObjectList.Add(vObjectID);
+                }
+            }
+            ObjectIDArray = vObjectList.ToArray();
+            LayerName = treeView_Layer.SelectedNode.Name;
+        }
+
+        private void button_Exit_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         //Dictionary<string,LayerStruct> getLayersData()

@@ -23,6 +23,7 @@ using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.Geoprocessor;
 using JXDL.IntrefaceStruct;
 using System.Runtime.InteropServices;
+using ESRI.ArcGIS.Output;
 
 namespace JXDL.Client
 {
@@ -60,12 +61,22 @@ namespace JXDL.Client
         /// </summary>
         bool m_BufferAnayle = false;
 
+        
+
+        /// <summary>
+        /// 缓冲区临时文件生成路径
+        /// </summary>
+        readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory);
+
+
+        #region 右键菜单
         /// <summary>
         /// 地图查询
         /// </summary>
         bool m_MapQuery = false;
 
-        readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory);
+        bool m_FileQuery = true;
+        #endregion
 
 
         public MainForm()
@@ -449,6 +460,8 @@ namespace JXDL.Client
             changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
 
             ////加载资源图层
+            ConfigFile vConfigFile = new ConfigFile();
+            var vLayerColor = vConfigFile.LayerColor;
             RemoteInterface vRemoteInterface = new RemoteInterface();
             m_Lyaers = vRemoteInterface.GetLayers();
             foreach (LayerStruct vTempLayer in m_Lyaers)
@@ -462,15 +475,30 @@ namespace JXDL.Client
                     vLayerFeature.FeatureClass = vFeatureClass;
                     vLayerFeature.Name = vTempLayer.Name;
                     axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
+                    if (vLayerColor.ContainsKey(vLayerFeature.Name))
+                    {
+                        vTempLayer.Color = vLayerColor[vLayerFeature.Name];
+
+                        if (vTempLayer.Color != -1)
+                            changeLayerColor(vLayerFeature, vTempLayer.Color);
+                    }
                 }
                 catch
                 {
                     MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            
+            //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
 
-            //axMapControl1.Extent = axMapControl1.FullExtent;
-            axMapControl1.Refresh();
+            //axMapControl1.FullExtent.Envelope.XMax = 416486.4234;
+            //axMapControl1.FullExtent.Envelope.XMin = 416486.4234;
+            //axMapControl1.FullExtent.Envelope.YMax = 416486.4234;
+            //axMapControl1.FullExtent.Envelope.YMin = 416486.4234;
+            //axMapControl1.FullExtent.QueryEnvelope();
+           // axMapControl1.Extent = axMapControl1.FullExtent;
+            axMapControl1.Refresh();    
+            axMapControl1.OnFullExtentUpdated += AxMapControl1_OnFullExtentUpdated;
 
             //axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
 
@@ -493,6 +521,13 @@ namespace JXDL.Client
             //axMapControl1.Map.AddLayer(cjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(zrcLayerFeature as ILayer);
 
+        }
+
+        private void AxMapControl1_OnFullExtentUpdated(object sender, IMapControlEvents2_OnFullExtentUpdatedEvent e)
+        {
+            
+            //MessageBox.Show("test");
+            //throw new NotImplementedException();
         }
 
         void changeMapColor(int background, int townshipBackgroundColor,
@@ -557,9 +592,10 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
+      
             if (m_MapQuery)
                 mapQuery();
-            else
+            else if ( m_FileQuery )
                 viewFiles();
         }
 
@@ -610,7 +646,40 @@ namespace JXDL.Client
             {
                 MapQueryForm vMapQueryForm = new MapQueryForm();
                 vMapQueryForm.SelectFeatures = vSelectFeatures;
-                vMapQueryForm.ShowDialog();
+                if ( vMapQueryForm.ShowDialog() == DialogResult.Yes && vMapQueryForm.ObjectIDArray.Length > 0 )
+                {
+                    axMapControl1.Map.ClearSelection();
+                    QueryFilterClass vQueryFilter = new QueryFilterClass();
+                    string vObjectIDStr = "";
+                    foreach( int vTempID in vMapQueryForm.ObjectIDArray )
+                    {
+                        vObjectIDStr += vTempID + ",";
+                    }
+                    if (vObjectIDStr != "")
+                        vObjectIDStr = vObjectIDStr.Remove(vObjectIDStr.Length-1);
+                    vQueryFilter.WhereClause = string.Format("OBJECTID in ({0})", vObjectIDStr);
+                    for( int i=0;i< axMapControl1.LayerCount;i++)
+                    {
+                        ILayer vLayer = axMapControl1.get_Layer(i);
+                        if ( vLayer.Name ==  vMapQueryForm.LayerName )
+                        {
+                            IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                            IFeatureClass vFeatureClass = vFeatureLayer.FeatureClass;
+                            IFeatureCursor vSerachResult=  vFeatureClass.Search(vQueryFilter, true);
+                            IFeature vFeature = vSerachResult.NextFeature();
+                            while(vFeature!=null)
+                            {
+                                axMapControl1.Map.SelectFeature(vLayer, vFeature);
+                                vFeature = vSerachResult.NextFeature();
+                                
+                                //axMapControl1.Extent.Union(vFeature.Shape.Envelope);
+                            }
+                        }
+                    }
+                    axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+                 }
+                
+
                 //DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
                 //vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
                 //vDisplayFilesForm.ShowDialog();
@@ -706,6 +775,31 @@ namespace JXDL.Client
 
         private void axMapControl1_OnMouseDown(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseDownEvent e)
         {
+            //bool a = axMapControl1.CurrentTool is ESRI.ArcGIS.Controls.ControlsNewRectangleToolClass;
+            
+            if (e.button == 2)
+            {
+                System.Drawing.Point p = new System.Drawing.Point();
+                p.X = e.x;
+                p.Y = e.y;
+                contextMenuStrip_Right.Show(axMapControl1, p);
+            }
+            //if (e.button != 2) return;
+            //esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone; 
+            //IBasicMap pMap = null;
+            //ILayer pLayer = null;
+            //object pOther = new object();
+            //object pIndex = new object();
+
+            //axTOCControl1.HitTest(e.x, e.y, ref pItem, ref pMap, ref pLayer, ref pOther, ref pIndex);
+            //if (pItem == esriTOCControlItem.esriTOCControlItemLayer)
+            //{
+
+            //System.Drawing.Point p = new System.Drawing.Point();
+            //p.X = e.x;
+            //p.Y = e.y;
+            //contextMenuStrip1.Show(axMapControl1, p);
+            //}
             //axMapControl1.MousePointer = esriControlsMousePointer.esriPointerCrosshair;
             //ISelection selection;
 
@@ -861,15 +955,43 @@ namespace JXDL.Client
             vLayerManageForm.Layers = m_Lyaers;
             if (vLayerManageForm.ShowDialog() == DialogResult.OK)
             {
+                Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
                 for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
                 {
                     string vName = axMapControl1.Map.Layer[i].Name;
                     LayerStruct vLayer = m_Lyaers.Where(m => m.Name == vName).FirstOrDefault();
-                    if (vLayer != null)
+                    if (vLayer != null && vLayer.Color!=0)
+                    {
                         axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
+                        if ( vLayer.Color!=-1)
+                            changeLayerColor(axMapControl1.Map.Layer[i], vLayer.Color);
+                        vLayerConfig.Add(vName, vLayer.Color);
+                    }
                 }
+
+                ConfigFile vConfigFile = new ConfigFile();
+                vConfigFile.LayerColor = vLayerConfig;
+                vConfigFile.Save();
                 axMapControl1.Refresh();
             }
+        }
+
+        void changeLayerColor( ILayer layer,int color )
+        {
+            IGeoFeatureLayer vGeoFeatureLayer;
+            ISimpleRenderer vSimpleRenderer;
+            IFillSymbol vFillSymbol;
+            Color vColorRgb;
+            vGeoFeatureLayer = (IGeoFeatureLayer)layer;
+            vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+            vFillSymbol = new SimpleFillSymbolClass();
+            vColorRgb = Color.FromArgb(color);
+            IRgbColor vColor = new RgbColorClass();
+            vColor.Red = vColorRgb.R;
+            vColor.Green = vColorRgb.G;
+            vColor.Blue = vColorRgb.B;
+            vFillSymbol.Color = vColor;
+            vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
         }
 
         private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
@@ -880,8 +1002,53 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem_Pic_Map.Checked = !ToolStripMenuItem_Pic_Map.Checked;
-            m_MapQuery = ToolStripMenuItem_Pic_Map.Checked;
+            //axMapControl1.Map.item
+            //Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
+            ////ILayer vLayer = axMapControl1.Map.Layers.Next();
+            //int vCount = axMapControl1.LayerCount;
+            //for (int i = 0; i < vCount; i++)
+            //{
+            //    ILayer vLayer = axMapControl1.get_Layer(i);
+            //    IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+            //    vFeatureLayer.FeatureClass.fea
+            //    IFeature vFeature = vFeatureLayer.FeatureClass as IFeature;
+            //    if (vFeature != null)
+            //    {
+            //        string vName = vFeature.Class.AliasName;
+            //        vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
+            //        if (!vSelectFeatures.ContainsKey(vName))
+            //            vSelectFeatures.Add(vName, new List<IFeature>());
+            //        vSelectFeatures[vName].Add(vFeature);
+            //    }
+            //}
+
+            //MapQueryForm vMapQueryForm = new MapQueryForm();
+            //vMapQueryForm.SelectFeatures = vSelectFeatures;
+            //vMapQueryForm.ShowDialog();
+            //for ( int i=0;i< axMapControl1.Map.LayerCount; i++)
+            //{
+
+            //}
+            //ISelection pSelection = axMapControl1.Map.LayerCount;
+            //IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
+            //pEnumFeatureSetup.AllFields = true;
+            //IEnumFeature pEnumFeature = pSelection as IEnumFeature;
+            //IFeature pFeature = pEnumFeature.Next();
+            ////List<string> vAreaCodeList = new List<string>();
+            //while (pFeature != null)
+            //{
+            //    //int vXZDMIndex = 0;
+            //    string vName = pFeature.Class.AliasName;
+            //    vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
+            //    if (!vSelectFeatures.ContainsKey(vName))
+            //        vSelectFeatures.Add(vName, new List<IFeature>());
+            //    vSelectFeatures[vName].Add(pFeature);
+            //    pFeature = pEnumFeature.Next();
+            //}
+
+            //MapQueryForm vMapQueryForm = new MapQueryForm();
+            ////vMapQueryForm.SelectFeatures = axMapControl1.Map.get
+            //vMapQueryForm.ShowDialog();
         }
 
 
@@ -951,6 +1118,111 @@ namespace JXDL.Client
                 GC.Collect();
             }
             return oFeatureLayer;
+        }
+
+        private void toolStripMenuItem_FileQuery_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            m_FileQuery = toolStripMenuItem_FileQuery.Checked;
+
+            toolStripMenuItem_MapQuery.Checked = !m_FileQuery;
+            m_MapQuery = !m_FileQuery;
+        }
+
+        private void toolStripMenuItem_MapQuery_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+            m_MapQuery = toolStripMenuItem_MapQuery.Checked;
+
+            toolStripMenuItem_FileQuery.Checked = !m_MapQuery;
+            m_FileQuery = !m_MapQuery;
+        }
+
+        private void ToolStripMenuItem_VillagePic_Click(object sender, EventArgs e)
+        {
+            VillagePicForm vVillagePicForm = new VillagePicForm();
+            vVillagePicForm.TownshipFeatureLayer = m_TownshipFeatureLayer;
+            vVillagePicForm.VillageCommitteeFeatureLayer = m_VillageCommitteeFeatureLayer;
+            vVillagePicForm.VillageFeatureLayer = m_VillageFeatureLayer;
+            vVillagePicForm.Main_Form = this;
+            vVillagePicForm.ShowDialog();
+        }
+
+        public void locationVillage(string VillageCommittee,string villageName)
+        {
+            QueryFilterClass vQueryFilter = new QueryFilterClass();
+
+            vQueryFilter.WhereClause = string.Format("村委会_dwg = '{0}'", VillageCommittee);
+            IFeatureCursor vSerachResult_VillageCommittee = m_VillageCommitteeFeatureLayer.Search(vQueryFilter, true);
+            IFeature vFeature_VillageCommittee = vSerachResult_VillageCommittee.NextFeature();
+
+            vQueryFilter.WhereClause = string.Format("text = '{0}'", villageName);
+            IFeatureCursor vSerachResult_Village = m_VillageFeatureLayer.Search(vQueryFilter, true);
+            IFeature vFeature_Village = vSerachResult_Village.NextFeature();
+            
+            if ( vFeature_VillageCommittee != null )
+            {
+                axMapControl1.Extent = vFeature_VillageCommittee.Shape.Envelope;
+            }
+
+            if (vFeature_Village != null )
+            {
+                //axMapControl1.Map.SelectFeature(m_VillageFeatureLayer, vFeature);
+
+                //ESRI.ArcGIS.Geometry.Point centerpoint = ESRI.ArcGIS.Geometry.GetCenterPoint(geo);
+                //Map1.CenterAt(centerpoint);
+                axMapControl1.FlashShape(vFeature_Village.Shape);
+                IPoint vPoint = new PointClass();
+                vPoint.X = vFeature_Village.Shape.Envelope.XMin;
+                vPoint.Y = vFeature_Village.Shape.Envelope.YMin;
+                axMapControl1.CenterAt(vPoint);
+                //axMapControl1.Extent = axMapControl1.FullExtent;
+            }
+            axMapControl1.Refresh();
+
+
+        }
+
+        public void OutPic(string FileName)
+        {
+            IActiveView vAciteView;
+            IExport vExport;
+            IPrintAndExport vPrintAndExport;
+            int vOutputResolution = 300;
+            vAciteView = axMapControl1.ActiveView;
+            vExport = new ExportJPEGClass();
+            vPrintAndExport = new PrintAndExportClass();
+            vExport.ExportFileName = FileName;
+            vPrintAndExport.Export(vAciteView, vExport, vOutputResolution, true, null);
+        }
+
+        private void axMapControl1_OnKeyDown(object sender, IMapControlEvents2_OnKeyDownEvent e)
+        {
+            //switch (e.keyCode)
+            //{
+            //    case (int)System.Windows.Forms.Keys.Up:
+            //        PanMap(0d, 0.5d);
+            //        break;
+            //    case (int)System.Windows.Forms.Keys.Down:
+            //        PanMap(0d, -0.5d);
+            //        break;
+            //    case (int)System.Windows.Forms.Keys.Left:
+            //        PanMap(-0.5d, 0d);
+            //        break;
+            //    case (int)System.Windows.Forms.Keys.Right:
+            //        PanMap(0.5d, 0d);
+            //        break;
+            //}
+        }
+
+        private void PanMap(double ratioX, double ratioY)
+        {
+            //Pans map by amount specified given in a fraction of the extent e.g. rationX=0.5, pan right by half a screen   
+            IEnvelope envelope = axMapControl1.Extent;
+            double h = envelope.Width;
+            double w = envelope.Height;
+            envelope.Offset(h * ratioX, w * ratioY);
+            axMapControl1.Extent = envelope;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace JXDL.Client
         public int TownshipBackgroundColor { get; set; }
         public int VillageCommitteeBackgroundColor { get; set; }
         public int VillageBackgroundColor { get; set; }
-
+      
         public string DownlaodPath { get; set; }
 
         private void button_SelectColor_Click(object sender, EventArgs e)

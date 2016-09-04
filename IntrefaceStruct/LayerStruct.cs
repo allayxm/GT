@@ -21,5 +21,7 @@ namespace JXDL.IntrefaceStruct
 
         public bool IsView { get; set; } = true;
 
+        public int Color { get; set; } = -1;
+
     }
 }

@@ -28,10 +28,25 @@ namespace JXDL.Client
                 foreach(LayerStruct vTempLayer in Layers)
                 {
                     ListViewItem vNewItem = new ListViewItem();
+                    vNewItem.UseItemStyleForSubItems = false;
                     vNewItem.Checked = vTempLayer.IsView;
                     vNewItem.SubItems.Add(vTempLayer.ID.ToString());
                     vNewItem.SubItems.Add( vTempLayer.Expository);
                     vNewItem.SubItems.Add( CommonUnit.ConvertLayerType(vTempLayer.Type.Value));
+                    if (vTempLayer.Color != -1)
+                    {
+                        Color vColor = Color.FromArgb(vTempLayer.Color);
+                        vNewItem.SubItems.Add("", vColor, vColor, new Font("宋体", 13));
+                    }
+                    else
+                    {
+                        vNewItem.SubItems.Add("");
+                    }
+                    //ListViewItem.ListViewSubItem vSubItem = new ListViewItem.ListViewSubItem()
+                    //{
+                    //    BackColor = Color.Red
+                    //};
+                    
                     listView_Layer.Items.Add(vNewItem);
                 }
             }
@@ -61,9 +76,28 @@ namespace JXDL.Client
             {
                 int vID = int.Parse( vTempItem.SubItems[1].Text );
                 Layers.Where(m => m.ID == vID).FirstOrDefault().IsView = vTempItem.Checked;
+                Layers.Where(m => m.ID == vID).FirstOrDefault().Color = vTempItem.SubItems[4].BackColor.ToArgb();
             }
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void listView_Layer_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+          
+        }
+
+        private void listView_Layer_DoubleClick(object sender, EventArgs e)
+        {
+            if ( listView_Layer.SelectedItems.Count > 0 )
+            {
+                ColorDialog vColorDialog = new ColorDialog();
+                if (vColorDialog.ShowDialog() == DialogResult.OK)
+                {
+                    listView_Layer.SelectedItems[0].SubItems[4].BackColor = vColorDialog.Color;
+                    listView_Layer.SelectedItems[0].SubItems[4].ForeColor = vColorDialog.Color;
+                }
+            }
         }
     }
 }

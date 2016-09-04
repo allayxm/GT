@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip_Main = new System.Windows.Forms.MenuStrip();
             this.ToolStripMenuItem_System = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,15 +47,20 @@
             this.ToolStripMenuItem_Pic_Anayle = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_EagleEye = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_VillagePic = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
             this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
             this.axMapControl1 = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.contextMenuStrip_Right = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_FileQuery = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_MapQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axMapControl1)).BeginInit();
+            this.contextMenuStrip_Right.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip_Main
@@ -151,7 +157,8 @@
             this.ToolStripMenuItem_Pic_Map,
             this.ToolStripMenuItem_Pic_Anayle,
             this.ToolStripMenuItem_Pic_Statistics,
-            this.ToolStripMenuItem_EagleEye});
+            this.ToolStripMenuItem_EagleEye,
+            this.ToolStripMenuItem_VillagePic});
             this.ToolStripMenuItem_Pic.Image = ((System.Drawing.Image)(resources.GetObject("ToolStripMenuItem_Pic.Image")));
             this.ToolStripMenuItem_Pic.Name = "ToolStripMenuItem_Pic";
             this.ToolStripMenuItem_Pic.Size = new System.Drawing.Size(97, 24);
@@ -160,42 +167,49 @@
             // ToolStripMenuItem_Pic_Layer
             // 
             this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
-            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
             this.ToolStripMenuItem_Pic_Layer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Layer_Click);
             // 
             // ToolStripMenuItem_Pic_Browse
             // 
             this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
-            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
             // 
             // ToolStripMenuItem_Pic_Map
             // 
             this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
-            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
             this.ToolStripMenuItem_Pic_Map.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Map_Click);
             // 
             // ToolStripMenuItem_Pic_Anayle
             // 
             this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
-            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
             this.ToolStripMenuItem_Pic_Anayle.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
-            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
             // 
             // ToolStripMenuItem_EagleEye
             // 
             this.ToolStripMenuItem_EagleEye.Name = "ToolStripMenuItem_EagleEye";
-            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_EagleEye.Text = "鹰眼地图";
             this.ToolStripMenuItem_EagleEye.Click += new System.EventHandler(this.ToolStripMenuItem_EagleEye_Click);
+            // 
+            // ToolStripMenuItem_VillagePic
+            // 
+            this.ToolStripMenuItem_VillagePic.Name = "ToolStripMenuItem_VillagePic";
+            this.ToolStripMenuItem_VillagePic.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_VillagePic.Text = "一村一图";
+            this.ToolStripMenuItem_VillagePic.Click += new System.EventHandler(this.ToolStripMenuItem_VillagePic_Click);
             // 
             // ToolStripMenuItem_About
             // 
@@ -235,6 +249,7 @@
             // 
             // axMapControl1
             // 
+            this.axMapControl1.ContextMenuStrip = this.contextMenuStrip_Right;
             this.axMapControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axMapControl1.Location = new System.Drawing.Point(0, 56);
             this.axMapControl1.Name = "axMapControl1";
@@ -243,6 +258,31 @@
             this.axMapControl1.TabIndex = 3;
             this.axMapControl1.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl1_OnMouseDown);
             this.axMapControl1.OnSelectionChanged += new System.EventHandler(this.AxMapControl1_OnSelectionChanged);
+            this.axMapControl1.OnKeyDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnKeyDownEventHandler(this.axMapControl1_OnKeyDown);
+            // 
+            // contextMenuStrip_Right
+            // 
+            this.contextMenuStrip_Right.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_FileQuery,
+            this.toolStripMenuItem_MapQuery});
+            this.contextMenuStrip_Right.Name = "contextMenuStrip_Right";
+            this.contextMenuStrip_Right.Size = new System.Drawing.Size(125, 48);
+            // 
+            // toolStripMenuItem_FileQuery
+            // 
+            this.toolStripMenuItem_FileQuery.Checked = true;
+            this.toolStripMenuItem_FileQuery.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItem_FileQuery.Name = "toolStripMenuItem_FileQuery";
+            this.toolStripMenuItem_FileQuery.Size = new System.Drawing.Size(124, 22);
+            this.toolStripMenuItem_FileQuery.Text = "文件查询";
+            this.toolStripMenuItem_FileQuery.Click += new System.EventHandler(this.toolStripMenuItem_FileQuery_Click);
+            // 
+            // toolStripMenuItem_MapQuery
+            // 
+            this.toolStripMenuItem_MapQuery.Name = "toolStripMenuItem_MapQuery";
+            this.toolStripMenuItem_MapQuery.Size = new System.Drawing.Size(124, 22);
+            this.toolStripMenuItem_MapQuery.Text = "地图查询";
+            this.toolStripMenuItem_MapQuery.Click += new System.EventHandler(this.toolStripMenuItem_MapQuery_Click);
             // 
             // MainForm
             // 
@@ -265,6 +305,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axMapControl1)).EndInit();
+            this.contextMenuStrip_Right.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,6 +335,10 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Statistics;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_EagleEye;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Right;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_FileQuery;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MapQuery;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_VillagePic;
     }
 }
 
