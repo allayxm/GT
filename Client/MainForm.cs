@@ -592,11 +592,13 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
-      
-            if (m_MapQuery)
-                mapQuery();
-            else if ( m_FileQuery )
-                viewFiles();
+            bufferAnayleEx();
+            IActiveView activeView = axMapControl1.ActiveView;
+            activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
+            //if (m_MapQuery)
+            //    mapQuery();
+            //else if ( m_FileQuery )
+            //    viewFiles();
         }
 
         void bufferAnayle()
@@ -621,6 +623,49 @@ namespace JXDL.Client
                 MessageBox.Show("缓冲区生成成功！");
             }
 
+        }
+
+        void bufferAnayleEx()
+        {
+
+            ISelection pSelection = axMapControl1.Map.FeatureSelection;
+            IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
+            pEnumFeatureSetup.AllFields = true;
+            IEnumFeature pEnumFeature = pSelection as IEnumFeature;
+            IFeature pFeature = pEnumFeature.Next();
+            IFeatureLayer pFeatureLayer = findIndexByFeature(pFeature);
+            Buffer(pFeatureLayer, pFeature, 1000, axMapControl1.Map);
+            //ESRI.ArcGIS.AnalysisTools.Buffer buffer = new ESRI.ArcGIS.AnalysisTools.Buffer(pSelection, m_BufferPath, 100);
+            //IGeoProcessorResult results = null;
+            //results = (IGeoProcessorResult)gp.Execute(buffer, null);
+            //if (results.Status != esriJobStatus.esriJobSucceeded)
+            //    MessageBox.Show("缓冲区生成失败！");
+            //else
+            //{
+            //    this.DialogResult = DialogResult.OK;
+            //    MessageBox.Show("缓冲区生成成功！");
+            //}
+
+        }
+
+        private IFeatureLayer findIndexByFeature(IFeature pFeature)
+        {
+            IFeatureLayer vResult = null;
+            IFeatureClass pFeatureClass = pFeature.Class as IFeatureClass;
+            for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            {
+                IFeatureLayer iFeatureLayer = axMapControl1.get_Layer(i) as IFeatureLayer;
+                IFeatureClass iFeatureCla = iFeatureLayer.FeatureClass;
+
+                if (iFeatureCla == pFeatureClass)
+                {
+                    vResult = iFeatureLayer;
+                    return iFeatureLayer;
+                }
+
+            }
+
+            return vResult;
         }
 
         void mapQuery()
@@ -1223,6 +1268,21 @@ namespace JXDL.Client
             double w = envelope.Height;
             envelope.Offset(h * ratioX, w * ratioY);
             axMapControl1.Extent = envelope;
+        }
+
+
+        public void Buffer( IFeatureLayer FeatureLayer, IFeature Feature, int Size, IMap Map)
+        {
+            IGeometry vGeo = Feature.Shape;
+            ITopologicalOperator vIPTO = (ITopologicalOperator)vGeo;
+            IGeometry vGeoBuffer = vIPTO.Buffer(Size);
+
+            ISpatialFilter vSpatialFilter = new SpatialFilter();
+            vSpatialFilter.Geometry = vGeoBuffer;
+            vSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIndexIntersects;
+
+            IFeatureSelection vFeatSelect = (IFeatureSelection)FeatureLayer;
+            vFeatSelect.SelectFeatures(vSpatialFilter, esriSelectionResultEnum.esriSelectionResultNew, false);
         }
     }
 }

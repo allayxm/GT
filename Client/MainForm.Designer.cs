@@ -167,47 +167,47 @@
             // ToolStripMenuItem_Pic_Layer
             // 
             this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
-            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
             this.ToolStripMenuItem_Pic_Layer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Layer_Click);
             // 
             // ToolStripMenuItem_Pic_Browse
             // 
             this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
-            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
             // 
             // ToolStripMenuItem_Pic_Map
             // 
             this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
-            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
             this.ToolStripMenuItem_Pic_Map.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Map_Click);
             // 
             // ToolStripMenuItem_Pic_Anayle
             // 
             this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
-            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
             this.ToolStripMenuItem_Pic_Anayle.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
-            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
             // 
             // ToolStripMenuItem_EagleEye
             // 
             this.ToolStripMenuItem_EagleEye.Name = "ToolStripMenuItem_EagleEye";
-            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_EagleEye.Text = "鹰眼地图";
             this.ToolStripMenuItem_EagleEye.Click += new System.EventHandler(this.ToolStripMenuItem_EagleEye_Click);
             // 
             // ToolStripMenuItem_VillagePic
             // 
             this.ToolStripMenuItem_VillagePic.Name = "ToolStripMenuItem_VillagePic";
-            this.ToolStripMenuItem_VillagePic.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_VillagePic.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_VillagePic.Text = "一村一图";
             this.ToolStripMenuItem_VillagePic.Click += new System.EventHandler(this.ToolStripMenuItem_VillagePic_Click);
             // 
