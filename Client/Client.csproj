@@ -150,6 +150,7 @@
     <Compile Include="EagleEyeForm.Designer.cs">
       <DependentUpon>EagleEyeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FeatureClone.cs" />
     <Compile Include="FeaturesSelectForm.cs">
       <SubType>Form</SubType>
     </Compile>
