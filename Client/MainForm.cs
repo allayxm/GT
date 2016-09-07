@@ -68,7 +68,6 @@ namespace JXDL.Client
         /// </summary>
         readonly string m_BufferPath = string.Format(@"{0}\buffer\Buffer.shp", System.Environment.CurrentDirectory);
 
-
         #region 右键菜单
         /// <summary>
         /// 地图查询
@@ -77,7 +76,6 @@ namespace JXDL.Client
 
         bool m_FileQuery = true;
         #endregion
-
 
         public MainForm()
         {
@@ -398,7 +396,6 @@ namespace JXDL.Client
                 init_Menu();
             }
         }
-
 
         private void init_Map(int background, int townshipBackgroundColor,
             int villageCommitteeBackgroundColor, int villageBackgroundColor)
