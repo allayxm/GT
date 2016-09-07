@@ -490,13 +490,12 @@ namespace JXDL.Client
             }
             
             //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
-
             //axMapControl1.FullExtent.Envelope.XMax = 416486.4234;
             //axMapControl1.FullExtent.Envelope.XMin = 416486.4234;
             //axMapControl1.FullExtent.Envelope.YMax = 416486.4234;
             //axMapControl1.FullExtent.Envelope.YMin = 416486.4234;
             //axMapControl1.FullExtent.QueryEnvelope();
-           // axMapControl1.Extent = axMapControl1.FullExtent;
+            // axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();    
             axMapControl1.OnFullExtentUpdated += AxMapControl1_OnFullExtentUpdated;
 
@@ -520,12 +519,10 @@ namespace JXDL.Client
             //axMapControl1.Map.AddLayer(xjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(cjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(zrcLayerFeature as ILayer);
-
         }
 
         private void AxMapControl1_OnFullExtentUpdated(object sender, IMapControlEvents2_OnFullExtentUpdatedEvent e)
         {
-            
             //MessageBox.Show("test");
             //throw new NotImplementedException();
         }
