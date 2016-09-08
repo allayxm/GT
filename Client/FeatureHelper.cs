@@ -24,6 +24,7 @@ namespace JXDL.Client
                 for (int i = 0; i < num; i++)
                 {
                     IField field = class2.Fields.get_Field(i);
+                    System.Diagnostics.Debug.WriteLine("字段名称:"+field.Name);
                     if ((((field.Type != esriFieldType.esriFieldTypeOID) &&
                         (field.Type != esriFieldType.esriFieldTypeGeometry))
                         && (field != class2.LengthField)) && (field != class2.AreaField))
@@ -80,7 +81,7 @@ namespace JXDL.Client
                         }
                     }
                 }
-                pDestFea.Store();
+                //pDestFea.Store();
             }
             catch (Exception)
             {

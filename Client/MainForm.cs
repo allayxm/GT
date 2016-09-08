@@ -604,9 +604,8 @@ namespace JXDL.Client
         {
             Dictionary<string, List<IFeature>> vSelectFeaturesLayer = new Dictionary<string, List<IFeature>>();
             Dictionary<string, IFeatureLayer> vSelectFeaturesFields = new Dictionary<string, IFeatureLayer>();
-            Geoprocessor vGP = new Geoprocessor();
-            //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
-            vGP.OverwriteOutput = true;
+          
+          
             //获取所有的选择的要素，并按图层放入对应的Dictionary中
             ISelection vSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup vEnumFeatureSetup = vSelection as IEnumFeatureSetup;
@@ -633,7 +632,8 @@ namespace JXDL.Client
             {
                 IFields vOldFields = vSelectFeaturesFields[vTempDict.Key].FeatureClass.Fields;
                 ISpatialReference vSpatialReference = (vSelectFeaturesFields[vTempDict.Key].FeatureClass as IGeoDataset).SpatialReference;
-                IFeatureLayer vMemFeatureLayer = CreateFeatureLayerInmemeory(vTempDict.Key, vTempDict.Key, vSpatialReference, vSelectFeaturesFields[vTempDict.Key].FeatureClass.ShapeType, vOldFields);
+                IFields vFields =  CloneFeatureClassFields(vSelectFeaturesFields[vTempDict.Key].FeatureClass, null);
+                IFeatureLayer vMemFeatureLayer = CreateFeatureLayerInmemeory(vTempDict.Key, vTempDict.Key, vSpatialReference, vSelectFeaturesFields[vTempDict.Key].FeatureClass.ShapeType, vFields);
                 IFeatureCursor vMemFeatureCursor = vMemFeatureLayer.FeatureClass.Insert(true);
 
                 //生成两个要素类字段的对应表  
@@ -647,9 +647,16 @@ namespace JXDL.Client
                     //vNewFeature = vTempFeature;
                     //for ( int i=0;i< vTempFeature.Fields.FieldCount;i++)
                     //{
-                    vNewFeature.Shape = vTempFeature.ShapeCopy;
+                    // int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField( vMemFeatureLayer.FeatureClass.ShapeFieldName );
+                    IGeometry pGeom = vTempFeature.ShapeCopy;
+                    IZAware pZaware = pGeom as IZAware;
+                    pZaware.DropZs();
+                    pZaware.ZAware = false;
+
+                    vNewFeatureBuffer.Shape = pGeom;
+                    //vNewFeatureBuffer.set_Value(vShapeFieldIndex, vTempFeature);
                     //ITopologicalOperator buff = vTempFeature.Shape as ITopologicalOperator;
-                    
+
                     //vNewFeature.Shape = buff.Buffer(100);
 
                     FeatureHelper.CopyFeature(vTempFeature, vNewFeature);
@@ -673,9 +680,9 @@ namespace JXDL.Client
                     //    //}
                     //}
                     vMemFeatureCursor.InsertFeature(vNewFeatureBuffer);
-                    vMemFeatureCursor.Flush();
+                   
                 }
-               
+                vMemFeatureCursor.Flush();
                 axMapControl1.Map.AddLayer(vMemFeatureLayer);
                 vMemFeatureLayerList.Add(vMemFeatureLayer);
             }
@@ -683,25 +690,83 @@ namespace JXDL.Client
             m_VillageFeatureLayer.Visible = false;
 
             //生成缓冲区
-            //string vBufferResult = "";
-            //foreach( IFeatureLayer vMemFeatureLayer in vMemFeatureLayerList)
-            //{
-            //    IQueryFilter vQueryFilter = new QueryFilter();
-            //    int vCount = vMemFeatureLayer.FeatureClass.FeatureCount(vQueryFilter);
-            //    IFeatureCursor vv =  vMemFeatureLayer.FeatureClass.Search(vQueryFilter, true);
-            //    IFeature vFF =  vv.NextFeature();
-            //    while( vFF != null)
-            //        vFF = vv.NextFeature();
-            //    ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath(vMemFeatureLayer.Name), 200);
-            //    IGeoProcessorResult results = null;
-            //    results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
-            //    if (results.Status != esriJobStatus.esriJobSucceeded)
-            //        vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vMemFeatureLayer.Name );
-            //    else
-            //    {
-            //        vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vMemFeatureLayer.Name);
-            //    }
-            //}
+            Geoprocessor vGP = new Geoprocessor();
+            //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
+            vGP.OverwriteOutput = true;
+            string vBufferResult = "";
+            foreach (IFeatureLayer vMemFeatureLayer in vMemFeatureLayerList)
+            {
+                IQueryFilter vQueryFilter = new QueryFilter();
+                int vCount = vMemFeatureLayer.FeatureClass.FeatureCount(vQueryFilter);
+                IFeatureCursor vv = vMemFeatureLayer.FeatureClass.Search(vQueryFilter, true);
+                IFeature vFF = vv.NextFeature();
+                while (vFF != null)
+                    vFF = vv.NextFeature();
+                ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath(vMemFeatureLayer.Name), 200);
+                IGeoProcessorResult results = null;
+                results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                if (results.Status != esriJobStatus.esriJobSucceeded)
+                    vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vMemFeatureLayer.Name);
+                else
+                {
+                    vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vMemFeatureLayer.Name);
+                }
+            }
+        }
+
+        private IFields CloneFeatureClassFields(IFeatureClass pFeatureClass, IEnvelope pDomainEnv)
+        {
+            IFields pFields = new FieldsClass();
+            IFieldsEdit pFieldsEdit = (IFieldsEdit)pFields;
+            //根据传入的要素类,将除了shape字段之外的字段复制  
+            long nOldFieldsCount = pFeatureClass.Fields.FieldCount;
+            long nOldGeoIndex = pFeatureClass.Fields.FindField(pFeatureClass.ShapeFieldName);
+            for (int i = 0; i < nOldFieldsCount; i++)
+            {
+                if (i != nOldGeoIndex)
+                {
+                    pFieldsEdit.AddField(pFeatureClass.Fields.get_Field(i));
+                }
+                else
+                {
+                    IGeometryDef pGeomDef = new GeometryDefClass();
+                    IGeometryDefEdit pGeomDefEdit = (IGeometryDefEdit)pGeomDef;
+                    ISpatialReference pSR = null;
+                    if (pDomainEnv != null)
+                    {
+                        pSR = new UnknownCoordinateSystemClass();
+                        pSR.SetDomain(pDomainEnv.XMin, pDomainEnv.XMax, pDomainEnv.YMin, pDomainEnv.YMax);
+                    }
+                    else
+                    {
+                        IGeoDataset pGeoDataset = pFeatureClass as IGeoDataset;
+                        pSR = CloneSpatialReference(pGeoDataset.SpatialReference);
+                    }
+                    //设置新要素类Geometry的参数  
+                    pGeomDefEdit.GeometryType_2 = pFeatureClass.ShapeType;
+                    pGeomDefEdit.GridCount_2 = 1;
+                    pGeomDefEdit.set_GridSize(0, 10);
+                    pGeomDefEdit.AvgNumPoints_2 = 2;
+                    pGeomDefEdit.SpatialReference_2 = pSR;
+                    //产生新的shape字段  
+                    IField pField = new FieldClass();
+                    IFieldEdit pFieldEdit = (IFieldEdit)pField;
+                    pFieldEdit.Name_2 = "shape";
+                    pFieldEdit.AliasName_2 = "shape";
+                    pFieldEdit.Type_2 = esriFieldType.esriFieldTypeGeometry;
+                    pFieldEdit.GeometryDef_2 = pGeomDef;
+                    pFieldsEdit.AddField(pField);
+                }
+            }
+            return pFields;
+        }
+        private ISpatialReference CloneSpatialReference(ISpatialReference pSrcSpatialReference)
+        {
+            double xmin, xmax, ymin, ymax;
+            pSrcSpatialReference.GetDomain(out xmin, out xmax, out ymin, out ymax);
+            ISpatialReference pSR = new UnknownCoordinateSystemClass();
+            pSR.SetDomain(xmin, xmax, ymin, ymax);
+            return pSR;
         }
 
         private void GetFCFieldsDirectory(IFeatureClass pFCold, IFeatureClass pFCnew, ref Dictionary<int, int> FieldsDictionary)
