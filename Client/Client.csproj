@@ -108,6 +108,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Version, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86" />
+    <Reference Include="LSCommonHelper">
+      <HintPath>..\..\Desktop\LSCommonHelper.dll</HintPath>
+    </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -151,6 +154,7 @@
       <DependentUpon>EagleEyeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FeatureClone.cs" />
+    <Compile Include="FeatureHelper.cs" />
     <Compile Include="FeaturesSelectForm.cs">
       <SubType>Form</SubType>
     </Compile>

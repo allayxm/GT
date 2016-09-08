@@ -644,55 +644,64 @@ namespace JXDL.Client
                 {
                     IFeatureBuffer vNewFeatureBuffer =  vMemFeatureLayer.FeatureClass.CreateFeatureBuffer();
                     IFeature vNewFeature = vNewFeatureBuffer as IFeature;
-                    vNewFeature = vTempFeature;
+                    //vNewFeature = vTempFeature;
                     //for ( int i=0;i< vTempFeature.Fields.FieldCount;i++)
                     //{
-                        vNewFeature.Shape = vTempFeature.Shape;
-                    foreach (KeyValuePair<int, int> keyvalue in pFieldsDict)
-                    {
-                        if (vTempFeature.get_Value(keyvalue.Key).ToString() == "")
-                        {
-                            if (vNewFeature.Fields.get_Field(keyvalue.Value).Type == esriFieldType.esriFieldTypeString)
-                            {
-                                vNewFeature.set_Value(keyvalue.Value, "");
-                            }
-                            else
-                            {
-                                vNewFeature.set_Value(keyvalue.Value, 0);
-                            }
-                        }
-                        else
-                        {
-                            vNewFeature.set_Value(keyvalue.Value, vNewFeature.get_Value(keyvalue.Key));
-                        }
-                        //}
-                    }
+                    vNewFeature.Shape = vTempFeature.ShapeCopy;
+                    //ITopologicalOperator buff = vTempFeature.Shape as ITopologicalOperator;
+                    
+                    //vNewFeature.Shape = buff.Buffer(100);
+
+                    FeatureHelper.CopyFeature(vTempFeature, vNewFeature);
+                    //foreach (KeyValuePair<int, int> keyvalue in pFieldsDict)
+                    //{
+                    //    if (vTempFeature.get_Value(keyvalue.Key).ToString() == "")
+                    //    {
+                    //        if (vNewFeature.Fields.get_Field(keyvalue.Value).Type == esriFieldType.esriFieldTypeString)
+                    //        {
+                    //            vNewFeature.set_Value(keyvalue.Value, "");
+                    //        }
+                    //        else
+                    //        {
+                    //            vNewFeature.set_Value(keyvalue.Value, 0);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        vNewFeature.set_Value(keyvalue.Value, vNewFeature.get_Value(keyvalue.Key));
+                    //    }
+                    //    //}
+                    //}
                     vMemFeatureCursor.InsertFeature(vNewFeatureBuffer);
                     vMemFeatureCursor.Flush();
                 }
+               
+                axMapControl1.Map.AddLayer(vMemFeatureLayer);
                 vMemFeatureLayerList.Add(vMemFeatureLayer);
             }
+            m_VillageCommitteeFeatureLayer.Visible = false;
+            m_VillageFeatureLayer.Visible = false;
 
             //生成缓冲区
-            string vBufferResult = "";
-            foreach( IFeatureLayer vMemFeatureLayer in vMemFeatureLayerList)
-            {
-                IQueryFilter vQueryFilter = new QueryFilter();
-                int vCount = vMemFeatureLayer.FeatureClass.FeatureCount(vQueryFilter);
-                IFeatureCursor vv =  vMemFeatureLayer.FeatureClass.Search(vQueryFilter, true);
-                IFeature vFF =  vv.NextFeature();
-                while( vFF != null)
-                    vFF = vv.NextFeature();
-                ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath(vMemFeatureLayer.Name), 1000);
-                IGeoProcessorResult results = null;
-                results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
-                if (results.Status != esriJobStatus.esriJobSucceeded)
-                    vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vMemFeatureLayer.Name );
-                else
-                {
-                    vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vMemFeatureLayer.Name);
-                }
-            }
+            //string vBufferResult = "";
+            //foreach( IFeatureLayer vMemFeatureLayer in vMemFeatureLayerList)
+            //{
+            //    IQueryFilter vQueryFilter = new QueryFilter();
+            //    int vCount = vMemFeatureLayer.FeatureClass.FeatureCount(vQueryFilter);
+            //    IFeatureCursor vv =  vMemFeatureLayer.FeatureClass.Search(vQueryFilter, true);
+            //    IFeature vFF =  vv.NextFeature();
+            //    while( vFF != null)
+            //        vFF = vv.NextFeature();
+            //    ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath(vMemFeatureLayer.Name), 200);
+            //    IGeoProcessorResult results = null;
+            //    results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+            //    if (results.Status != esriJobStatus.esriJobSucceeded)
+            //        vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vMemFeatureLayer.Name );
+            //    else
+            //    {
+            //        vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vMemFeatureLayer.Name);
+            //    }
+            //}
         }
 
         private void GetFCFieldsDirectory(IFeatureClass pFCold, IFeatureClass pFCnew, ref Dictionary<int, int> FieldsDictionary)
