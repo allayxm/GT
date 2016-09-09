@@ -649,17 +649,23 @@ namespace JXDL.Client
                     //{
                     // int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField( vMemFeatureLayer.FeatureClass.ShapeFieldName );
                     IGeometry pGeom = vTempFeature.ShapeCopy;
+
                     IZAware pZaware = pGeom as IZAware;
                     pZaware.DropZs();
                     pZaware.ZAware = false;
 
-                    vNewFeatureBuffer.Shape = pGeom;
+                    //vNewFeatureBuffer.Shape = pGeom;
                     //vNewFeatureBuffer.set_Value(vShapeFieldIndex, vTempFeature);
                     //ITopologicalOperator buff = vTempFeature.Shape as ITopologicalOperator;
 
                     //vNewFeature.Shape = buff.Buffer(100);
 
                     FeatureHelper.CopyFeature(vTempFeature, vNewFeature);
+                    int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField(vMemFeatureLayer.FeatureClass.ShapeFieldName);
+                    IPoint xpoint = new PointClass();
+                    xpoint.PutCoords(100, 200);
+                    vNewFeature.set_Value(vShapeFieldIndex, xpoint);
+                    //vNewFeature.Store();
                     //foreach (KeyValuePair<int, int> keyvalue in pFieldsDict)
                     //{
                     //    if (vTempFeature.get_Value(keyvalue.Key).ToString() == "")
@@ -679,7 +685,7 @@ namespace JXDL.Client
                     //    }
                     //    //}
                     //}
-                    vMemFeatureCursor.InsertFeature(vNewFeatureBuffer);
+                    object vM = vMemFeatureCursor.InsertFeature(vNewFeatureBuffer);
                    
                 }
                 vMemFeatureCursor.Flush();
@@ -748,6 +754,7 @@ namespace JXDL.Client
                     pGeomDefEdit.set_GridSize(0, 10);
                     pGeomDefEdit.AvgNumPoints_2 = 2;
                     pGeomDefEdit.SpatialReference_2 = pSR;
+                    pGeomDefEdit.HasZ_2 = false;
                     //产生新的shape字段  
                     IField pField = new FieldClass();
                     IFieldEdit pFieldEdit = (IFieldEdit)pField;
