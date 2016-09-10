@@ -51,7 +51,9 @@ namespace JXDL.Client
 
         int m_ToolButtonIndex;
 
-        LayerStruct[] m_Lyaers;
+        LayerStruct[] m_Layers;
+
+        List<LayerStruct> m_BufferLayers = new List<LayerStruct>();
         /// <summary>
         /// 鹰眼对话框
         /// </summary>
@@ -465,24 +467,28 @@ namespace JXDL.Client
             ConfigFile vConfigFile = new ConfigFile();
             var vLayerColor = vConfigFile.LayerColor;
             RemoteInterface vRemoteInterface = new RemoteInterface();
-            m_Lyaers = vRemoteInterface.GetLayers();
-            foreach (LayerStruct vTempLayer in m_Lyaers)
+            m_Layers = vRemoteInterface.GetLayers();
+            foreach (LayerStruct vTempLayer in m_Layers)
             {
                 try
                 {
                     IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(string.Format("sde.{0}", vTempLayer.Name));
-                    IFeatureLayer vLayerFeature = new FeatureLayerClass();
-                    vLayerFeature.MaximumScale = Program.Village_MaximumScale;
-                    vLayerFeature.MinimumScale = Program.Village_MinimumScale;
-                    vLayerFeature.FeatureClass = vFeatureClass;
-                    vLayerFeature.Name = vTempLayer.Name;
-                    axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
-                    if (vLayerColor.ContainsKey(vLayerFeature.Name))
+                    int vCount = vFeatureClass.FeatureCount(null);
+                    if (vCount > 0)
                     {
-                        vTempLayer.Color = vLayerColor[vLayerFeature.Name];
+                        IFeatureLayer vLayerFeature = new FeatureLayerClass();
+                        vLayerFeature.MaximumScale = Program.Village_MaximumScale;
+                        vLayerFeature.MinimumScale = Program.Village_MinimumScale;
+                        vLayerFeature.FeatureClass = vFeatureClass;
+                        vLayerFeature.Name = vTempLayer.Name;
+                        axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
+                        if (vLayerColor.ContainsKey(vLayerFeature.Name))
+                        {
+                            vTempLayer.Color = vLayerColor[vLayerFeature.Name];
 
-                        if (vTempLayer.Color != -1)
-                            changeLayerColor(vLayerFeature, vTempLayer.Color);
+                            if (vTempLayer.Color != -1)
+                                changeLayerColor(vLayerFeature, vTempLayer.Color);
+                        }
                     }
                 }
                 catch
@@ -591,7 +597,7 @@ namespace JXDL.Client
 
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
-            bufferAnayleEx();
+            //bufferAnayleEx();
             IActiveView activeView = axMapControl1.ActiveView;
             activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
             //if (m_MapQuery)
@@ -604,7 +610,6 @@ namespace JXDL.Client
         {
             Dictionary<string, List<IFeature>> vSelectFeaturesLayer = new Dictionary<string, List<IFeature>>();
             Dictionary<string, IFeatureLayer> vSelectFeaturesFields = new Dictionary<string, IFeatureLayer>();
-          
           
             //获取所有的选择的要素，并按图层放入对应的Dictionary中
             ISelection vSelection = axMapControl1.Map.FeatureSelection;
@@ -630,15 +635,16 @@ namespace JXDL.Client
             List<IFeatureLayer> vMemFeatureLayerList = new List<IFeatureLayer>();
             foreach (KeyValuePair<string, List<IFeature>> vTempDict in vSelectFeaturesLayer)
             {
-                IFields vOldFields = vSelectFeaturesFields[vTempDict.Key].FeatureClass.Fields;
-                ISpatialReference vSpatialReference = (vSelectFeaturesFields[vTempDict.Key].FeatureClass as IGeoDataset).SpatialReference;
-                IFields vFields =  CloneFeatureClassFields(vSelectFeaturesFields[vTempDict.Key].FeatureClass, null);
-                IFeatureLayer vMemFeatureLayer = CreateFeatureLayerInmemeory(vTempDict.Key, vTempDict.Key, vSpatialReference, vSelectFeaturesFields[vTempDict.Key].FeatureClass.ShapeType, vFields);
+                IFeatureLayer vSourceLayer = vSelectFeaturesFields[vTempDict.Key];
+                IFields vOldFields = vSourceLayer.FeatureClass.Fields;
+                ISpatialReference vSpatialReference = (vSourceLayer.FeatureClass as IGeoDataset).SpatialReference;
+                IFields vFields =  CloneFeatureClassFields(vSourceLayer.FeatureClass, null);
+                IFeatureLayer vMemFeatureLayer = CreateFeatureLayerInmemeory(vTempDict.Key, vTempDict.Key, new UnknownCoordinateSystemClass(), vSourceLayer.FeatureClass.ShapeType, vSourceLayer.FeatureClass.Fields);
                 IFeatureCursor vMemFeatureCursor = vMemFeatureLayer.FeatureClass.Insert(true);
 
                 //生成两个要素类字段的对应表  
                 Dictionary<int, int> pFieldsDict = new Dictionary<int, int>();
-                GetFCFieldsDirectory(vSelectFeaturesFields[vTempDict.Key].FeatureClass, vMemFeatureLayer.FeatureClass, ref pFieldsDict);
+                GetFCFieldsDirectory(vSourceLayer.FeatureClass, vMemFeatureLayer.FeatureClass, ref pFieldsDict);
 
                 foreach (IFeature vTempFeature in vTempDict.Value)
                 {
@@ -650,9 +656,9 @@ namespace JXDL.Client
                     // int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField( vMemFeatureLayer.FeatureClass.ShapeFieldName );
                     IGeometry pGeom = vTempFeature.ShapeCopy;
 
-                    IZAware pZaware = pGeom as IZAware;
-                    pZaware.DropZs();
-                    pZaware.ZAware = false;
+                    //IZAware pZaware = pGeom as IZAware;
+                    //pZaware.DropZs();
+                    //pZaware.ZAware = false;
 
                     //vNewFeatureBuffer.Shape = pGeom;
                     //vNewFeatureBuffer.set_Value(vShapeFieldIndex, vTempFeature);
@@ -662,9 +668,11 @@ namespace JXDL.Client
 
                     FeatureHelper.CopyFeature(vTempFeature, vNewFeature);
                     int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField(vMemFeatureLayer.FeatureClass.ShapeFieldName);
+                    IGeometry vIG = (IGeometry)vTempFeature.get_Value(vShapeFieldIndex);
                     IPoint xpoint = new PointClass();
                     xpoint.PutCoords(100, 200);
-                    vNewFeature.set_Value(vShapeFieldIndex, xpoint);
+                    vNewFeature.set_Value(vShapeFieldIndex, pGeom);
+
                     //vNewFeature.Store();
                     //foreach (KeyValuePair<int, int> keyvalue in pFieldsDict)
                     //{
@@ -689,11 +697,14 @@ namespace JXDL.Client
                    
                 }
                 vMemFeatureCursor.Flush();
+                changeLayerColor(vMemFeatureLayer, -65536);
                 axMapControl1.Map.AddLayer(vMemFeatureLayer);
                 vMemFeatureLayerList.Add(vMemFeatureLayer);
             }
             m_VillageCommitteeFeatureLayer.Visible = false;
             m_VillageFeatureLayer.Visible = false;
+            vMemFeatureLayerList.Clear();
+            vMemFeatureLayerList.Add(m_VillageFeatureLayer);
 
             //生成缓冲区
             Geoprocessor vGP = new Geoprocessor();
@@ -702,13 +713,18 @@ namespace JXDL.Client
             string vBufferResult = "";
             foreach (IFeatureLayer vMemFeatureLayer in vMemFeatureLayerList)
             {
+                int vShapeFieldIndex = vMemFeatureLayer.FeatureClass.FindField(vMemFeatureLayer.FeatureClass.ShapeFieldName);
                 IQueryFilter vQueryFilter = new QueryFilter();
                 int vCount = vMemFeatureLayer.FeatureClass.FeatureCount(vQueryFilter);
                 IFeatureCursor vv = vMemFeatureLayer.FeatureClass.Search(vQueryFilter, true);
                 IFeature vFF = vv.NextFeature();
-                while (vFF != null)
-                    vFF = vv.NextFeature();
-                ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath(vMemFeatureLayer.Name), 200);
+                
+                //while (vFF != null)
+                //{
+                //    IGeometry vIG = (IGeometry)vFF.get_Value(vShapeFieldIndex);
+                //    vFF = vv.NextFeature();
+                //}
+                ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vMemFeatureLayer, markBufferPath("Test"), 200);
                 IGeoProcessorResult results = null;
                 results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
                 if (results.Status != esriJobStatus.esriJobSucceeded)
@@ -813,25 +829,106 @@ namespace JXDL.Client
 
         void bufferAnayleEx()
         {
+            Dictionary<string, int> vSelectFeatureLayers = new Dictionary<string, int>();
 
-            ISelection pSelection = axMapControl1.Map.FeatureSelection;
-            IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
-            pEnumFeatureSetup.AllFields = true;
-            IEnumFeature pEnumFeature = pSelection as IEnumFeature;
-            IFeature pFeature = pEnumFeature.Next();
-            IFeatureLayer pFeatureLayer = findIndexByFeature(pFeature);
-            Buffer(pFeatureLayer, pFeature, 1000, axMapControl1.Map);
-            //ESRI.ArcGIS.AnalysisTools.Buffer buffer = new ESRI.ArcGIS.AnalysisTools.Buffer(pSelection, m_BufferPath, 100);
-            //IGeoProcessorResult results = null;
-            //results = (IGeoProcessorResult)gp.Execute(buffer, null);
-            //if (results.Status != esriJobStatus.esriJobSucceeded)
-            //    MessageBox.Show("缓冲区生成失败！");
-            //else
-            //{
-            //    this.DialogResult = DialogResult.OK;
-            //    MessageBox.Show("缓冲区生成成功！");
-            //}
+            //获取所有的选择的要素，并按图层放入对应的Dictionary中
+            ISelection vSelection = axMapControl1.Map.FeatureSelection;
+            IEnumFeatureSetup vEnumFeatureSetup = vSelection as IEnumFeatureSetup;
+            vEnumFeatureSetup.AllFields = true;
+            IEnumFeature vEnumFeature = vSelection as IEnumFeature;
+            IFeature vFeature = vEnumFeature.Next();
+            while (vFeature != null)
+            {
+                IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
+                string vFeatureLayerName = fixLayerName(vFeatureLayer );
+                if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
+                    vSelectFeatureLayers.Add(vFeatureLayerName,10);
+                vFeature = vEnumFeature.Next();
+            }
+            if (vSelectFeatureLayers.Count > 0)
+            {
+                BufferForm vBufferForm = new BufferForm();
+                vBufferForm.Layers = m_Layers;
+                vBufferForm.BufferLayers = vSelectFeatureLayers;
+                if (vBufferForm.ShowDialog() == DialogResult.OK)
+                {
+                    Dictionary<IFeatureLayer,int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
+                    for (int i = 0; i < axMapControl1.LayerCount; i++)
+                    {
+                        ILayer vLayer = axMapControl1.get_Layer(i);
+                        IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                        string vAliasName = fixLayerName(vFeatureLayer);
+                        foreach (var vSelectLayer in vSelectFeatureLayers)
+                        {
+                            if (vAliasName == vSelectLayer.Key)
+                            {
+                                vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value);
+                                break;
+                            }
 
+                        }
+                    }
+
+                    //生成缓冲区
+                    Geoprocessor vGP = new Geoprocessor();
+                    //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
+                    vGP.OverwriteOutput = true;
+                    string vBufferResult = "";
+                    foreach (var vBufferDict in vBufferLayers)
+                    {
+                        //int vShapeFieldIndex = vBufferDict.Key.FeatureClass.FindField(vBufferDict.Key.FeatureClass.ShapeFieldName);
+                        //IQueryFilter vQueryFilter = new QueryFilter();
+                        //int vCount = vBufferDict.Key.FeatureClass.FeatureCount(vQueryFilter);
+                        try
+                        {
+                            string vLayerName = fixLayerName(vBufferDict.Key);
+                            string vBufferFileName = markBufferPath(vLayerName);
+                            ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vBufferDict.Key, vBufferFileName, vBufferDict.Value);
+                            IGeoProcessorResult results = null;
+                            results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                            if (results.Status != esriJobStatus.esriJobSucceeded)
+                                vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vBufferDict.Key.Name);
+                            else
+                            {
+                                int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                                string vFileName = vBufferFileName.Substring(vLateIndex+1);
+                                vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferDict.Key.Name);
+                                axMapControl1.AddShapeFile(vFilePath, vFileName);
+                                LayerStruct vBufferLayer = new LayerStruct()
+                                {
+                                    Name = vLayerName + "_Buffer",
+                                    IsView = true,
+                                    Expository = vLayerName+"缓冲图层"
+                                };
+                                m_BufferLayers.Add(vBufferLayer);
+                            }
+                        }
+                        catch( Exception ex)
+                        {
+                            vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vBufferDict.Key.Name,ex.Message);
+                        }
+
+                    }
+                    MessageBox.Show(vBufferResult, "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    for( int i=0;i<axMapControl1.Map.LayerCount;i++)
+                    {
+                        ILayer vLayer =  axMapControl1.get_Layer(i);
+                        System.Diagnostics.Debug.WriteLine(vLayer.Name);
+                    }
+                    
+                }
+            }
+        }
+
+        string fixLayerName( IFeatureLayer featureLayer)
+        {
+            string vAliasName = featureLayer.FeatureClass.AliasName;
+            int vIndex = vAliasName.LastIndexOf('.');
+            if (vIndex != -1)
+                vAliasName = vAliasName.Substring(vAliasName.LastIndexOf('.') + 1);
+            return vAliasName;
         }
 
         private IFeatureLayer findIndexByFeature(IFeature pFeature)
@@ -862,7 +959,6 @@ namespace JXDL.Client
             pEnumFeatureSetup.AllFields = true;
             IEnumFeature pEnumFeature = pSelection as IEnumFeature;
             IFeature pFeature = pEnumFeature.Next();
-            //List<string> vAreaCodeList = new List<string>();
             while (pFeature != null)
             {
                 //int vXZDMIndex = 0;
@@ -902,7 +998,7 @@ namespace JXDL.Client
                             {
                                 axMapControl1.Map.SelectFeature(vLayer, vFeature);
                                 vFeature = vSerachResult.NextFeature();
-
+                                
                                 //axMapControl1.Extent.Union(vFeature.Shape.Envelope);
                             }
                         }
@@ -1043,7 +1139,8 @@ namespace JXDL.Client
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bufferAnayle();
+            //bufferAnayle();
+            bufferAnayleEx();
             //ILayer zrcLayer = null;
             //for ( int i=0;i< axMapControl1.LayerCount;i++)
             //{
@@ -1184,14 +1281,14 @@ namespace JXDL.Client
         private void ToolStripMenuItem_Pic_Layer_Click(object sender, EventArgs e)
         {
             LayerManageForm vLayerManageForm = new LayerManageForm();
-            vLayerManageForm.Layers = m_Lyaers;
+            vLayerManageForm.Layers = m_Layers;
             if (vLayerManageForm.ShowDialog() == DialogResult.OK)
             {
                 Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
                 for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
                 {
                     string vName = axMapControl1.Map.Layer[i].Name;
-                    LayerStruct vLayer = m_Lyaers.Where(m => m.Name == vName).FirstOrDefault();
+                    LayerStruct vLayer = m_Layers.Where(m => m.Name == vName).FirstOrDefault();
                     if (vLayer != null && vLayer.Color != 0)
                     {
                         axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
@@ -1228,8 +1325,9 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
-            m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
+            //ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
+            //m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
+            bufferAnayleEx();
         }
 
         private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)

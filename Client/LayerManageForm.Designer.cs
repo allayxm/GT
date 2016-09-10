@@ -63,6 +63,7 @@
             this.columnHeader_Color});
             this.listView_Layer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView_Layer.FullRowSelect = true;
+            this.listView_Layer.LabelEdit = true;
             this.listView_Layer.Location = new System.Drawing.Point(3, 17);
             this.listView_Layer.MultiSelect = false;
             this.listView_Layer.Name = "listView_Layer";
