@@ -91,21 +91,21 @@
             // ToolStripMenuItem_System_Setup
             // 
             this.ToolStripMenuItem_System_Setup.Name = "ToolStripMenuItem_System_Setup";
-            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_System_Setup.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_System_Setup.Text = "系统设置";
             this.ToolStripMenuItem_System_Setup.Click += new System.EventHandler(this.ToolStripMenuItem_System_Setup_Click);
             // 
             // ToolStripMenuItem_System_Logout
             // 
             this.ToolStripMenuItem_System_Logout.Name = "ToolStripMenuItem_System_Logout";
-            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_System_Logout.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_System_Logout.Text = "注销";
             this.ToolStripMenuItem_System_Logout.Click += new System.EventHandler(this.ToolStripMenuItem_System_Logout_Click);
             // 
             // ToolStripMenuItem_System_Exit
             // 
             this.ToolStripMenuItem_System_Exit.Name = "ToolStripMenuItem_System_Exit";
-            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_System_Exit.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_System_Exit.Text = "退出";
             this.ToolStripMenuItem_System_Exit.Click += new System.EventHandler(this.ToolStripMenuItem_System_Exit_Click);
             // 
@@ -124,28 +124,28 @@
             // ToolStripMenuItem_Doc_Input
             // 
             this.ToolStripMenuItem_Doc_Input.Name = "ToolStripMenuItem_Doc_Input";
-            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Input.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Input.Text = "信息输入";
             this.ToolStripMenuItem_Doc_Input.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Input_Click);
             // 
             // ToolStripMenuItem_Doc_Edit
             // 
             this.ToolStripMenuItem_Doc_Edit.Name = "ToolStripMenuItem_Doc_Edit";
-            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Edit.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Edit.Text = "管理编辑";
             this.ToolStripMenuItem_Doc_Edit.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Edit_Click);
             // 
             // ToolStripMenuItem_Doc_Query
             // 
             this.ToolStripMenuItem_Doc_Query.Name = "ToolStripMenuItem_Doc_Query";
-            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Query.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Query.Text = "信息查询";
             this.ToolStripMenuItem_Doc_Query.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Query_Click);
             // 
             // ToolStripMenuItem_Doc_Report
             // 
             this.ToolStripMenuItem_Doc_Report.Name = "ToolStripMenuItem_Doc_Report";
-            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(138, 24);
+            this.ToolStripMenuItem_Doc_Report.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Doc_Report.Text = "统计报表";
             this.ToolStripMenuItem_Doc_Report.Click += new System.EventHandler(this.ToolStripMenuItem_Doc_Report_Click);
             // 
@@ -175,7 +175,8 @@
             // 
             this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
             this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Browse.Text = "显示浏览";
+            this.ToolStripMenuItem_Pic_Browse.Text = "要素编辑";
+            this.ToolStripMenuItem_Pic_Browse.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Browse_Click);
             // 
             // ToolStripMenuItem_Pic_Map
             // 
@@ -224,7 +225,7 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.testToolStripMenuItem.Text = "test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 

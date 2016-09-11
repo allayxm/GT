@@ -53,7 +53,7 @@ namespace JXDL.Client
 
         LayerStruct[] m_Layers;
 
-        List<LayerStruct> m_BufferLayers = new List<LayerStruct>();
+        public List<LayerStruct> m_BufferLayers = new List<LayerStruct>();
         /// <summary>
         /// 鹰眼对话框
         /// </summary>
@@ -64,6 +64,36 @@ namespace JXDL.Client
         /// </summary>
         bool m_BufferAnayle = false;
 
+
+        public void ChanageLayerVisible( string LayerName,bool Visible )
+        {
+            for( int i=0;i<axMapControl1.LayerCount;i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                if ( vLayer.Name == LayerName)
+                {
+                    vLayer.Visible = Visible;
+                    axMapControl1.Refresh();
+                    break;
+                }
+            }
+        }
+
+        public void DeleteLayer(string LayerName)
+        {
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+
+                if (vLayer.Name == LayerName)
+                {
+                    axMapControl1.DeleteLayer(i);
+                    m_BufferLayers.Remove(m_BufferLayers.Where(m => m.Name == LayerName).FirstOrDefault());
+                    break;
+                }
+            }
+            axMapControl1.Refresh();
+        }
 
 
         /// <summary>
@@ -849,77 +879,79 @@ namespace JXDL.Client
             {
                 BufferForm vBufferForm = new BufferForm();
                 vBufferForm.Layers = m_Layers;
+                vBufferForm.VMainForm = this;
                 vBufferForm.BufferLayers = vSelectFeatureLayers;
-                if (vBufferForm.ShowDialog() == DialogResult.OK)
+                vBufferForm.ShowDialog();
+            }
+        }
+
+        
+
+        public string CreateBufferLayer(Dictionary<string, int> selectFeatureLayers)
+        {
+            Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vAliasName = fixLayerName(vFeatureLayer);
+                foreach (var vSelectLayer in selectFeatureLayers)
                 {
-                    Dictionary<IFeatureLayer,int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
-                    for (int i = 0; i < axMapControl1.LayerCount; i++)
+                    if (vAliasName == vSelectLayer.Key)
                     {
-                        ILayer vLayer = axMapControl1.get_Layer(i);
-                        IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                        string vAliasName = fixLayerName(vFeatureLayer);
-                        foreach (var vSelectLayer in vSelectFeatureLayers)
-                        {
-                            if (vAliasName == vSelectLayer.Key)
-                            {
-                                vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value);
-                                break;
-                            }
-
-                        }
+                        vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value);
+                        break;
                     }
 
-                    //生成缓冲区
-                    Geoprocessor vGP = new Geoprocessor();
-                    //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
-                    vGP.OverwriteOutput = true;
-                    string vBufferResult = "";
-                    foreach (var vBufferDict in vBufferLayers)
-                    {
-                        //int vShapeFieldIndex = vBufferDict.Key.FeatureClass.FindField(vBufferDict.Key.FeatureClass.ShapeFieldName);
-                        //IQueryFilter vQueryFilter = new QueryFilter();
-                        //int vCount = vBufferDict.Key.FeatureClass.FeatureCount(vQueryFilter);
-                        try
-                        {
-                            string vLayerName = fixLayerName(vBufferDict.Key);
-                            string vBufferFileName = markBufferPath(vLayerName);
-                            ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vBufferDict.Key, vBufferFileName, vBufferDict.Value);
-                            IGeoProcessorResult results = null;
-                            results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
-                            if (results.Status != esriJobStatus.esriJobSucceeded)
-                                vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vBufferDict.Key.Name);
-                            else
-                            {
-                                int vLateIndex = vBufferFileName.LastIndexOf('\\');
-                                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
-                                string vFileName = vBufferFileName.Substring(vLateIndex+1);
-                                vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferDict.Key.Name);
-                                axMapControl1.AddShapeFile(vFilePath, vFileName);
-                                LayerStruct vBufferLayer = new LayerStruct()
-                                {
-                                    Name = vLayerName + "_Buffer",
-                                    IsView = true,
-                                    Expository = vLayerName+"缓冲图层"
-                                };
-                                m_BufferLayers.Add(vBufferLayer);
-                            }
-                        }
-                        catch( Exception ex)
-                        {
-                            vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vBufferDict.Key.Name,ex.Message);
-                        }
-
-                    }
-                    MessageBox.Show(vBufferResult, "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    for( int i=0;i<axMapControl1.Map.LayerCount;i++)
-                    {
-                        ILayer vLayer =  axMapControl1.get_Layer(i);
-                        System.Diagnostics.Debug.WriteLine(vLayer.Name);
-                    }
-                    
                 }
             }
+
+            //生成缓冲区
+            Geoprocessor vGP = new Geoprocessor();
+            //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
+            vGP.OverwriteOutput = true;
+            string vBufferResult = "";
+            foreach (var vBufferDict in vBufferLayers)
+            {
+                try
+                {
+                    string vLayerName = fixLayerName(vBufferDict.Key);
+                    string vBufferFileName = markBufferPath(vLayerName);
+                    ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vBufferDict.Key, vBufferFileName, vBufferDict.Value);
+                    IGeoProcessorResult results = null;
+                    results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                    if (results.Status != esriJobStatus.esriJobSucceeded)
+                        vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vBufferDict.Key.Name);
+                    else
+                    {
+                        int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                        string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                        string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                        vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferDict.Key.Name);
+                        axMapControl1.AddShapeFile(vFilePath, vFileName);
+                        LayerStruct vBufferLayer = new LayerStruct()
+                        {
+                            Name = vLayerName + "_Buffer",
+                            IsView = true,
+                            Expository = vLayerName + "缓冲图层"
+                        };
+                        m_BufferLayers.Add(vBufferLayer);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vBufferDict.Key.Name, ex.Message);
+                }
+
+            }
+            //MessageBox.Show(vBufferResult, "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                System.Diagnostics.Debug.WriteLine(vLayer.Name);
+            }
+            return vBufferResult;
         }
 
         string fixLayerName( IFeatureLayer featureLayer)
@@ -1566,6 +1598,13 @@ namespace JXDL.Client
 
             IFeatureSelection vFeatSelect = (IFeatureSelection)FeatureLayer;
             vFeatSelect.SelectFeatures(vSpatialFilter, esriSelectionResultEnum.esriSelectionResultNew, false);
+        }
+
+        private void ToolStripMenuItem_Pic_Browse_Click(object sender, EventArgs e)
+        {
+            MapToolsForm vMapToolsForm = new MapToolsForm();
+            vMapToolsForm.axMapControl1 = axMapControl1;
+            vMapToolsForm.Show();
         }
     }
 }

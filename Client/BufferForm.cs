@@ -23,6 +23,9 @@ namespace JXDL.Client
         public LayerStruct[] Layers { get; set; } 
 
 
+        public MainForm VMainForm { get; set; }
+
+
         private void button_Analysis_Click(object sender, EventArgs e)
         {
             DataTable vTable =  (DataTable)dataGridView_Layers.DataSource;
@@ -37,10 +40,28 @@ namespace JXDL.Client
                     BufferLayers.Add(vLayerName, vDistance);
                 }
             }
-            DialogResult = DialogResult.OK;
-            Close();
+
+            string vInfo = VMainForm.CreateBufferLayer(BufferLayers);
+            textBox_Info.Text = "";
+            textBox_Info.Text = vInfo;
+
+            loadBufferLayers();
+
         }
 
+
+        void loadBufferLayers()
+        {
+            listView_BufferLayers.Items.Clear();
+            foreach (var vTempLayer in VMainForm.m_BufferLayers)
+            {
+                ListViewItem vNewItem = new ListViewItem();
+                vNewItem.Checked = vTempLayer.IsView;
+                vNewItem.SubItems.Add(vTempLayer.Name);
+                listView_BufferLayers.Items.Add(vNewItem);
+                
+            }
+        }
        
 
         private void button_Exit_Click(object sender, EventArgs e)
@@ -51,6 +72,7 @@ namespace JXDL.Client
 
         private void BufferForm_Load(object sender, EventArgs e)
         {
+            toolStripMenuItem_Delete.Click += ToolStripMenuItem_Delete_Click;
             DataTable vTable = createTableStruct();
             foreach(var vTempDict in BufferLayers)
             {
@@ -65,6 +87,22 @@ namespace JXDL.Client
             vTable.AcceptChanges();
             dataGridView_Layers.AutoGenerateColumns = false;
             dataGridView_Layers.DataSource = vTable;
+
+            loadBufferLayers();
+        }
+
+        private void ToolStripMenuItem_Delete_Click(object sender, EventArgs e)
+        {
+            if ( listView_BufferLayers.SelectedItems.Count>0 )
+            {
+                
+                foreach ( ListViewItem vItem in listView_BufferLayers.SelectedItems)
+                {
+                    string vLayerName = vItem.SubItems[1].Text;
+                    VMainForm.DeleteLayer(vLayerName);
+                    listView_BufferLayers.Items.Remove(vItem);
+                }
+            }
         }
 
         string getLayerType(string layerName)
@@ -113,6 +151,27 @@ namespace JXDL.Client
             });
             vTable.AcceptChanges();
             return vTable;
+        }
+
+        private void listView_BufferLayers_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            string vLayerName = e.Item.SubItems[1].Text;
+            VMainForm.ChanageLayerVisible(vLayerName, e.Item.Checked);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ListViewItem vNewItem1 = new ListViewItem();
+            vNewItem1.Checked = true;
+            vNewItem1.Text = "11";
+
+            ListViewItem vNewItem2 = new ListViewItem();
+            vNewItem2.Checked = true;
+            vNewItem2.Text = "22";
+
+            listView_BufferLayers.Items.Add(vNewItem1);
+            listView_BufferLayers.Items.Add(vNewItem2);
+
         }
     }
 }
