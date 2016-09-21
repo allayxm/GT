@@ -16,6 +16,8 @@ namespace JXDL.Client
     public partial class LayerManageForm : Form
     {
         public LayerStruct[] Layers { get; set; }
+
+        public MainForm VMainForm { get; set; }
         public LayerManageForm()
         {
             InitializeComponent();
@@ -78,13 +80,24 @@ namespace JXDL.Client
                 Layers.Where(m => m.ID == vID).FirstOrDefault().IsView = vTempItem.Checked;
                 Layers.Where(m => m.ID == vID).FirstOrDefault().Color = vTempItem.SubItems[4].BackColor.ToArgb();
             }
+            saveConfigFile();
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void listView_Layer_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        void saveConfigFile()
         {
-          
+            Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
+            foreach( LayerStruct vTempLayer in Layers )
+            {
+                if ( vTempLayer.Color != 0 )
+                {
+                    vLayerConfig.Add(vTempLayer.Name, vTempLayer.Color);
+                }
+            }
+            ConfigFile vConfigFile = new ConfigFile();
+            vConfigFile.LayerColor = vLayerConfig;
+            vConfigFile.Save();
         }
 
         private void listView_Layer_DoubleClick(object sender, EventArgs e)
@@ -96,8 +109,19 @@ namespace JXDL.Client
                 {
                     listView_Layer.SelectedItems[0].SubItems[4].BackColor = vColorDialog.Color;
                     listView_Layer.SelectedItems[0].SubItems[4].ForeColor = vColorDialog.Color;
+                    int vID = int.Parse(listView_Layer.SelectedItems[0].SubItems[1].Text);
+                    string vLayerName = Layers.Where(m => m.ID == vID).FirstOrDefault().Name;
+                    VMainForm.ChangeLayerColor(vLayerName, vColorDialog.Color.ToArgb());
                 }
             }
+        }
+
+        private void listView_Layer_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            int vID = int.Parse(e.Item.SubItems[1].Text);
+            string vLayerName = Layers.Where(m => m.ID == vID).FirstOrDefault().Name;
+            //Layers.Where(m => m.ID == vID).FirstOrDefault().IsView = e.Item.Checked;
+           VMainForm.ChangeLayerVisible(vLayerName, e.Item.Checked);
         }
     }
 }

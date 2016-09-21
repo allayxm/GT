@@ -43,16 +43,16 @@
             this.listView_BufferLayers = new System.Windows.Forms.ListView();
             this.columnHeader_Visible = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader_Name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip_Right = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_Delete = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Info = new System.Windows.Forms.GroupBox();
             this.textBox_Info = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.contextMenuStrip_Right = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem_Delete = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Layers)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.groupBox_Info.SuspendLayout();
             this.contextMenuStrip_Right.SuspendLayout();
+            this.groupBox_Info.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -191,6 +191,19 @@
             this.columnHeader_Name.Text = "图层名称";
             this.columnHeader_Name.Width = 263;
             // 
+            // contextMenuStrip_Right
+            // 
+            this.contextMenuStrip_Right.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_Delete});
+            this.contextMenuStrip_Right.Name = "contextMenuStrip_Right";
+            this.contextMenuStrip_Right.Size = new System.Drawing.Size(101, 26);
+            // 
+            // toolStripMenuItem_Delete
+            // 
+            this.toolStripMenuItem_Delete.Name = "toolStripMenuItem_Delete";
+            this.toolStripMenuItem_Delete.Size = new System.Drawing.Size(100, 22);
+            this.toolStripMenuItem_Delete.Text = "删除";
+            // 
             // groupBox_Info
             // 
             this.groupBox_Info.Controls.Add(this.textBox_Info);
@@ -222,19 +235,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // contextMenuStrip_Right
-            // 
-            this.contextMenuStrip_Right.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_Delete});
-            this.contextMenuStrip_Right.Name = "contextMenuStrip_Right";
-            this.contextMenuStrip_Right.Size = new System.Drawing.Size(153, 48);
-            // 
-            // toolStripMenuItem_Delete
-            // 
-            this.toolStripMenuItem_Delete.Name = "toolStripMenuItem_Delete";
-            this.toolStripMenuItem_Delete.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem_Delete.Text = "删除";
-            // 
             // BufferForm
             // 
             this.AcceptButton = this.button_Analysis;
@@ -254,13 +254,14 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "缓冲区分析";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.BufferForm_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Layers)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            this.contextMenuStrip_Right.ResumeLayout(false);
             this.groupBox_Info.ResumeLayout(false);
             this.groupBox_Info.PerformLayout();
-            this.contextMenuStrip_Right.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

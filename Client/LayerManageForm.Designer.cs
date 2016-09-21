@@ -71,7 +71,7 @@
             this.listView_Layer.TabIndex = 0;
             this.listView_Layer.UseCompatibleStateImageBehavior = false;
             this.listView_Layer.View = System.Windows.Forms.View.Details;
-            this.listView_Layer.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_Layer_ItemSelectionChanged);
+            this.listView_Layer.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView_Layer_ItemChecked);
             this.listView_Layer.DoubleClick += new System.EventHandler(this.listView_Layer_DoubleClick);
             // 
             // columnHeader_Visible
@@ -140,6 +140,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "图层管理";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.LayerManageForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);

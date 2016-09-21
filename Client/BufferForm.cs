@@ -41,12 +41,11 @@ namespace JXDL.Client
                 }
             }
 
+            VMainForm.DeleteAllBufferLayers();
             string vInfo = VMainForm.CreateBufferLayer(BufferLayers);
             textBox_Info.Text = "";
             textBox_Info.Text = vInfo;
-
             loadBufferLayers();
-
         }
 
 
@@ -73,8 +72,14 @@ namespace JXDL.Client
         private void BufferForm_Load(object sender, EventArgs e)
         {
             toolStripMenuItem_Delete.Click += ToolStripMenuItem_Delete_Click;
+            initSelectedLayers();
+            loadBufferLayers();
+        }
+
+        public void initSelectedLayers()
+        {
             DataTable vTable = createTableStruct();
-            foreach(var vTempDict in BufferLayers)
+            foreach (var vTempDict in BufferLayers)
             {
                 DataRow vNewRow = vTable.NewRow();
                 vNewRow["选择"] = true;
@@ -87,8 +92,6 @@ namespace JXDL.Client
             vTable.AcceptChanges();
             dataGridView_Layers.AutoGenerateColumns = false;
             dataGridView_Layers.DataSource = vTable;
-
-            loadBufferLayers();
         }
 
         private void ToolStripMenuItem_Delete_Click(object sender, EventArgs e)
@@ -156,7 +159,7 @@ namespace JXDL.Client
         private void listView_BufferLayers_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             string vLayerName = e.Item.SubItems[1].Text;
-            VMainForm.ChanageLayerVisible(vLayerName, e.Item.Checked);
+            VMainForm.ChangeLayerVisible(vLayerName, e.Item.Checked);
         }
 
         private void button1_Click(object sender, EventArgs e)

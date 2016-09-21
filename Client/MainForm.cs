@@ -53,19 +53,16 @@ namespace JXDL.Client
 
         LayerStruct[] m_Layers;
 
+        /// <summary>
+        /// 缓冲区图层
+        /// </summary>
         public List<LayerStruct> m_BufferLayers = new List<LayerStruct>();
         /// <summary>
         /// 鹰眼对话框
         /// </summary>
         EagleEyeForm m_EagleEyeForm = null;
 
-        /// <summary>
-        /// 缓冲区分析
-        /// </summary>
-        bool m_BufferAnayle = false;
-
-
-        public void ChanageLayerVisible( string LayerName,bool Visible )
+        public void ChangeLayerVisible( string LayerName,bool Visible )
         {
             for( int i=0;i<axMapControl1.LayerCount;i++)
             {
@@ -95,6 +92,22 @@ namespace JXDL.Client
             axMapControl1.Refresh();
         }
 
+
+        public void DeleteAllBufferLayers()
+        {
+            foreach( LayerStruct vTempLayer in m_BufferLayers)
+            {
+                for( int i=0;i<axMapControl1.LayerCount;i++)
+                {
+                    if (axMapControl1.Map.Layer[i].Name == vTempLayer.Name)
+                    {
+                        axMapControl1.DeleteLayer(i);
+                        break;
+                    }
+                }
+            }
+            m_BufferLayers.Clear();
+        }
 
         /// <summary>
         /// 缓冲区临时文件生成路径
@@ -312,7 +325,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Anayle.Enabled = false;
+                    ToolStripMenuItem_Pic_Buffer.Enabled = false;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
@@ -333,7 +346,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = false;
                     ToolStripMenuItem_Pic_Map.Enabled = false;
-                    ToolStripMenuItem_Pic_Anayle.Enabled = true;
+                    ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
                     break;
@@ -348,7 +361,7 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Query.Enabled = false;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Anayle.Enabled = true;
+                    ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = true;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
@@ -517,7 +530,7 @@ namespace JXDL.Client
                             vTempLayer.Color = vLayerColor[vLayerFeature.Name];
 
                             if (vTempLayer.Color != -1)
-                                changeLayerColor(vLayerFeature, vTempLayer.Color);
+                                ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
                         }
                     }
                 }
@@ -628,8 +641,19 @@ namespace JXDL.Client
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
             //bufferAnayleEx();
-            IActiveView activeView = axMapControl1.ActiveView;
-            activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
+            //IActiveView activeView = axMapControl1.ActiveView;
+            //activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
+            ICommand vCurrenTool = axMapControl1.CurrentTool as ICommand;
+            if (vCurrenTool.Name == "ControlToolsFeatureSelection_SelectFeatures")
+            {
+                if (toolStripMenuItem_MapQuery.Checked)
+                    mapQuery();
+                else if (toolStripMenuItem_FileQuery.Checked)
+                    viewFiles();
+                else if (toolStripMenuItem_SpaceAnalyze.Checked)
+                    bufferAnayleEx();
+            }
+
             //if (m_MapQuery)
             //    mapQuery();
             //else if ( m_FileQuery )
@@ -727,7 +751,7 @@ namespace JXDL.Client
                    
                 }
                 vMemFeatureCursor.Flush();
-                changeLayerColor(vMemFeatureLayer, -65536);
+                ChangeLayerColor(vMemFeatureLayer, -65536);
                 axMapControl1.Map.AddLayer(vMemFeatureLayer);
                 vMemFeatureLayerList.Add(vMemFeatureLayer);
             }
@@ -857,6 +881,7 @@ namespace JXDL.Client
             }
         }
 
+        BufferForm m_BufferForm = null;
         void bufferAnayleEx()
         {
             Dictionary<string, int> vSelectFeatureLayers = new Dictionary<string, int>();
@@ -877,11 +902,20 @@ namespace JXDL.Client
             }
             if (vSelectFeatureLayers.Count > 0)
             {
-                BufferForm vBufferForm = new BufferForm();
-                vBufferForm.Layers = m_Layers;
-                vBufferForm.VMainForm = this;
-                vBufferForm.BufferLayers = vSelectFeatureLayers;
-                vBufferForm.ShowDialog();
+                if (m_BufferForm == null)
+                {
+                    m_BufferForm = new BufferForm();
+                    m_BufferForm.Layers = m_Layers;
+                    m_BufferForm.VMainForm = this;
+                    m_BufferForm.BufferLayers = vSelectFeatureLayers;
+                    m_BufferForm.Show();
+                }
+                else
+                {
+                    m_BufferForm.BufferLayers = vSelectFeatureLayers;
+                    m_BufferForm.initSelectedLayers();
+                    m_BufferForm.Refresh();
+                }
             }
         }
 
@@ -1314,36 +1348,40 @@ namespace JXDL.Client
         {
             LayerManageForm vLayerManageForm = new LayerManageForm();
             vLayerManageForm.Layers = m_Layers;
-            if (vLayerManageForm.ShowDialog() == DialogResult.OK)
-            {
-                Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
-                for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
-                {
-                    string vName = axMapControl1.Map.Layer[i].Name;
-                    LayerStruct vLayer = m_Layers.Where(m => m.Name == vName).FirstOrDefault();
-                    if (vLayer != null && vLayer.Color != 0)
-                    {
-                        axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
-                        if (vLayer.Color != -1)
-                            changeLayerColor(axMapControl1.Map.Layer[i], vLayer.Color);
-                        vLayerConfig.Add(vName, vLayer.Color);
-                    }
-                }
+            vLayerManageForm.VMainForm = this;
+            vLayerManageForm.Show();
 
-                ConfigFile vConfigFile = new ConfigFile();
-                vConfigFile.LayerColor = vLayerConfig;
-                vConfigFile.Save();
-                axMapControl1.Refresh();
-            }
+            //if (vLayerManageForm.ShowDialog() == DialogResult.OK)
+            //{
+                
+            //    Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
+            //    for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            //    {
+            //        string vName = axMapControl1.Map.Layer[i].Name;
+            //        LayerStruct vLayer = m_Layers.Where(m => m.Name == vName).FirstOrDefault();
+            //        if (vLayer != null && vLayer.Color != 0)
+            //        {
+            //            axMapControl1.Map.Layer[i].Visible = vLayer.IsView;
+            //            if (vLayer.Color != -1)
+            //                changeLayerColor(axMapControl1.Map.Layer[i], vLayer.Color);
+            //            vLayerConfig.Add(vName, vLayer.Color);
+            //        }
+            //    }
+
+            //    ConfigFile vConfigFile = new ConfigFile();
+            //    vConfigFile.LayerColor = vLayerConfig;
+            //    vConfigFile.Save();
+            //    axMapControl1.Refresh();
+            //}
         }
 
-        void changeLayerColor(ILayer layer, int color)
+        public void ChangeLayerColor(ILayer Layer, int color)
         {
             IGeoFeatureLayer vGeoFeatureLayer;
             ISimpleRenderer vSimpleRenderer;
             IFillSymbol vFillSymbol;
             Color vColorRgb;
-            vGeoFeatureLayer = (IGeoFeatureLayer)layer;
+            vGeoFeatureLayer = (IGeoFeatureLayer)Layer;
             vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
             vFillSymbol = new SimpleFillSymbolClass();
             vColorRgb = Color.FromArgb(color);
@@ -1353,45 +1391,78 @@ namespace JXDL.Client
             vColor.Blue = vColorRgb.B;
             vFillSymbol.Color = vColor;
             vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+            axMapControl1.Refresh();
+        }
+
+        public void ChangeLayerColor(string layerName, int color)
+        {
+
+            for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            {
+                string vName = axMapControl1.Map.Layer[i].Name;
+                if (vName == layerName)
+                {
+                    ILayer vLayer = axMapControl1.Map.Layer[i] as ILayer;
+                    IGeoFeatureLayer vGeoFeatureLayer;
+                    ISimpleRenderer vSimpleRenderer;
+                    IFillSymbol vFillSymbol;
+                    Color vColorRgb;
+                    vGeoFeatureLayer = (IGeoFeatureLayer)vLayer;
+                    vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+                    vFillSymbol = new SimpleFillSymbolClass();
+                    vColorRgb = Color.FromArgb(color);
+                    IRgbColor vColor = new RgbColorClass();
+                    vColor.Red = vColorRgb.R;
+                    vColor.Green = vColorRgb.G;
+                    vColor.Blue = vColorRgb.B;
+                    vFillSymbol.Color = vColor;
+                    vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+                    axMapControl1.Refresh();
+                    break;
+                }
+            }
+
+          
         }
 
         private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
         {
             //ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
             //m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
-            bufferAnayleEx();
+            if ( toolStripMenuItem_SpaceAnalyze.Checked)
+                bufferAnayleEx();
         }
 
         private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)
         {
             //axMapControl1.Map.item
-            //Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
-            ////ILayer vLayer = axMapControl1.Map.Layers.Next();
-            //int vCount = axMapControl1.LayerCount;
-            //for (int i = 0; i < vCount; i++)
-            //{
-            //    ILayer vLayer = axMapControl1.get_Layer(i);
-            //    IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-            //    vFeatureLayer.FeatureClass.fea
-            //    IFeature vFeature = vFeatureLayer.FeatureClass as IFeature;
-            //    if (vFeature != null)
-            //    {
-            //        string vName = vFeature.Class.AliasName;
-            //        vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
-            //        if (!vSelectFeatures.ContainsKey(vName))
-            //            vSelectFeatures.Add(vName, new List<IFeature>());
-            //        vSelectFeatures[vName].Add(vFeature);
-            //    }
-            //}
+            Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
+            //ILayer vLayer = axMapControl1.Map.Layers.Next();
+            int vCount = axMapControl1.LayerCount;
+            for (int i = 0; i < vCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                //vFeatureLayer.FeatureClass.fea
+                IFeature vFeature = vFeatureLayer.FeatureClass as IFeature;
+                if (vFeature != null)
+                {
+                    string vName = vFeature.Class.AliasName;
+                    vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
+                    if (!vSelectFeatures.ContainsKey(vName))
+                        vSelectFeatures.Add(vName, new List<IFeature>());
+                    vSelectFeatures[vName].Add(vFeature);
+                }
+            }
 
-            //MapQueryForm vMapQueryForm = new MapQueryForm();
-            //vMapQueryForm.SelectFeatures = vSelectFeatures;
-            //vMapQueryForm.ShowDialog();
-            //for ( int i=0;i< axMapControl1.Map.LayerCount; i++)
+            MapQueryForm vMapQueryForm = new MapQueryForm();
+            vMapQueryForm.SelectFeatures = vSelectFeatures;
+            vMapQueryForm.ShowDialog();
+            //for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
             //{
 
             //}
-            //ISelection pSelection = axMapControl1.Map.LayerCount;
+            //ISelection pSelection = axMapControl1.Map.FeatureSelection;
             //IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
             //pEnumFeatureSetup.AllFields = true;
             //IEnumFeature pEnumFeature = pSelection as IEnumFeature;
@@ -1409,7 +1480,7 @@ namespace JXDL.Client
             //}
 
             //MapQueryForm vMapQueryForm = new MapQueryForm();
-            ////vMapQueryForm.SelectFeatures = axMapControl1.Map.get
+            //vMapQueryForm.SelectFeatures = axMapControl1.Map.get
             //vMapQueryForm.ShowDialog();
         }
 
@@ -1484,20 +1555,19 @@ namespace JXDL.Client
 
         private void toolStripMenuItem_FileQuery_Click(object sender, EventArgs e)
         {
-            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
-            m_FileQuery = toolStripMenuItem_FileQuery.Checked;
 
-            toolStripMenuItem_MapQuery.Checked = !m_FileQuery;
-            m_MapQuery = !m_FileQuery;
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FileQuery.Checked;
+            toolStripMenuItem_SpaceAnalyze.Checked  = !toolStripMenuItem_FileQuery.Checked;
         }
 
         private void toolStripMenuItem_MapQuery_Click(object sender, EventArgs e)
         {
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
-            m_MapQuery = toolStripMenuItem_MapQuery.Checked;
-
-            toolStripMenuItem_FileQuery.Checked = !m_MapQuery;
-            m_FileQuery = !m_MapQuery;
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_MapQuery.Checked;
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_MapQuery.Checked;
         }
 
         private void ToolStripMenuItem_VillagePic_Click(object sender, EventArgs e)
@@ -1605,6 +1675,27 @@ namespace JXDL.Client
             MapToolsForm vMapToolsForm = new MapToolsForm();
             vMapToolsForm.axMapControl1 = axMapControl1;
             vMapToolsForm.Show();
+        }
+
+        private void ToolStripMenuItem_Pic_Statistics_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ToolStripMenuItem_FeatureSelect_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+        }
+
+        private void toolStripMenuItem_SpaceAnalyze_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
         }
     }
 }

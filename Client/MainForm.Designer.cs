@@ -44,7 +44,7 @@
             this.ToolStripMenuItem_Pic_Layer = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Browse = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Map = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_Pic_Anayle = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_Pic_Buffer = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_EagleEye = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_VillagePic = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +56,8 @@
             this.contextMenuStrip_Right = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_FileQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_MapQuery = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_FeatureSelect = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_SpaceAnalyze = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
@@ -155,7 +157,7 @@
             this.ToolStripMenuItem_Pic_Layer,
             this.ToolStripMenuItem_Pic_Browse,
             this.ToolStripMenuItem_Pic_Map,
-            this.ToolStripMenuItem_Pic_Anayle,
+            this.ToolStripMenuItem_Pic_Buffer,
             this.ToolStripMenuItem_Pic_Statistics,
             this.ToolStripMenuItem_EagleEye,
             this.ToolStripMenuItem_VillagePic});
@@ -185,18 +187,19 @@
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
             this.ToolStripMenuItem_Pic_Map.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Map_Click);
             // 
-            // ToolStripMenuItem_Pic_Anayle
+            // ToolStripMenuItem_Pic_Buffer
             // 
-            this.ToolStripMenuItem_Pic_Anayle.Name = "ToolStripMenuItem_Pic_Anayle";
-            this.ToolStripMenuItem_Pic_Anayle.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Anayle.Text = "空间分析 ";
-            this.ToolStripMenuItem_Pic_Anayle.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
+            this.ToolStripMenuItem_Pic_Buffer.Name = "ToolStripMenuItem_Pic_Buffer";
+            this.ToolStripMenuItem_Pic_Buffer.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Buffer.Text = "空间分析 ";
+            this.ToolStripMenuItem_Pic_Buffer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
             this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
+            this.ToolStripMenuItem_Pic_Statistics.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Statistics_Click);
             // 
             // ToolStripMenuItem_EagleEye
             // 
@@ -264,26 +267,42 @@
             // contextMenuStrip_Right
             // 
             this.contextMenuStrip_Right.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_FeatureSelect,
             this.toolStripMenuItem_FileQuery,
-            this.toolStripMenuItem_MapQuery});
+            this.toolStripMenuItem_MapQuery,
+            this.toolStripMenuItem_SpaceAnalyze});
             this.contextMenuStrip_Right.Name = "contextMenuStrip_Right";
-            this.contextMenuStrip_Right.Size = new System.Drawing.Size(125, 48);
+            this.contextMenuStrip_Right.Size = new System.Drawing.Size(153, 114);
             // 
             // toolStripMenuItem_FileQuery
             // 
-            this.toolStripMenuItem_FileQuery.Checked = true;
-            this.toolStripMenuItem_FileQuery.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItem_FileQuery.Name = "toolStripMenuItem_FileQuery";
-            this.toolStripMenuItem_FileQuery.Size = new System.Drawing.Size(124, 22);
+            this.toolStripMenuItem_FileQuery.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem_FileQuery.Text = "文件查询";
             this.toolStripMenuItem_FileQuery.Click += new System.EventHandler(this.toolStripMenuItem_FileQuery_Click);
             // 
             // toolStripMenuItem_MapQuery
             // 
             this.toolStripMenuItem_MapQuery.Name = "toolStripMenuItem_MapQuery";
-            this.toolStripMenuItem_MapQuery.Size = new System.Drawing.Size(124, 22);
+            this.toolStripMenuItem_MapQuery.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem_MapQuery.Text = "地图查询";
             this.toolStripMenuItem_MapQuery.Click += new System.EventHandler(this.toolStripMenuItem_MapQuery_Click);
+            // 
+            // toolStripMenuItem_FeatureSelect
+            // 
+            this.toolStripMenuItem_FeatureSelect.Checked = true;
+            this.toolStripMenuItem_FeatureSelect.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItem_FeatureSelect.Name = "toolStripMenuItem_FeatureSelect";
+            this.toolStripMenuItem_FeatureSelect.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem_FeatureSelect.Text = "要素选择";
+            this.toolStripMenuItem_FeatureSelect.Click += new System.EventHandler(this.ToolStripMenuItem_FeatureSelect_Click);
+            // 
+            // toolStripMenuItem_SpaceAnalyze
+            // 
+            this.toolStripMenuItem_SpaceAnalyze.Name = "toolStripMenuItem_SpaceAnalyze";
+            this.toolStripMenuItem_SpaceAnalyze.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem_SpaceAnalyze.Text = "空间分析";
+            this.toolStripMenuItem_SpaceAnalyze.Click += new System.EventHandler(this.toolStripMenuItem_SpaceAnalyze_Click);
             // 
             // MainForm
             // 
@@ -332,7 +351,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Layer;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Browse;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Map;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Anayle;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Buffer;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Pic_Statistics;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_EagleEye;
@@ -340,6 +359,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_FileQuery;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_MapQuery;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_VillagePic;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_FeatureSelect;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_SpaceAnalyze;
     }
 }
 
