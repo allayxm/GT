@@ -25,18 +25,22 @@ namespace JXDL.Client
         public string LayerName { get; set; }
         public int[] ObjectIDArray { get; set; } 
 
+        public MainForm VMainForm { get; set; }
+
+        LayerStruct[] m_Layers;
         private void MapQueryForm_Load(object sender, EventArgs e)
         {
-            init();   
+            RemoteInterface vRemoteInterface = new RemoteInterface();
+            m_Layers = vRemoteInterface.GetLayers();
+            InitFeatureLayers();   
         }
 
-        void init()
+        public void InitFeatureLayers()
         {
-            RemoteInterface vRemoteInterface = new RemoteInterface();
-            LayerStruct[] vLayers = vRemoteInterface.GetLayers();
+            treeView_Layer.Nodes.Clear();
             foreach ( var TempDict in SelectFeatures )
             {
-                LayerStruct vLayer = vLayers.Where(m => m.Name == TempDict.Key).FirstOrDefault();
+                LayerStruct vLayer = m_Layers.Where(m => m.Name == TempDict.Key).FirstOrDefault();
                 if (vLayer != null)
                 {
                     string vNodeName = string.Format("图层:【{0}】 要素类型:【{1}】", vLayer.Expository, CommonUnit.ConvertLayerType(vLayer.Type ?? 0));
@@ -121,7 +125,7 @@ namespace JXDL.Client
 
         private void button_Location_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Yes;
+            //DialogResult = DialogResult.Yes;
             List<int> vObjectList = new List<int>();
             foreach (DataGridViewRow vTempRow in dataGridView_Data.Rows)
             {
@@ -133,6 +137,7 @@ namespace JXDL.Client
             }
             ObjectIDArray = vObjectList.ToArray();
             LayerName = treeView_Layer.SelectedNode.Name;
+            VMainForm.SelectFeatures(ObjectIDArray, LayerName);
         }
 
         private void button_Exit_Click(object sender, EventArgs e)

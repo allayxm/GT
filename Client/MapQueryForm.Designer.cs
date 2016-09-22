@@ -192,6 +192,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "地图查询";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.MapQueryForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

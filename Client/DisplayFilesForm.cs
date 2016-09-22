@@ -27,15 +27,19 @@ namespace JXDL.Client
 
         private void DisplayFilesForm_Load(object sender, EventArgs e)
         {
-            if (AreaCodeArray!=null )
+            InitFileInfo();
+        }
+
+        public void InitFileInfo()
+        {
+            if (AreaCodeArray != null)
             {
-                RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value,Program.LoginUserInfo.UserName,Program.LoginUserInfo.Token);
+                RemoteInterface vRemoteInterface = new RemoteInterface(Program.LoginUserInfo.ID.Value, Program.LoginUserInfo.UserName, Program.LoginUserInfo.Token);
                 FileInfo[] vFileInfoArray = vRemoteInterface.GetFiles(AreaCodeArray);
-                if (vFileInfoArray!=null )
+                if (vFileInfoArray != null)
                 {
                     dataGridView_FileList.AutoGenerateColumns = false;
                     dataGridView_FileList.DataSource = vFileInfoArray;
-                
                 }
             }
         }

@@ -123,5 +123,11 @@ namespace JXDL.Client
             //Layers.Where(m => m.ID == vID).FirstOrDefault().IsView = e.Item.Checked;
            VMainForm.ChangeLayerVisible(vLayerName, e.Item.Checked);
         }
+
+        private void button_Exit_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
     }
 }

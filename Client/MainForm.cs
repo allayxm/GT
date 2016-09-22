@@ -358,7 +358,7 @@ namespace JXDL.Client
 
                     ToolStripMenuItem_Doc_Edit.Enabled = true;
                     ToolStripMenuItem_Doc_Input.Enabled = true;
-                    ToolStripMenuItem_Doc_Query.Enabled = false;
+                    ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
 
                     ToolStripMenuItem_Pic_Buffer.Enabled = true;
@@ -896,13 +896,17 @@ namespace JXDL.Client
             {
                 IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
                 string vFeatureLayerName = fixLayerName(vFeatureLayer );
-                if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
-                    vSelectFeatureLayers.Add(vFeatureLayerName,10);
+                //排除村委会、乡镇街道、自然村三个图层
+                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村")
+                {
+                    if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
+                        vSelectFeatureLayers.Add(vFeatureLayerName, 10);
+                }
                 vFeature = vEnumFeature.Next();
             }
             if (vSelectFeatureLayers.Count > 0)
             {
-                if (m_BufferForm == null)
+                if (m_BufferForm == null || m_BufferForm.IsDisposed )
                 {
                     m_BufferForm = new BufferForm();
                     m_BufferForm.Layers = m_Layers;
@@ -1011,12 +1015,11 @@ namespace JXDL.Client
                     vResult = iFeatureLayer;
                     return iFeatureLayer;
                 }
-
             }
-
             return vResult;
         }
 
+        MapQueryForm m_MapQueryForm = null;
         void mapQuery()
         {
             Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
@@ -1037,62 +1040,64 @@ namespace JXDL.Client
             }
             if (vSelectFeatures.Count > 0)
             {
-                MapQueryForm vMapQueryForm = new MapQueryForm();
-                vMapQueryForm.SelectFeatures = vSelectFeatures;
-                if (vMapQueryForm.ShowDialog() == DialogResult.Yes && vMapQueryForm.ObjectIDArray.Length > 0)
+                if (m_MapQueryForm == null || m_MapQueryForm.IsDisposed)
                 {
-                    axMapControl1.Map.ClearSelection();
-                    QueryFilterClass vQueryFilter = new QueryFilterClass();
-                    string vObjectIDStr = "";
-                    foreach (int vTempID in vMapQueryForm.ObjectIDArray)
-                    {
-                        vObjectIDStr += vTempID + ",";
-                    }
-                    if (vObjectIDStr != "")
-                        vObjectIDStr = vObjectIDStr.Remove(vObjectIDStr.Length - 1);
-                    vQueryFilter.WhereClause = string.Format("OBJECTID in ({0})", vObjectIDStr);
-                    for (int i = 0; i < axMapControl1.LayerCount; i++)
-                    {
-                        ILayer vLayer = axMapControl1.get_Layer(i);
-                        if (vLayer.Name == vMapQueryForm.LayerName)
-                        {
-                            IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                            IFeatureClass vFeatureClass = vFeatureLayer.FeatureClass;
-                            IFeatureCursor vSerachResult = vFeatureClass.Search(vQueryFilter, true);
-                            IFeature vFeature = vSerachResult.NextFeature();
-                            while (vFeature != null)
-                            {
-                                axMapControl1.Map.SelectFeature(vLayer, vFeature);
-                                vFeature = vSerachResult.NextFeature();
-                                
-                                //axMapControl1.Extent.Union(vFeature.Shape.Envelope);
-                            }
-                        }
-                    }
-                    axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+                    m_MapQueryForm = new MapQueryForm();
+                    m_MapQueryForm.SelectFeatures = vSelectFeatures;
+                    m_MapQueryForm.VMainForm = this;
+                    m_MapQueryForm.Show();
                 }
-
-
-                //DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
-                //vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
-                //vDisplayFilesForm.ShowDialog();
+                else
+                {
+                    m_MapQueryForm.SelectFeatures = vSelectFeatures;
+                    m_MapQueryForm.Show();
+                    m_MapQueryForm.InitFeatureLayers();
+                    m_MapQueryForm.Refresh();
+                }
             }
-            else
-            {
-                if (m_ToolButtonIndex != 7)
-                    MessageBox.Show("没有需要任何图层", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            //else
+            //{
+            //    if (m_ToolButtonIndex != 7)
+            //        MessageBox.Show("没有选择任何要素", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //}
         }
 
+        public void SelectFeatures(int[] ObjectIDArray,string LayerName)
+        {
+            axMapControl1.Map.ClearSelection();
+            QueryFilterClass vQueryFilter = new QueryFilterClass();
+            string vObjectIDStr = "";
+            foreach (int vTempID in ObjectIDArray)
+            {
+                vObjectIDStr += vTempID + ",";
+            }
+            if (vObjectIDStr != "")
+                vObjectIDStr = vObjectIDStr.Remove(vObjectIDStr.Length - 1);
+            vQueryFilter.WhereClause = string.Format("OBJECTID in ({0})", vObjectIDStr);
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                if (vLayer.Name == LayerName)
+                {
+                    IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                    IFeatureClass vFeatureClass = vFeatureLayer.FeatureClass;
+                    IFeatureCursor vSerachResult = vFeatureClass.Search(vQueryFilter, true);
+                    IFeature vFeature = vSerachResult.NextFeature();
+                    while (vFeature != null)
+                    {
+                        axMapControl1.Map.SelectFeature(vLayer, vFeature);
+                        vFeature = vSerachResult.NextFeature();
+
+                        //axMapControl1.Extent.Union(vFeature.Shape.Envelope);
+                    }
+                }
+            }
+            axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+        }
+
+        DisplayFilesForm m_DisplayFilesForm = null;
         void viewFiles()
         {
-            //IFeatureLayerDefinition pFeaturelyrdef = pFtSelection as IFeatureLayerDefinition;
-            //pFeaturelyrdef.DefinitionExpression = whereclause;
-            //IFeatureLayer pflay = pFeaturelyrdef.CreateSelectionLayer(selectionlayername, true, null, null);
-            //pflay.Visible = true;
-            //pflay.Name = selectionlayername;
-            //pflay.Selectable = true;
-
             ISelection pSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
             pEnumFeatureSetup.AllFields = true;
@@ -1123,15 +1128,25 @@ namespace JXDL.Client
             }
             if (vAreaCodeList.Count > 0)
             {
-                DisplayFilesForm vDisplayFilesForm = new DisplayFilesForm();
-                vDisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
-                vDisplayFilesForm.ShowDialog();
+                if (m_DisplayFilesForm == null || m_DisplayFilesForm.IsDisposed )
+                {
+                    m_DisplayFilesForm = new DisplayFilesForm();
+                    m_DisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
+                    m_DisplayFilesForm.Show();
+                }
+                else
+                {
+                    m_DisplayFilesForm.AreaCodeArray = vAreaCodeList.ToArray();
+                    m_DisplayFilesForm.InitFileInfo();
+                    m_DisplayFilesForm.Show();
+                    m_DisplayFilesForm.Refresh();
+                }
             }
-            else
-            {
-                if (m_ToolButtonIndex != 7)
-                    MessageBox.Show("选择的单位没有文档数据", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            //else
+            //{
+            //    if (m_ToolButtonIndex != 7)
+            //        MessageBox.Show("选择的单位没有文档数据", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //}
         }
 
         private void ToolStripMenuItem_About_Click(object sender, EventArgs e)
@@ -1170,6 +1185,7 @@ namespace JXDL.Client
         {
             //bool a = axMapControl1.CurrentTool is ESRI.ArcGIS.Controls.ControlsNewRectangleToolClass;
 
+            //鼠标右键菜单
             if (e.button == 2)
             {
                 System.Drawing.Point p = new System.Drawing.Point();
@@ -1177,6 +1193,8 @@ namespace JXDL.Client
                 p.Y = e.y;
                 contextMenuStrip_Right.Show(axMapControl1, p);
             }
+
+
             //if (e.button != 2) return;
             //esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone; 
             //IBasicMap pMap = null;
@@ -1427,61 +1445,35 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
         {
-            //ToolStripMenuItem_Pic_Anayle.Checked = !ToolStripMenuItem_Pic_Anayle.Checked;
-            //m_BufferAnayle = ToolStripMenuItem_Pic_Anayle.Checked;
-            if ( toolStripMenuItem_SpaceAnalyze.Checked)
-                bufferAnayleEx();
+            SpaceAnalyzeMode();
+            bufferAnayleEx();
         }
 
         private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)
         {
-            //axMapControl1.Map.item
-            Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
-            //ILayer vLayer = axMapControl1.Map.Layers.Next();
-            int vCount = axMapControl1.LayerCount;
-            for (int i = 0; i < vCount; i++)
-            {
-                ILayer vLayer = axMapControl1.get_Layer(i);
-                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                //vFeatureLayer.FeatureClass.fea
-                IFeature vFeature = vFeatureLayer.FeatureClass as IFeature;
-                if (vFeature != null)
-                {
-                    string vName = vFeature.Class.AliasName;
-                    vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
-                    if (!vSelectFeatures.ContainsKey(vName))
-                        vSelectFeatures.Add(vName, new List<IFeature>());
-                    vSelectFeatures[vName].Add(vFeature);
-                }
-            }
+            MapQueryMode();
+            mapQuery();
 
-            MapQueryForm vMapQueryForm = new MapQueryForm();
-            vMapQueryForm.SelectFeatures = vSelectFeatures;
-            vMapQueryForm.ShowDialog();
-            //for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            //Dictionary<string, List<IFeature>> vSelectFeatures = new Dictionary<string, List<IFeature>>();
+            //int vCount = axMapControl1.LayerCount;
+            //for (int i = 0; i < vCount; i++)
             //{
-
-            //}
-            //ISelection pSelection = axMapControl1.Map.FeatureSelection;
-            //IEnumFeatureSetup pEnumFeatureSetup = pSelection as IEnumFeatureSetup;
-            //pEnumFeatureSetup.AllFields = true;
-            //IEnumFeature pEnumFeature = pSelection as IEnumFeature;
-            //IFeature pFeature = pEnumFeature.Next();
-            ////List<string> vAreaCodeList = new List<string>();
-            //while (pFeature != null)
-            //{
-            //    //int vXZDMIndex = 0;
-            //    string vName = pFeature.Class.AliasName;
-            //    vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
-            //    if (!vSelectFeatures.ContainsKey(vName))
-            //        vSelectFeatures.Add(vName, new List<IFeature>());
-            //    vSelectFeatures[vName].Add(pFeature);
-            //    pFeature = pEnumFeature.Next();
+            //    ILayer vLayer = axMapControl1.get_Layer(i);
+            //    IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+            //    IFeature vFeature = vFeatureLayer.FeatureClass as IFeature;
+            //    if (vFeature != null)
+            //    {
+            //        string vName = vFeature.Class.AliasName;
+            //        vName = vName.Remove(0, vName.LastIndexOf('.') + 1);
+            //        if (!vSelectFeatures.ContainsKey(vName))
+            //            vSelectFeatures.Add(vName, new List<IFeature>());
+            //        vSelectFeatures[vName].Add(vFeature);
+            //    }
             //}
 
             //MapQueryForm vMapQueryForm = new MapQueryForm();
-            //vMapQueryForm.SelectFeatures = axMapControl1.Map.get
-            //vMapQueryForm.ShowDialog();
+            //vMapQueryForm.SelectFeatures = vSelectFeatures;
+            //vMapQueryForm.Show();
         }
 
 
@@ -1555,19 +1547,40 @@ namespace JXDL.Client
 
         private void toolStripMenuItem_FileQuery_Click(object sender, EventArgs e)
         {
+            FileQueryMode();
+        }
 
+        void FileQueryMode()
+        {
             toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = toolStripMenuItem_FileQuery.Checked;
+
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_FileQuery.Checked;
+
             toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FileQuery.Checked;
-            toolStripMenuItem_SpaceAnalyze.Checked  = !toolStripMenuItem_FileQuery.Checked;
+
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FileQuery.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_FileQuery.Checked;
         }
 
         private void toolStripMenuItem_MapQuery_Click(object sender, EventArgs e)
         {
+            MapQueryMode();
+        }
+
+        void MapQueryMode()
+        {
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = toolStripMenuItem_MapQuery.Checked;
+
             toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_MapQuery.Checked;
+
             toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+
             toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_MapQuery.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_MapQuery.Checked;
         }
 
         private void ToolStripMenuItem_VillagePic_Click(object sender, EventArgs e)
@@ -1684,18 +1697,46 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_FeatureSelect_Click(object sender, EventArgs e)
         {
+            featureSelectMode();
+        }
+
+        void featureSelectMode()
+        {
             toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+
             toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+
             toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_FeatureSelect.Checked;
         }
 
         private void toolStripMenuItem_SpaceAnalyze_Click(object sender, EventArgs e)
         {
+            SpaceAnalyzeMode();
+        }
+
+        void SpaceAnalyzeMode()
+        {
             toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = toolStripMenuItem_SpaceAnalyze.Checked;
+
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+
             toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+
             toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+        }
+
+        private void ToolStripMenuItem_Doc_FileQuery_Click(object sender, EventArgs e)
+        {
+            FileQueryMode();
+            viewFiles();
         }
     }
 }
