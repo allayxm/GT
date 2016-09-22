@@ -177,6 +177,41 @@ namespace JXDL.Client
             return vPowerName;
         }
 
+        public string[] GetColumns(string LayerName)
+        {
+            List<string> vResult = new List<string>();
+            for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vLayerName = fixLayerName(vFeatureLayer);
+                if (vLayerName== LayerName)
+                {
+                    for (int j = 0; j < vFeatureLayer.FeatureClass.Fields.FieldCount; j++)
+                    {
+                        string vColumnName = vFeatureLayer.FeatureClass.Fields.get_Field(j).Name.ToUpper();
+                        switch (vColumnName)
+                        {
+                            case "OBJECTID":
+                            case "SHAPE":
+                            case "SHAPE_LENGTH":
+                            case "SHAPE_AREA":
+                            case "FID":
+                            case "SHAPE.STAREA()":
+                            case "SHAPE.STLENGTH()":
+                                    //以上字段由系统自动生成  
+                                    break;
+                            default:
+                                vResult.Add(vColumnName);
+                                break;
+                        }
+                    }
+                    break;
+                }
+                
+            }
+            return vResult.ToArray();
+        }
 
         //void test()
         //{
@@ -532,6 +567,10 @@ namespace JXDL.Client
                             if (vTempLayer.Color != -1)
                                 ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
                         }
+                    }
+                    else
+                    {
+                        vTempLayer.IsView = false;
                     }
                 }
                 catch
