@@ -25,7 +25,7 @@ namespace JXDL.Client
         public const string VillageCommitteeTableName = "sde.SDE.村委会";
         public const string VillageCommitteeCodeName = "CWHDM";
 
-        public const string VillageTableName = "sde.SDE.自然村";
+        public const string VillageTableName = "sde.SDE.自然村面";
         public const string VillageCodeName = "ZRCDM";
 
         public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName };

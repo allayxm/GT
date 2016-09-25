@@ -125,7 +125,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAACm
-        BwAAAk1TRnQBSQFMAgEBAwEAATgBAAE4AQABEAEAARABAAT/AREBAAj/AUIBTQE2BwABNgMAASgDAAFA
+        BwAAAk1TRnQBSQFMAgEBAwEAAUgBAAFIAQABEAEAARABAAT/AREBAAj/AUIBTQE2BwABNgMAASgDAAFA
         AwABEAMAAQEBAAEQBgABCBwAAf8BfwH/AX8BvQF3Ad4BewH/AX8B/wF/KgABSgEpAbUBVgG1AVYBtQFW
         AbUBVgG1AVYBtQFWAbUBVgG1AVYBtQFWAbUBVgG1AVYBtQFWAbUBVgG1AVYBSgEpJgAB/wF/Af8BfwHe
         AXsBnAFzAb0BdwGcAXMBnAFzAd4BewH/AX8KAAH/AX8B/wF/GgABlAFSAf8BfxgAAf8BfwGUAVIkAAH/
@@ -249,4 +249,23 @@
         AABJRU5ErkJggg==
 </value>
   </data>
+  <data name="button_Apply.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAJVSURBVEhL7ZT/SxNhHMf3V9w9K7O2Id429yW1Zba1NscWq+gLVCJhEBVB/RgURFD/QRRIhBAR
+        ZRqLVrJICfolK2rsi+tOnU4hAjNCAqF0xLvnebYb6Wozdz9Fb3g4OO5erw+fz+dO9z//XkiMXOgeD6P5
+        RSOKt7SL9bkRDP5hSYYvbkdjdKN2kl/hJ3P7sEvZDFNfnTYCBo8u9JTgIcWJ7W8tqL+zrnbBSnjgvQPe
+        hI3D2TyKj60tlmED4t9iJbh/1EaPHcb+Ogi3hNqq10fIssp96SZePRus0LsCrn9KINwW+Cneqhhyn+Da
+        /HnM5ifRme3AjpQVAdkB2zNTOZw8JjhGp59aiOFM7lBViXBXwLlP3ZjLT/PKPUmJV872Xrwplr8rDW3C
+        1dmz6Jpo4xLpleGPEgbvmgnSyqdw6eNpuBMSOjJ2tI5I0Pf+Bs5iHjZy+Imct6JE7BfhG2tdZD3vmbsM
+        T8oMf8bG4aw1xcfKQ6IErhFz/viUhwsO03Pj85VlEnZtocDs0hv0fblOe27BztEmDq+662xXmcT92oqj
+        k+1ccHDMVZJIL+mh1/jiIIa+DvA1ZENlcOPAKr9UKoE+ooef/j+OZLdhv7IFe5QWLrk434l3359w+G65
+        jQ7VwuHSoGF1cDVsm+oj6xFMOnBgwoWw3IwQ3Y5T03s5PCxvhTtprt7zSiGPCpJQ2omwQgUZJ/+A2hMN
+        FF5oiyVmXBtcDXlAYHq4AUEKD2Qc8Kft8CYL21IzXI14T+Q9ZgIfHaqmcDXsk6fQHwysOVwNk5T9W/4q
+        Ot1Pv3ay+bRb+EIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>53</value>
+  </metadata>
 </root>

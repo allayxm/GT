@@ -518,19 +518,19 @@ namespace JXDL.Client
 
                     switch (Program.MapTables[i])
                     {
-                        case "sde.SDE.乡镇街道":
+                        case Program.TownshipTableName:
                             m_TownshipFeatureLayer = vLayerFeature;
                             m_TownshipFeatureLayer.MaximumScale = Program.Township_MaximumScale;
                             m_TownshipFeatureLayer.MinimumScale = Program.Township_MinimumScale;
                             showAnnotationByScale(m_TownshipFeatureLayer, "街道", Program.Township_Annotation_MaximumScale, Program.Township_Annotation_MinimumScale);
                             break;
-                        case "sde.SDE.村委会":
+                        case Program.VillageCommitteeTableName:
                             m_VillageCommitteeFeatureLayer = vLayerFeature;
                             m_VillageCommitteeFeatureLayer.MaximumScale = Program.VillageCommittee_MaximumScale;
                             m_VillageCommitteeFeatureLayer.MinimumScale = Program.VillageCommittee_MinimumScale;
                             showAnnotationByScale(m_VillageCommitteeFeatureLayer, "村委会_dwg", Program.VillageCommittee_Annotation_MaximumScale, Program.VillageCommittee_Annotation_MinimumScale);
                             break;
-                        case "sde.SDE.自然村":
+                        case Program.VillageTableName:
                             m_VillageFeatureLayer = vLayerFeature;
                             m_VillageFeatureLayer.MaximumScale = Program.Village_MaximumScale;
                             m_VillageFeatureLayer.MinimumScale = Program.Village_MinimumScale;
@@ -543,9 +543,11 @@ namespace JXDL.Client
 
             ////加载资源图层
             ConfigFile vConfigFile = new ConfigFile();
-            var vLayerColor = vConfigFile.LayerColor;
+            //var vLayerColor = vConfigFile.LayerColor;
+            LayerStruct[] vLayerConfig = vConfigFile.LayerConfig;
             RemoteInterface vRemoteInterface = new RemoteInterface();
             m_Layers = vRemoteInterface.GetLayers();
+            int vLayerIndex = 0;
             foreach (LayerStruct vTempLayer in m_Layers)
             {
                 try
@@ -554,22 +556,36 @@ namespace JXDL.Client
                     int vCount = vFeatureClass.FeatureCount(null);
                     if (vCount > 0)
                     {
+                        vLayerIndex++;
                         IFeatureLayer vLayerFeature = new FeatureLayerClass();
                         vLayerFeature.MaximumScale = Program.Village_MaximumScale;
                         vLayerFeature.MinimumScale = Program.Village_MinimumScale;
                         vLayerFeature.FeatureClass = vFeatureClass;
                         vLayerFeature.Name = vTempLayer.Name;
                         axMapControl1.Map.AddLayer(vLayerFeature as ILayer);
-                        if (vLayerColor.ContainsKey(vLayerFeature.Name))
+                        LayerStruct vLayer = null;
+                        if (vLayerConfig!=null)
+                            vLayer = vLayerConfig.Where(m => m.Name == vTempLayer.Name).FirstOrDefault();
+                        if (vLayer != null)
                         {
-                            vTempLayer.Color = vLayerColor[vLayerFeature.Name];
-
-                            if (vTempLayer.Color != -1)
-                                ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
+                            vTempLayer.Color = vLayer.Color;
+                            vTempLayer.IsView = vLayer.IsView;
+                            vTempLayer.Order = vLayer.Order;
+                            vTempLayer.ShowAnnotation = vLayer.ShowAnnotation;
+                            vTempLayer.AnnotationField = vLayer.AnnotationField;
+                            vTempLayer.AnnotationFontColor = vLayer.AnnotationFontColor;
+                            vTempLayer.AnnotationFontSize = vLayer.AnnotationFontSize;
                         }
+                        vTempLayer.Order = vLayerIndex;
+                        if (vTempLayer.Color != -1)
+                            ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
+                        if (vTempLayer.ShowAnnotation)
+                            EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
+                        vLayerFeature.Visible = vTempLayer.IsView;
                     }
                     else
                     {
+                        vTempLayer.Order = -1;
                         vTempLayer.IsView = false;
                     }
                 }
@@ -579,13 +595,16 @@ namespace JXDL.Client
                 }
             }
 
+            m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
+
             //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
             //axMapControl1.FullExtent.Envelope.XMax = 416486.4234;
             //axMapControl1.FullExtent.Envelope.XMin = 416486.4234;
             //axMapControl1.FullExtent.Envelope.YMax = 416486.4234;
             //axMapControl1.FullExtent.Envelope.YMin = 416486.4234;
             //axMapControl1.FullExtent.QueryEnvelope();
-            // axMapControl1.Extent = axMapControl1.FullExtent;
+
+            axMapControl1.Extent = axMapControl1.FullExtent;
             axMapControl1.Refresh();
             axMapControl1.OnFullExtentUpdated += AxMapControl1_OnFullExtentUpdated;
 
@@ -660,20 +679,35 @@ namespace JXDL.Client
             {
                 vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageFeatureLayer;
                 vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
-                ISimpleMarkerSymbol vSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
+                vFillSymbol = new SimpleFillSymbolClass();
 
                 vColorRgb = Color.FromArgb(villageBackgroundColor);
                 IRgbColor vColor = new RgbColorClass();
                 vColor.Red = vColorRgb.R;
                 vColor.Green = vColorRgb.G;
                 vColor.Blue = vColorRgb.B;
-                vSimpleMarkerSymbol.Color = vColor;
-                //设置pSimpleMarkerSymbol对象的符号类型，选择钻石
-                vSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
-                //设置pSimpleMarkerSymbol对象大小，设置为５
-                vSimpleMarkerSymbol.Size = 5;
-                vSimpleRenderer.Symbol = (ISymbol)vSimpleMarkerSymbol;
+                vFillSymbol.Color = vColor;
+                vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
             }
+
+            //if (m_VillageFeatureLayer != null)
+            //{
+            //    vGeoFeatureLayer = (IGeoFeatureLayer)m_VillageFeatureLayer;
+            //    vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+            //    ISimpleMarkerSymbol vSimpleMarkerSymbol = new SimpleMarkerSymbolClass();
+
+            //    vColorRgb = Color.FromArgb(villageBackgroundColor);
+            //    IRgbColor vColor = new RgbColorClass();
+            //    vColor.Red = vColorRgb.R;
+            //    vColor.Green = vColorRgb.G;
+            //    vColor.Blue = vColorRgb.B;
+            //    vSimpleMarkerSymbol.Color = vColor;
+            //    //设置pSimpleMarkerSymbol对象的符号类型，选择钻石
+            //    vSimpleMarkerSymbol.Style = esriSimpleMarkerStyle.esriSMSCircle;
+            //    //设置pSimpleMarkerSymbol对象大小，设置为５
+            //    vSimpleMarkerSymbol.Size = 5;
+            //    vSimpleRenderer.Symbol = (ISymbol)vSimpleMarkerSymbol;
+            //}
             axMapControl1.Refresh();
         }
 
@@ -936,7 +970,7 @@ namespace JXDL.Client
                 IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
                 string vFeatureLayerName = fixLayerName(vFeatureLayer );
                 //排除村委会、乡镇街道、自然村三个图层
-                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村")
+                if (vFeatureLayerName != Program.VillageCommitteeTableName && vFeatureLayerName != Program.TownshipTableName && vFeatureLayerName != Program.VillageTableName)
                 {
                     if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
                         vSelectFeatureLayers.Add(vFeatureLayerName, 10);
@@ -988,6 +1022,7 @@ namespace JXDL.Client
             //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
             vGP.OverwriteOutput = true;
             string vBufferResult = "";
+            
             foreach (var vBufferDict in vBufferLayers)
             {
                 try
@@ -1004,6 +1039,9 @@ namespace JXDL.Client
                         int vLateIndex = vBufferFileName.LastIndexOf('\\');
                         string vFilePath = vBufferFileName.Substring(0, vLateIndex);
                         string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                        //检查缓存目录是否存在
+                        if (!System.IO.Directory.Exists(vFilePath))
+                            System.IO.Directory.CreateDirectory(vFilePath);
                         vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferDict.Key.Name);
                         axMapControl1.AddShapeFile(vFilePath, vFileName);
                         LayerStruct vBufferLayer = new LayerStruct()
@@ -1410,7 +1448,6 @@ namespace JXDL.Client
 
             //if (vLayerManageForm.ShowDialog() == DialogResult.OK)
             //{
-                
             //    Dictionary<string, int> vLayerConfig = new Dictionary<string, int>();
             //    for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
             //    {
@@ -1589,38 +1626,14 @@ namespace JXDL.Client
             FileQueryMode();
         }
 
-        void FileQueryMode()
-        {
-            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
-            ToolStripMenuItem_Doc_FileQuery.Checked = toolStripMenuItem_FileQuery.Checked;
-
-            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
-            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_FileQuery.Checked;
-
-            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FileQuery.Checked;
-
-            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FileQuery.Checked;
-            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_FileQuery.Checked;
-        }
+      
 
         private void toolStripMenuItem_MapQuery_Click(object sender, EventArgs e)
         {
             MapQueryMode();
         }
 
-        void MapQueryMode()
-        {
-            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
-            ToolStripMenuItem_Pic_Map.Checked = toolStripMenuItem_MapQuery.Checked;
-
-            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_MapQuery.Checked;
-
-            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
-            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
-
-            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_MapQuery.Checked;
-            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_MapQuery.Checked;
-        }
+       
 
         private void ToolStripMenuItem_VillagePic_Click(object sender, EventArgs e)
         {
@@ -1741,7 +1754,7 @@ namespace JXDL.Client
 
         void featureSelectMode()
         {
-            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FeatureSelect.Checked;
+            toolStripMenuItem_FeatureSelect.Checked = true;
 
             toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FeatureSelect.Checked;
             ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_FeatureSelect.Checked;
@@ -1752,30 +1765,208 @@ namespace JXDL.Client
             toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FeatureSelect.Checked;
             ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_FeatureSelect.Checked;
         }
+        void MapQueryMode()
+        {
+            toolStripMenuItem_MapQuery.Checked = true;
+            ToolStripMenuItem_Pic_Map.Checked = true;
+
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_MapQuery.Checked;
+
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_MapQuery.Checked;
+
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_MapQuery.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_MapQuery.Checked;
+        }
+
+
+        void SpaceAnalyzeMode()
+        {
+            toolStripMenuItem_SpaceAnalyze.Checked = true;
+            ToolStripMenuItem_Pic_Buffer.Checked = true;
+
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+
+            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
+        }
+
+        void FileQueryMode()
+        {
+            toolStripMenuItem_FileQuery.Checked = true;
+            ToolStripMenuItem_Doc_FileQuery.Checked = true;
+
+            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_FileQuery.Checked;
+            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_FileQuery.Checked;
+
+            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_FileQuery.Checked;
+
+            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_FileQuery.Checked;
+            ToolStripMenuItem_Pic_Buffer.Checked = !toolStripMenuItem_FileQuery.Checked;
+        }
 
         private void toolStripMenuItem_SpaceAnalyze_Click(object sender, EventArgs e)
         {
             SpaceAnalyzeMode();
         }
 
-        void SpaceAnalyzeMode()
-        {
-            toolStripMenuItem_SpaceAnalyze.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-            ToolStripMenuItem_Pic_Buffer.Checked = toolStripMenuItem_SpaceAnalyze.Checked;
 
-            toolStripMenuItem_MapQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-            ToolStripMenuItem_Pic_Map.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-
-            toolStripMenuItem_FeatureSelect.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-
-            toolStripMenuItem_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-            ToolStripMenuItem_Doc_FileQuery.Checked = !toolStripMenuItem_SpaceAnalyze.Checked;
-        }
 
         private void ToolStripMenuItem_Doc_FileQuery_Click(object sender, EventArgs e)
         {
             FileQueryMode();
             viewFiles();
+        }
+
+        #region 标注
+        /// <summary>
+        /// 标注图层
+        /// </summary>
+        /// <param name="pFeaturelayer"></param>
+        /// <param name="sLableField"></param>
+        /// <param name="pRGB"></param>
+        /// <param name="size"></param>
+        /// <param name="angleField"></param>
+        public void EnableFeatureLayerLabel( string LayerName, string sLableField, 
+            IRgbColor pRGB, int size)
+        {
+
+            for( int i=0;i< axMapControl1.LayerCount;i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vLayerName = fixLayerName(vFeatureLayer);
+                if (LayerName== vLayerName)
+                {
+                    IFeatureLayer pFeaturelayer = vFeatureLayer;
+                    //判断图层是否为空
+                    if (pFeaturelayer == null)
+                        return;
+                    IGeoFeatureLayer pGeoFeaturelayer = (IGeoFeatureLayer)pFeaturelayer;
+                    IAnnotateLayerPropertiesCollection pAnnoLayerPropsCollection;
+                    pAnnoLayerPropsCollection = pGeoFeaturelayer.AnnotationProperties;
+                    pAnnoLayerPropsCollection.Clear();
+
+                    //stdole.IFontDisp  pFont; //字体
+                    ITextSymbol pTextSymbol;
+
+                    //pFont.Name = "新宋体";
+                    //pFont.Size = 9;
+                    //未指定字体颜色则默认为黑色
+                    if (pRGB == null)
+                    {
+                        pRGB = new RgbColorClass();
+                        pRGB.Red = 0;
+                        pRGB.Green = 0;
+                        pRGB.Blue = 0;
+                    }
+
+                    pTextSymbol = new TextSymbolClass();
+                    pTextSymbol.Color = (IColor)pRGB;
+                    pTextSymbol.Size = size; //标注大小
+
+                    IBasicOverposterLayerProperties4 pBasicOverposterlayerProps4 = new BasicOverposterLayerPropertiesClass();
+                    switch (pFeaturelayer.FeatureClass.ShapeType)//判断图层类型
+                    {
+                        case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolygon:
+                            pBasicOverposterlayerProps4.FeatureType = esriBasicOverposterFeatureType.esriOverposterPolygon;
+                            break;
+                        case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPoint:
+                            pBasicOverposterlayerProps4.FeatureType = esriBasicOverposterFeatureType.esriOverposterPoint;
+                            break;
+                        case ESRI.ArcGIS.Geometry.esriGeometryType.esriGeometryPolyline:
+                            pBasicOverposterlayerProps4.FeatureType = esriBasicOverposterFeatureType.esriOverposterPolyline;
+                            break;
+                    }
+                    pBasicOverposterlayerProps4.PointPlacementMethod = esriOverposterPointPlacementMethod.esriRotationField;
+                    //pBasicOverposterlayerProps4.RotationField = angleField;
+
+                    ILabelEngineLayerProperties pLabelEnginelayerProps = new LabelEngineLayerPropertiesClass();
+                    pLabelEnginelayerProps.Expression = "[" + sLableField + "]";
+                    pLabelEnginelayerProps.Symbol = pTextSymbol;
+                    pLabelEnginelayerProps.BasicOverposterLayerProperties = pBasicOverposterlayerProps4 as IBasicOverposterLayerProperties;
+                    pAnnoLayerPropsCollection.Add((IAnnotateLayerProperties)pLabelEnginelayerProps);
+                    pGeoFeaturelayer.DisplayAnnotation = true;//很重要，必须设置 
+                    axMapControl1.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewBackground, null, null);
+                    break;
+                }
+            }
+            //axMapControl1.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewBackground, null, null); }
+        }
+
+
+        public void DisableFeatureLayerLabel(string LayerName)
+        {
+
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vLayerName = fixLayerName(vFeatureLayer);
+                if (LayerName == vLayerName)
+                {
+                    IFeatureLayer pFeaturelayer = vFeatureLayer;
+                    //判断图层是否为空
+                    if (pFeaturelayer == null)
+                        return;
+                    IGeoFeatureLayer pGeoFeaturelayer = (IGeoFeatureLayer)pFeaturelayer;
+                    pGeoFeaturelayer.DisplayAnnotation = false;//很重要，必须设置 
+                    axMapControl1.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewBackground, null, null);
+                    break;
+                }
+            }
+            //axMapControl1.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewBackground, null, null); }
+        }
+        #endregion
+
+        /// <summary>
+        /// 改变层的索引
+        /// </summary>
+        /// <param name="FromIndex"></param>
+        /// <param name="ToIndex"></param>
+        public void ChangeLayerIndex(int FromIndex,int ToIndex )
+        {
+
+            FromIndex += 2;
+            ToIndex += 2;
+            axMapControl1.MoveLayerTo(FromIndex, ToIndex);
+            axMapControl1.Refresh();
+        }
+
+        private void ToolStripMenuItem_Pic_Import_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog vOpenFileDialog = new OpenFileDialog();
+            vOpenFileDialog.Filter = "shp files (*.shp)|*.shp";
+            vOpenFileDialog.Multiselect = false;
+            if ( vOpenFileDialog.ShowDialog() == DialogResult.OK )
+            {
+                string vShpFile = vOpenFileDialog.FileName;
+                int vLateIndex = vShpFile.LastIndexOf('\\');
+                string vFilePath = vShpFile.Substring(0, vLateIndex);
+                string vFileName = vShpFile.Substring(vLateIndex + 1);
+                axMapControl1.AddShapeFile(vFilePath, vFileName);
+                string vLayerName = vFileName.Substring(0, vFileName.LastIndexOf('.'));
+                ILayer vLayer =  GetLayerFromName(vLayerName);
+                IEnvelope envelope = vLayer.AreaOfInterest;
+                axMapControl1.Extent = envelope;
+                axMapControl1.Refresh();
+            }
+        }
+
+        public ILayer GetLayerFromName( string LayerName )
+        {
+            ILayer vLayer = null;
+            for( int i=0;i<axMapControl1.LayerCount;i++)
+            {
+                vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                if (vFeatureLayer.Name == LayerName)
+                    break;
+            }
+            return vLayer;
         }
     }
 }

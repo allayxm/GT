@@ -23,5 +23,15 @@ namespace JXDL.IntrefaceStruct
 
         public int Color { get; set; } = -1;
 
+        public int Order { get; set; }
+
+        public bool ShowAnnotation { get; set; } = false;
+
+        public int AnnotationFontSize { get; set; } = 13;
+
+        public int AnnotationFontColor { get; set; } = -1;
+
+        public string AnnotationField { get; set; }
+
     }
 }

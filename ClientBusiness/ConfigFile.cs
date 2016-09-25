@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
-
+using JXDL.IntrefaceStruct;
+using System.Web.Script.Serialization;
 
 namespace JXDL.ClientBusiness
 {
@@ -28,8 +29,8 @@ namespace JXDL.ClientBusiness
         public int TownshipBackgroundColor { get; set; }
         public int VillageCommitteeBackgroundColor { get; set; }
         public int VillageBackgroundColor { get; set; }
-
-        public Dictionary<string, int> LayerColor { get; set; } = new Dictionary<string, int>();
+        //public Dictionary<string, int> LayerColor { get; set; } = new Dictionary<string, int>();
+        public LayerStruct[] LayerConfig { get; set; }
         #endregion
 
         #region 构造
@@ -44,21 +45,25 @@ namespace JXDL.ClientBusiness
             VillageBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["VillageBackgroundColor"].Value);
             DownloadPath = m_Configuration.AppSettings.Settings["DownloadPath"].Value;
 
-            string vLayerColor = m_Configuration.AppSettings.Settings["LayerColor"].Value;
-            string[] vLayerArray = vLayerColor.Split('|');
-            foreach( string vTempLayer in vLayerArray)
-            {
-                string[] vLayerData = vTempLayer.Split(',');
-                if (vLayerData.Length == 2 )
-                {
-                    if (LayerColor.ContainsKey(vLayerData[0]))
-                        LayerColor[vLayerData[0]] = int.Parse( vLayerData[1] );
-                    else
-                    {
-                        LayerColor.Add(vLayerData[0], int.Parse( vLayerData[1] ));
-                    }
-                }
-            }
+            //string vLayerColor = m_Configuration.AppSettings.Settings["LayerColor"].Value;
+            //string[] vLayerArray = vLayerColor.Split('|');
+            //foreach( string vTempLayer in vLayerArray)
+            //{
+            //    string[] vLayerData = vTempLayer.Split(',');
+            //    if (vLayerData.Length == 2 )
+            //    {
+            //        if (LayerColor.ContainsKey(vLayerData[0]))
+            //            LayerColor[vLayerData[0]] = int.Parse( vLayerData[1] );
+            //        else
+            //        {
+            //            LayerColor.Add(vLayerData[0], int.Parse( vLayerData[1] ));
+            //        }
+            //    }
+            //}
+
+            string vLayerConfig = m_Configuration.AppSettings.Settings["LayerConfig"].Value;
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            LayerConfig = vJSC.Deserialize< LayerStruct[]>(vLayerConfig);
         }
         #endregion
 
@@ -73,15 +78,17 @@ namespace JXDL.ClientBusiness
             m_Configuration.AppSettings.Settings["VillageBackgroundColor"].Value = VillageBackgroundColor.ToString();
             m_Configuration.AppSettings.Settings["DownloadPath"].Value = DownloadPath;
 
-            string vLayerColor = "";
-            foreach ( var vTempLayerColor in LayerColor)
-            {
-                if (vLayerColor == "")
-                    vLayerColor += string.Format("{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
-                else
-                    vLayerColor += string.Format("|{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
-            }
-            m_Configuration.AppSettings.Settings["LayerColor"].Value = vLayerColor;
+            //string vLayerColor = "";
+            //foreach ( var vTempLayerColor in LayerColor)
+            //{
+            //    if (vLayerColor == "")
+            //        vLayerColor += string.Format("{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
+            //    else
+            //        vLayerColor += string.Format("|{0},{1}", vTempLayerColor.Key, vTempLayerColor.Value);
+            //}
+            //m_Configuration.AppSettings.Settings["LayerColor"].Value = vLayerColor;
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            m_Configuration.AppSettings.Settings["LayerConfig"].Value = vJSC.Serialize(LayerConfig);
             m_Configuration.Save(ConfigurationSaveMode.Modified);
             System.Configuration.ConfigurationManager.RefreshSection("appSettings");
         }

@@ -82,7 +82,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="esriGeoDatabase">
       <Guid>{0475BDB1-E5B2-4CA2-9127-B4B1683E70C2}</Guid>

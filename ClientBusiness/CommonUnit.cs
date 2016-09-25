@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Display;
+using System.Drawing;
 
 namespace JXDL.ClientBusiness
 {
@@ -70,5 +72,22 @@ namespace JXDL.ClientBusiness
             }
             return vType;
         }
+
+        #region 颜色互转
+        //Color转ArcEngine的IRgbColor
+        public static IRgbColor ColorToIRgbColor(Color pColor)
+        {
+            IRgbColor pRgbColor = new RgbColorClass();
+            pRgbColor.RGB = pColor.B * 65536 + pColor.G * 256 + pColor.R;
+            return pRgbColor;
+        }
+        //Color转ArcEngine的IColor
+        public static IColor ColorToIColor(Color color)
+        {
+            IColor pColor = new RgbColorClass();
+            pColor.RGB = color.B * 65536 + color.G * 256 + color.R;
+            return pColor;
+        }
+        #endregion
     }
 }
