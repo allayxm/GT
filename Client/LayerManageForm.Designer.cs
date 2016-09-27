@@ -99,6 +99,8 @@
             this.treeView_Layers.AllowDrop = true;
             this.treeView_Layers.CheckBoxes = true;
             this.treeView_Layers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView_Layers.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+            this.treeView_Layers.HideSelection = false;
             this.treeView_Layers.ImageIndex = 0;
             this.treeView_Layers.ImageList = this.imageList_Tree;
             this.treeView_Layers.Location = new System.Drawing.Point(0, 0);
@@ -107,6 +109,7 @@
             this.treeView_Layers.Size = new System.Drawing.Size(208, 303);
             this.treeView_Layers.TabIndex = 2;
             this.treeView_Layers.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Layers_AfterCheck);
+            this.treeView_Layers.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView_Layers_DrawNode);
             this.treeView_Layers.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_Layers_ItemDrag);
             this.treeView_Layers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Layers_AfterSelect);
             this.treeView_Layers.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView_Layers_DragDrop);

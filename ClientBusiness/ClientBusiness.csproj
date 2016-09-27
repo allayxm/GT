@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BufferConfig.cs" />
     <Compile Include="ComboBoxListItem.cs" />
     <Compile Include="CommonUnit.cs" />
     <Compile Include="ConfigFile.cs" />

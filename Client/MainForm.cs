@@ -51,7 +51,7 @@ namespace JXDL.Client
 
         int m_ToolButtonIndex;
 
-        LayerStruct[] m_Layers;
+        public LayerStruct[] m_Layers;
 
         /// <summary>
         /// 缓冲区图层
@@ -957,7 +957,7 @@ namespace JXDL.Client
         BufferForm m_BufferForm = null;
         void bufferAnayleEx()
         {
-            Dictionary<string, int> vSelectFeatureLayers = new Dictionary<string, int>();
+            Dictionary<string, BufferConfig> vSelectFeatureLayers = new Dictionary<string, BufferConfig>();
 
             //获取所有的选择的要素，并按图层放入对应的Dictionary中
             ISelection vSelection = axMapControl1.Map.FeatureSelection;
@@ -968,12 +968,12 @@ namespace JXDL.Client
             while (vFeature != null)
             {
                 IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
-                string vFeatureLayerName = fixLayerName(vFeatureLayer );
+                string vFeatureLayerName = fixLayerName(vFeatureLayer);
                 //排除村委会、乡镇街道、自然村三个图层
-                if (vFeatureLayerName != Program.VillageCommitteeTableName && vFeatureLayerName != Program.TownshipTableName && vFeatureLayerName != Program.VillageTableName)
+                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村")
                 {
                     if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
-                        vSelectFeatureLayers.Add(vFeatureLayerName, 10);
+                        vSelectFeatureLayers.Add(vFeatureLayerName, new BufferConfig() { LayerName= vFeatureLayerName });
                 }
                 vFeature = vEnumFeature.Next();
             }
@@ -990,15 +990,14 @@ namespace JXDL.Client
                 else
                 {
                     m_BufferForm.BufferLayers = vSelectFeatureLayers;
-                    m_BufferForm.initSelectedLayers();
+                    //m_BufferForm.initSelectedLayers();
+                    m_BufferForm.initTreeView();
                     m_BufferForm.Refresh();
                 }
             }
         }
 
-        
-
-        public string CreateBufferLayer(Dictionary<string, int> selectFeatureLayers)
+        public string CreateBufferLayer(Dictionary<string, BufferConfig> selectFeatureLayers)
         {
             Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
             for (int i = 0; i < axMapControl1.LayerCount; i++)
@@ -1010,7 +1009,7 @@ namespace JXDL.Client
                 {
                     if (vAliasName == vSelectLayer.Key)
                     {
-                        vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value);
+                        vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value.distance);
                         break;
                     }
 
