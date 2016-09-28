@@ -144,6 +144,7 @@
             this.treeView_FeatureLayers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_FeatureLayers.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
             this.treeView_FeatureLayers.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.treeView_FeatureLayers.HideSelection = false;
             this.treeView_FeatureLayers.ImageIndex = 0;
             this.treeView_FeatureLayers.ImageList = this.imageList_Tree;
             this.treeView_FeatureLayers.Location = new System.Drawing.Point(0, 0);
@@ -151,6 +152,7 @@
             this.treeView_FeatureLayers.SelectedImageIndex = 0;
             this.treeView_FeatureLayers.Size = new System.Drawing.Size(215, 514);
             this.treeView_FeatureLayers.TabIndex = 0;
+            this.treeView_FeatureLayers.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView_FeatureLayers_AfterCheck);
             this.treeView_FeatureLayers.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView_FeatureLayers_DrawNode);
             this.treeView_FeatureLayers.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_FeatureLayers_AfterSelect);
             // 

@@ -12,7 +12,10 @@ namespace JXDL.ClientBusiness
     {
         public string LayerName { get; set; }
         public int LayerType { get; set; }
-        public int distance { get; set; } = 10;
+        public string Expository { get; set; }
+        public int Distance { get; set; } = 10;
+        public string BufferLayerName { get; set; }
+        public bool IsSelect { get; set; } = true;
         public List<ListViewItem> SelectedLayers { get; set; } = new List<ListViewItem>();
         public List<ListViewItem> AnalyzeLayers { get; set; } = new List<ListViewItem>();
         public List<DataTable> AnalyzeLayers_Detail { get; set; } = new List<DataTable>();

@@ -32,7 +32,7 @@ namespace JXDL.Client
         private void button_Analysis_Click(object sender, EventArgs e)
         {
             //DataTable vTable =  (DataTable)dataGridView_Layers.DataSource;
-            BufferLayers.Clear();
+            //BufferLayers.Clear();
             //foreach ( DataRow vTempRow in vTable.Rows)
             //{
             //    bool vSelected = (bool)vTempRow["选择"];
@@ -45,7 +45,7 @@ namespace JXDL.Client
             //}
 
             VMainForm.DeleteAllBufferLayers();
-            string vInfo = VMainForm.CreateBufferLayer(BufferLayers);
+            string vInfo = VMainForm.CreateBufferLayerEx(BufferLayers);
             //textBox_Info.Text = "";
             //textBox_Info.Text = vInfo;
             //loadBufferLayers();
@@ -100,18 +100,20 @@ namespace JXDL.Client
 
         public void initTreeView()
         {
+            treeView_FeatureLayers.Nodes.Clear();
             foreach (var vTempDict in BufferLayers)
             {
                 
                 TreeNode vNewNode = new TreeNode()
                 {
-                    Checked = true,
+                    Checked = vTempDict.Value.IsSelect,
                     Name = vTempDict.Key,
                     ImageIndex = getLayerType(vTempDict.Key),
                     Text = string.Format("{0}({1})", getLayerAliasName(vTempDict.Key), CommonUnit.ConvertLayerType(getLayerType(vTempDict.Key))),
                     SelectedImageIndex = getLayerType(vTempDict.Key),
                     Tag = vTempDict.Value
                 };
+                vTempDict.Value.Expository = vNewNode.Text;
                 treeView_FeatureLayers.Nodes.Add(vNewNode);
             }
         }
@@ -214,7 +216,7 @@ namespace JXDL.Client
             string vLayerName = string.Format("{0}_Buffer", e.Node.Name);
             textBox_Name.Text = vBufferConfig.LayerName;
             textBox_Type.Text = CommonUnit.ConvertLayerType(getLayerType(vBufferConfig.LayerName));
-            numericUpDown_Distance.Value = vBufferConfig.distance;
+            numericUpDown_Distance.Value = vBufferConfig.Distance;
 
             listView_Layers.Items.Clear();
             listView_Layers.Items.AddRange(vBufferConfig.SelectedLayers.ToArray());
@@ -301,7 +303,7 @@ namespace JXDL.Client
         private void numericUpDown_Distance_ValueChanged(object sender, EventArgs e)
         {
             BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
-            vBufferConfig.distance = Convert.ToInt32( numericUpDown_Distance.Value );
+            vBufferConfig.Distance = Convert.ToInt32( numericUpDown_Distance.Value );
         }
 
         private void button_Remove_Click(object sender, EventArgs e)
@@ -312,8 +314,17 @@ namespace JXDL.Client
                 return;
             }
             BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
-            listView_Layers.Items.Remove(listView_Layers.SelectedItems[0]);
             vBufferConfig.SelectedLayers.Remove(listView_Layers.SelectedItems[0]);
+            listView_Layers.Items.Remove(listView_Layers.SelectedItems[0]);
+        }
+
+        private void treeView_FeatureLayers_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            BufferConfig vBufferConfig = (BufferConfig)e.Node.Tag;
+            vBufferConfig.IsSelect = e.Node.Checked;
+            if (vBufferConfig.BufferLayerName!=null && vBufferConfig.BufferLayerName != "")
+                VMainForm.ChangeLayerVisible(vBufferConfig.BufferLayerName, vBufferConfig.IsSelect);
+            e.Node.Tag = vBufferConfig;
         }
     }
 }

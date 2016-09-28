@@ -997,6 +997,80 @@ namespace JXDL.Client
             }
         }
 
+        public string CreateBufferLayerEx(Dictionary<string, BufferConfig> selectFeatureLayers)
+        {
+            //Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
+            //生成缓冲区
+            Geoprocessor vGP = new Geoprocessor();
+            //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
+            vGP.OverwriteOutput = true;
+            string vBufferResult = "";
+
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vAliasName = fixLayerName(vFeatureLayer);
+                foreach (var vSelectLayer in selectFeatureLayers)
+                {
+                    BufferConfig vBufferConfig = vSelectLayer.Value;
+                    if (vAliasName == vSelectLayer.Key && vBufferConfig.IsSelect)
+                    {
+                        try
+                        {
+                            //string vLayerName = fixLayerName(vSelectLayer.Value.);
+                            string vBufferFileName = markBufferPath(vAliasName);
+                            ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vFeatureLayer, vBufferFileName, vBufferConfig.Distance);
+                            IGeoProcessorResult results = null;
+                            results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                            if (results.Status != esriJobStatus.esriJobSucceeded)
+                                vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vBufferConfig.Expository);
+                            else
+                            {
+                                int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                                string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                                //检查缓存目录是否存在
+                                if (!System.IO.Directory.Exists(vFilePath))
+                                    System.IO.Directory.CreateDirectory(vFilePath);
+                                vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferConfig.Expository);
+                                
+                                LayerStruct vBufferLayer = new LayerStruct()
+                                {
+                                    Name = vAliasName + "_Buffer",
+                                    IsView = true,
+                                    Expository = vAliasName + "缓冲图层"
+                                };
+                                vBufferConfig.BufferLayerName = vBufferLayer.Name;
+                                m_BufferLayers.Add(vBufferLayer);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vBufferConfig.Expository, ex.Message);
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        vBufferConfig.BufferLayerName = "";
+                    }
+
+                }
+            }
+
+            foreach( LayerStruct vBufferLayer in m_BufferLayers)
+            {
+                string vBufferFileName = string.Format(@"{0}\buffer\{1}.shp", System.Environment.CurrentDirectory, vBufferLayer.Name);
+                int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                axMapControl1.AddShapeFile(vFilePath, vFileName);
+            }
+            
+            return vBufferResult;
+        }
+
         public string CreateBufferLayer(Dictionary<string, BufferConfig> selectFeatureLayers)
         {
             Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
@@ -1009,7 +1083,7 @@ namespace JXDL.Client
                 {
                     if (vAliasName == vSelectLayer.Key)
                     {
-                        vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value.distance);
+                        vBufferLayers.Add(vFeatureLayer, vSelectLayer.Value.Distance);
                         break;
                     }
 
