@@ -51,6 +51,7 @@ namespace JXDL.Client
 
             VMainForm.DeleteAllBufferLayers();
             string vInfo = VMainForm.CreateBufferLayerEx(BufferLayers);
+
             //textBox_Info.Text = "";
             //textBox_Info.Text = vInfo;
             //loadBufferLayers();
@@ -292,12 +293,11 @@ namespace JXDL.Client
         private void listBox_Buffer_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListViewItem vSelectedItem = (ListViewItem)listBox_Buffer.SelectedItem;
-            BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
+            BufferConfig vBufferConfig = getBufferConfig( treeView_FeatureLayers.SelectedNode.Name);
             foreach( DataTable vTable in vBufferConfig.AnalyzeLayers_Detail)
             {
                 if ( vTable.TableName == vSelectedItem.Name)
                 {
-                    dataGridView_Analyze.AutoGenerateColumns = false;
                     dataGridView_Analyze.DataSource = vTable;
                     break;
                 }

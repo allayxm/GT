@@ -54,7 +54,7 @@ namespace JXDL.Client
             string vKey = e.Node.Name;
             if (  SelectFeatures[vKey].Count > 0 )
             {
-                DataTable vTable = createFeaturesTableStruct(SelectFeatures[vKey][0]);
+                DataTable vTable = CommonUnit.CreateFeaturesTableStruct(SelectFeatures[vKey][0]);
                 for( int i=0;i< SelectFeatures[vKey].Count;i++)
                 {
                     DataRow vNewRow = vTable.NewRow();
@@ -74,18 +74,18 @@ namespace JXDL.Client
             }
         }
 
-        DataTable createFeaturesTableStruct(IFeature feature)
-        {
-            DataTable vTable = new DataTable();
-            for( int i=0;i<feature.Fields.FieldCount;i++ )
-            {
-                IField vField = feature.Fields.get_Field(i);
-                if (vField.AliasName != "Shape")
-                    vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
-            }
-            vTable.AcceptChanges();
-            return vTable;
-        }
+        //DataTable createFeaturesTableStruct(IFeature feature)
+        //{
+        //    DataTable vTable = new DataTable();
+        //    for( int i=0;i<feature.Fields.FieldCount;i++ )
+        //    {
+        //        IField vField = feature.Fields.get_Field(i);
+        //        if (vField.AliasName != "Shape")
+        //            vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
+        //    }
+        //    vTable.AcceptChanges();
+        //    return vTable;
+        //}
 
         private void button_Query_Click(object sender, EventArgs e)
         {

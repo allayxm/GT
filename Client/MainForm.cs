@@ -502,6 +502,7 @@ namespace JXDL.Client
 
             IWorkspace vWorkspace = vWorkspaceFactory.Open(vPropSet, 0);
             IFeatureWorkspace vFeatWS = vWorkspace as IFeatureWorkspace;
+
             //初始化行政区域图层
             for (int i = 0; i < Program.MapTables.Length; i++)
             {
@@ -596,8 +597,9 @@ namespace JXDL.Client
                     MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
             m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
+
+            
 
             //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
             //axMapControl1.FullExtent.Envelope.XMax = 416486.4234;
@@ -1051,18 +1053,63 @@ namespace JXDL.Client
                         vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vSelectLayer.Expository, ex.Message);
                     }
                 }
-               
+
             }
 
-            foreach( LayerStruct vBufferLayer in m_BufferLayers)
+            ISpatialFilter vSpatialFilter = new SpatialFilter();
+            vSpatialFilter.SpatialRel = esriSpatialRelEnum.esriSpatialRelIndexIntersects;
+
+            foreach (LayerStruct vBufferStruct in m_BufferLayers)
             {
-                string vBufferFileName = string.Format(@"{0}\buffer\{1}.shp", System.Environment.CurrentDirectory, vBufferLayer.Name);
+                BufferConfig vBufferConfig = selectFeatureLayers.Where(m => m.Value.BufferLayerName == vBufferStruct.Name).FirstOrDefault().Value;
+                string vBufferFileName = string.Format(@"{0}\buffer\{1}.shp", System.Environment.CurrentDirectory, vBufferStruct.Name);
                 int vLateIndex = vBufferFileName.LastIndexOf('\\');
                 string vFilePath = vBufferFileName.Substring(0, vLateIndex);
                 string vFileName = vBufferFileName.Substring(vLateIndex + 1);
                 axMapControl1.AddShapeFile(vFilePath, vFileName);
+
+                foreach (ListViewItem vItem in vBufferConfig.SelectedLayers)
+                {
+                    ILayer vAnalyseLayer = GetLayerFromName(vItem.Name);
+                    IFeatureLayer vAnalyseFeatureLayer = vAnalyseLayer as IFeatureLayer;
+                    vBufferConfig.AnalyzeLayers.Add(new ListViewItem() { Name = vItem.Name, Text = vItem.Text });
+
+                    DataTable vTable = CommonUnit.CreateFeaturesTableStruct(vAnalyseFeatureLayer.FeatureClass);
+                    vTable.TableName = vItem.Name;
+                    vBufferConfig.AnalyzeLayers_Detail.Add(vTable);
+
+                    ILayer vBufferLayer = GetLayerFromName(vBufferStruct.Name);
+                    IFeatureLayer vBufferFeatureLayer = vBufferLayer as IFeatureLayer;
+                    IFeatureCursor vFeatureCursor = vBufferFeatureLayer.FeatureClass.Search(null, true);
+                    IFeature vFeature = vFeatureCursor.NextFeature();
+
+                    while (vFeature != null)
+                    {
+                        vSpatialFilter.Geometry = vFeature.Shape;
+                        IFeatureCursor vAnalyseFeatureCursor = vAnalyseFeatureLayer.Search(vSpatialFilter, true);
+                        IFeature vAnayleFeature = vAnalyseFeatureCursor.NextFeature();
+                        while(vAnayleFeature!=null)
+                        {
+                            DataRow vNewRow = vTable.NewRow();
+                            for( int i=0;i<vTable.Columns.Count;i++)
+                            {
+                                if ( vAnayleFeature.Fields.Field[i].Name != "Shape" )
+                                {
+                                    object vValue = vAnayleFeature.get_Value(i);
+                                    vNewRow[i] = vValue;
+                                }
+                            }
+                            vTable.Rows.Add(vNewRow);
+                            vAnayleFeature = vAnalyseFeatureCursor.NextFeature();
+                        }
+                        vFeature = vFeatureCursor.NextFeature();
+                    }
+                    vTable.AcceptChanges();
+
+
+                }
             }
-            
+
             return vBufferResult;
         }
 
@@ -1717,33 +1764,35 @@ namespace JXDL.Client
         {
             QueryFilterClass vQueryFilter = new QueryFilterClass();
 
-            vQueryFilter.WhereClause = string.Format("村委会_dwg = '{0}'", VillageCommittee);
-            IFeatureCursor vSerachResult_VillageCommittee = m_VillageCommitteeFeatureLayer.Search(vQueryFilter, true);
-            IFeature vFeature_VillageCommittee = vSerachResult_VillageCommittee.NextFeature();
+            //vQueryFilter.WhereClause = string.Format("村委会_dwg = '{0}'", VillageCommittee);
+            //IFeatureCursor vSerachResult_VillageCommittee = m_VillageCommitteeFeatureLayer.Search(vQueryFilter, true);
+            //IFeature vFeature_VillageCommittee = vSerachResult_VillageCommittee.NextFeature();
 
             vQueryFilter.WhereClause = string.Format("text = '{0}'", villageName);
             IFeatureCursor vSerachResult_Village = m_VillageFeatureLayer.Search(vQueryFilter, true);
             IFeature vFeature_Village = vSerachResult_Village.NextFeature();
 
-            if (vFeature_VillageCommittee != null)
-            {
-                axMapControl1.Extent = vFeature_VillageCommittee.Shape.Envelope;
-            }
-
             if (vFeature_Village != null)
             {
-                //axMapControl1.Map.SelectFeature(m_VillageFeatureLayer, vFeature);
-
-                //ESRI.ArcGIS.Geometry.Point centerpoint = ESRI.ArcGIS.Geometry.GetCenterPoint(geo);
-                //Map1.CenterAt(centerpoint);
-                axMapControl1.FlashShape(vFeature_Village.Shape);
-                IPoint vPoint = new PointClass();
-                vPoint.X = vFeature_Village.Shape.Envelope.XMin;
-                vPoint.Y = vFeature_Village.Shape.Envelope.YMin;
-                axMapControl1.CenterAt(vPoint);
-                //axMapControl1.Extent = axMapControl1.FullExtent;
+                axMapControl1.Extent = vFeature_Village.Shape.Envelope;
+                //axMapControl1.Refresh();
+                //axMapControl1.FlashShape(vFeature_Village.Shape);
             }
-            axMapControl1.Refresh();
+
+            //if (vFeature_Village != null)
+            //{
+            //    //axMapControl1.Map.SelectFeature(m_VillageFeatureLayer, vFeature);
+
+            //    //ESRI.ArcGIS.Geometry.Point centerpoint = ESRI.ArcGIS.Geometry.GetCenterPoint(geo);
+            //    //Map1.CenterAt(centerpoint);
+            //    axMapControl1.FlashShape(vFeature_Village.Shape);
+            //    IPoint vPoint = new PointClass();
+            //    vPoint.X = vFeature_Village.Shape.Envelope.XMin;
+            //    vPoint.Y = vFeature_Village.Shape.Envelope.YMin;
+            //    axMapControl1.CenterAt(vPoint);
+            //    //axMapControl1.Extent = axMapControl1.FullExtent;
+            //}
+            
         }
 
         public void OutPic(string FileName)

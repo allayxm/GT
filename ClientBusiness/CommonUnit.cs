@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Display;
 using System.Drawing;
+using System.Data;
 
 namespace JXDL.ClientBusiness
 {
@@ -71,6 +72,32 @@ namespace JXDL.ClientBusiness
                     break;
             }
             return vType;
+        }
+
+        public static DataTable CreateFeaturesTableStruct(IFeature feature)
+        {
+            DataTable vTable = new DataTable();
+            for (int i = 0; i < feature.Fields.FieldCount; i++)
+            {
+                IField vField = feature.Fields.get_Field(i);
+                if (vField.AliasName != "Shape")
+                    vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
+            }
+            vTable.AcceptChanges();
+            return vTable;
+        }
+
+        public static DataTable CreateFeaturesTableStruct(IFeatureClass FeatureClass)
+        {
+            DataTable vTable = new DataTable();
+            for (int i = 0; i < FeatureClass.Fields.FieldCount; i++)
+            {
+                IField vField = FeatureClass.Fields.get_Field(i);
+                if (vField.AliasName != "Shape")
+                    vTable.Columns.Add(vField.AliasName, CommonUnit.ConvertFeaturesFieldType(vField.Type));
+            }
+            vTable.AcceptChanges();
+            return vTable;
         }
 
         #region 颜色互转
