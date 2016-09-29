@@ -95,9 +95,10 @@ namespace JXDL.Client
 
         public void DeleteAllBufferLayers()
         {
-            foreach( LayerStruct vTempLayer in m_BufferLayers)
+            m_SelectionChanged = false;
+            foreach ( LayerStruct vTempLayer in m_BufferLayers)
             {
-                for( int i=0;i<axMapControl1.LayerCount;i++)
+                for ( int i=0;i<axMapControl1.LayerCount;i++)
                 {
                     if (axMapControl1.Map.Layer[i].Name == vTempLayer.Name)
                     {
@@ -107,6 +108,7 @@ namespace JXDL.Client
                 }
             }
             m_BufferLayers.Clear();
+            m_SelectionChanged = true;
         }
 
         /// <summary>
@@ -711,13 +713,14 @@ namespace JXDL.Client
             axMapControl1.Refresh();
         }
 
+        bool m_SelectionChanged = true;
         private void AxMapControl1_OnSelectionChanged(object sender, EventArgs e)
         {
             //bufferAnayleEx();
             //IActiveView activeView = axMapControl1.ActiveView;
             //activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
             ICommand vCurrenTool = axMapControl1.CurrentTool as ICommand;
-            if (vCurrenTool.Name == "ControlToolsFeatureSelection_SelectFeatures")
+            if (vCurrenTool.Name == "ControlToolsFeatureSelection_SelectFeatures" && m_SelectionChanged)
             {
                 if (toolStripMenuItem_MapQuery.Checked)
                     mapQuery();
@@ -970,7 +973,7 @@ namespace JXDL.Client
                 IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
                 string vFeatureLayerName = fixLayerName(vFeatureLayer);
                 //排除村委会、乡镇街道、自然村三个图层
-                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村")
+                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村" && m_BufferLayers.Where(m=>m.Name== vFeatureLayerName).Count()== 0 )
                 {
                     if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
                         vSelectFeatureLayers.Add(vFeatureLayerName, new BufferConfig() { LayerName= vFeatureLayerName });
@@ -1011,52 +1014,44 @@ namespace JXDL.Client
                 ILayer vLayer = axMapControl1.get_Layer(i);
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
                 string vAliasName = fixLayerName(vFeatureLayer);
-                foreach (var vSelectLayer in selectFeatureLayers)
+                if (selectFeatureLayers.ContainsKey(vAliasName) && selectFeatureLayers[vAliasName].IsSelect)
                 {
-                    BufferConfig vBufferConfig = vSelectLayer.Value;
-                    if (vAliasName == vSelectLayer.Key && vBufferConfig.IsSelect)
+                    var vSelectLayer = selectFeatureLayers[vAliasName];
+                    try
                     {
-                        try
+                        //string vLayerName = fixLayerName(vSelectLayer.Value.);
+                        string vBufferFileName = markBufferPath(vAliasName);
+                        ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vFeatureLayer, vBufferFileName, vSelectLayer.Distance);
+                        IGeoProcessorResult results = null;
+                        results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                        if (results.Status != esriJobStatus.esriJobSucceeded)
+                            vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vSelectLayer.Expository);
+                        else
                         {
-                            //string vLayerName = fixLayerName(vSelectLayer.Value.);
-                            string vBufferFileName = markBufferPath(vAliasName);
-                            ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vFeatureLayer, vBufferFileName, vBufferConfig.Distance);
-                            IGeoProcessorResult results = null;
-                            results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
-                            if (results.Status != esriJobStatus.esriJobSucceeded)
-                                vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vBufferConfig.Expository);
-                            else
-                            {
-                                int vLateIndex = vBufferFileName.LastIndexOf('\\');
-                                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
-                                string vFileName = vBufferFileName.Substring(vLateIndex + 1);
-                                //检查缓存目录是否存在
-                                if (!System.IO.Directory.Exists(vFilePath))
-                                    System.IO.Directory.CreateDirectory(vFilePath);
-                                vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vBufferConfig.Expository);
-                                
-                                LayerStruct vBufferLayer = new LayerStruct()
-                                {
-                                    Name = vAliasName + "_Buffer",
-                                    IsView = true,
-                                    Expository = vAliasName + "缓冲图层"
-                                };
-                                vBufferConfig.BufferLayerName = vBufferLayer.Name;
-                                m_BufferLayers.Add(vBufferLayer);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vBufferConfig.Expository, ex.Message);
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        vBufferConfig.BufferLayerName = "";
-                    }
+                            int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                            string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                            string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                            //检查缓存目录是否存在
+                            if (!System.IO.Directory.Exists(vFilePath))
+                                System.IO.Directory.CreateDirectory(vFilePath);
+                            vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vSelectLayer.Expository);
 
+                            LayerStruct vBufferLayer = new LayerStruct()
+                            {
+                                Name = vAliasName + "_Buffer",
+                                IsView = true,
+                                Expository = vAliasName + "缓冲图层"
+                            };
+                            vSelectLayer.BufferLayerName = vBufferLayer.Name;
+                            m_BufferLayers.Add(vBufferLayer);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vSelectLayer.Expository, ex.Message);
+                    }
                 }
+               
             }
 
             foreach( LayerStruct vBufferLayer in m_BufferLayers)

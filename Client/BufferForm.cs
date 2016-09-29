@@ -19,7 +19,7 @@ namespace JXDL.Client
             InitializeComponent();
         }
 
-        public Dictionary<string, BufferConfig> BufferLayers { get; set; } = new Dictionary<string, BufferConfig>();
+        public Dictionary<string, BufferConfig> BufferLayers = new Dictionary<string, BufferConfig>();
 
         Dictionary<string, DataTable> m_AnalyzeResult = new Dictionary<string, DataTable>();
 
@@ -28,6 +28,11 @@ namespace JXDL.Client
 
         public MainForm VMainForm { get; set; }
 
+
+        BufferConfig getBufferConfig(string LayerName)
+        {
+            return BufferLayers.Where(m => m.Key == LayerName).FirstOrDefault().Value;
+        }
 
         private void button_Analysis_Click(object sender, EventArgs e)
         {
@@ -110,8 +115,7 @@ namespace JXDL.Client
                     Name = vTempDict.Key,
                     ImageIndex = getLayerType(vTempDict.Key),
                     Text = string.Format("{0}({1})", getLayerAliasName(vTempDict.Key), CommonUnit.ConvertLayerType(getLayerType(vTempDict.Key))),
-                    SelectedImageIndex = getLayerType(vTempDict.Key),
-                    Tag = vTempDict.Value
+                    SelectedImageIndex = getLayerType(vTempDict.Key)
                 };
                 vTempDict.Value.Expository = vNewNode.Text;
                 treeView_FeatureLayers.Nodes.Add(vNewNode);
@@ -212,7 +216,7 @@ namespace JXDL.Client
 
         private void treeView_FeatureLayers_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            BufferConfig vBufferConfig = (BufferConfig)e.Node.Tag;
+            BufferConfig vBufferConfig = getBufferConfig( e.Node.Name);
             string vLayerName = string.Format("{0}_Buffer", e.Node.Name);
             textBox_Name.Text = vBufferConfig.LayerName;
             textBox_Type.Text = CommonUnit.ConvertLayerType(getLayerType(vBufferConfig.LayerName));
@@ -263,7 +267,7 @@ namespace JXDL.Client
 
         private void button_Add_Click(object sender, EventArgs e)
         {
-            BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
+            BufferConfig vBufferConfig = getBufferConfig(treeView_FeatureLayers.SelectedNode.Name );
             ComboBoxListItem vSelectedItem = (ComboBoxListItem)comboBox_Layers.SelectedItem;
             foreach( ListViewItem vTempItem in vBufferConfig.SelectedLayers )
             {
@@ -302,7 +306,7 @@ namespace JXDL.Client
 
         private void numericUpDown_Distance_ValueChanged(object sender, EventArgs e)
         {
-            BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
+            BufferConfig vBufferConfig = getBufferConfig( treeView_FeatureLayers.SelectedNode.Name );
             vBufferConfig.Distance = Convert.ToInt32( numericUpDown_Distance.Value );
         }
 
@@ -320,11 +324,10 @@ namespace JXDL.Client
 
         private void treeView_FeatureLayers_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            BufferConfig vBufferConfig = (BufferConfig)e.Node.Tag;
+            BufferConfig vBufferConfig = getBufferConfig(e.Node.Name);
             vBufferConfig.IsSelect = e.Node.Checked;
             if (vBufferConfig.BufferLayerName!=null && vBufferConfig.BufferLayerName != "")
                 VMainForm.ChangeLayerVisible(vBufferConfig.BufferLayerName, vBufferConfig.IsSelect);
-            e.Node.Tag = vBufferConfig;
         }
     }
 }

@@ -49,6 +49,7 @@
             this.ToolStripMenuItem_Pic_Statistics = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_EagleEye = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_VillagePic = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_Pic_Import = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
@@ -59,7 +60,6 @@
             this.toolStripMenuItem_FileQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_MapQuery = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_SpaceAnalyze = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItem_Pic_Import = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
@@ -180,51 +180,58 @@
             // ToolStripMenuItem_Pic_Layer
             // 
             this.ToolStripMenuItem_Pic_Layer.Name = "ToolStripMenuItem_Pic_Layer";
-            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Layer.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Layer.Text = "图层管理";
             this.ToolStripMenuItem_Pic_Layer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Layer_Click);
             // 
             // ToolStripMenuItem_Pic_Browse
             // 
             this.ToolStripMenuItem_Pic_Browse.Name = "ToolStripMenuItem_Pic_Browse";
-            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Browse.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Browse.Text = "要素编辑";
             this.ToolStripMenuItem_Pic_Browse.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Browse_Click);
             // 
             // ToolStripMenuItem_Pic_Map
             // 
             this.ToolStripMenuItem_Pic_Map.Name = "ToolStripMenuItem_Pic_Map";
-            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Map.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Map.Text = "地图查询";
             this.ToolStripMenuItem_Pic_Map.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Map_Click);
             // 
             // ToolStripMenuItem_Pic_Buffer
             // 
             this.ToolStripMenuItem_Pic_Buffer.Name = "ToolStripMenuItem_Pic_Buffer";
-            this.ToolStripMenuItem_Pic_Buffer.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Buffer.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Buffer.Text = "空间分析 ";
             this.ToolStripMenuItem_Pic_Buffer.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Anayle_Click);
             // 
             // ToolStripMenuItem_Pic_Statistics
             // 
             this.ToolStripMenuItem_Pic_Statistics.Name = "ToolStripMenuItem_Pic_Statistics";
-            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_Pic_Statistics.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_Pic_Statistics.Text = "统计分析";
             this.ToolStripMenuItem_Pic_Statistics.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Statistics_Click);
             // 
             // ToolStripMenuItem_EagleEye
             // 
             this.ToolStripMenuItem_EagleEye.Name = "ToolStripMenuItem_EagleEye";
-            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_EagleEye.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_EagleEye.Text = "鹰眼地图";
             this.ToolStripMenuItem_EagleEye.Click += new System.EventHandler(this.ToolStripMenuItem_EagleEye_Click);
             // 
             // ToolStripMenuItem_VillagePic
             // 
             this.ToolStripMenuItem_VillagePic.Name = "ToolStripMenuItem_VillagePic";
-            this.ToolStripMenuItem_VillagePic.Size = new System.Drawing.Size(152, 24);
+            this.ToolStripMenuItem_VillagePic.Size = new System.Drawing.Size(142, 24);
             this.ToolStripMenuItem_VillagePic.Text = "一村一图";
             this.ToolStripMenuItem_VillagePic.Click += new System.EventHandler(this.ToolStripMenuItem_VillagePic_Click);
+            // 
+            // ToolStripMenuItem_Pic_Import
+            // 
+            this.ToolStripMenuItem_Pic_Import.Name = "ToolStripMenuItem_Pic_Import";
+            this.ToolStripMenuItem_Pic_Import.Size = new System.Drawing.Size(142, 24);
+            this.ToolStripMenuItem_Pic_Import.Text = "导入地图";
+            this.ToolStripMenuItem_Pic_Import.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Import_Click);
             // 
             // ToolStripMenuItem_About
             // 
@@ -314,13 +321,6 @@
             this.toolStripMenuItem_SpaceAnalyze.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItem_SpaceAnalyze.Text = "空间分析";
             this.toolStripMenuItem_SpaceAnalyze.Click += new System.EventHandler(this.toolStripMenuItem_SpaceAnalyze_Click);
-            // 
-            // ToolStripMenuItem_Pic_Import
-            // 
-            this.ToolStripMenuItem_Pic_Import.Name = "ToolStripMenuItem_Pic_Import";
-            this.ToolStripMenuItem_Pic_Import.Size = new System.Drawing.Size(152, 24);
-            this.ToolStripMenuItem_Pic_Import.Text = "导入地图";
-            this.ToolStripMenuItem_Pic_Import.Click += new System.EventHandler(this.ToolStripMenuItem_Pic_Import_Click);
             // 
             // MainForm
             // 
