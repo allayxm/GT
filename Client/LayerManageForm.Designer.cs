@@ -55,6 +55,8 @@
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
+            this.button_MapColor = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -137,6 +139,7 @@
             // tabPage_LayerProperty
             // 
             this.tabPage_LayerProperty.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_LayerProperty.Controls.Add(this.button_MapColor);
             this.tabPage_LayerProperty.Controls.Add(this.label_Color);
             this.tabPage_LayerProperty.Controls.Add(this.textBox_Type);
             this.tabPage_LayerProperty.Controls.Add(this.textBox_Expository);
@@ -228,6 +231,7 @@
             // tabPage_Annotation
             // 
             this.tabPage_Annotation.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Annotation.Controls.Add(this.button1);
             this.tabPage_Annotation.Controls.Add(this.checkBox_Annotation);
             this.tabPage_Annotation.Controls.Add(this.comboBox_FontSize);
             this.tabPage_Annotation.Controls.Add(this.label8);
@@ -251,6 +255,7 @@
             this.checkBox_Annotation.TabIndex = 23;
             this.checkBox_Annotation.Text = "标注些图层中的要素字段";
             this.checkBox_Annotation.UseVisualStyleBackColor = true;
+            this.checkBox_Annotation.CheckedChanged += new System.EventHandler(this.checkBox_Annotation_CheckedChanged);
             // 
             // comboBox_FontSize
             // 
@@ -280,6 +285,7 @@
             this.comboBox_FontSize.Name = "comboBox_FontSize";
             this.comboBox_FontSize.Size = new System.Drawing.Size(121, 23);
             this.comboBox_FontSize.TabIndex = 22;
+            this.comboBox_FontSize.SelectedIndexChanged += new System.EventHandler(this.comboBox_FontSize_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -320,6 +326,7 @@
             this.comboBox_Label.Name = "comboBox_Label";
             this.comboBox_Label.Size = new System.Drawing.Size(191, 23);
             this.comboBox_Label.TabIndex = 12;
+            this.comboBox_Label.SelectedIndexChanged += new System.EventHandler(this.comboBox_Label_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -373,6 +380,26 @@
             this.button_Apply.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
+            // 
+            // button_MapColor
+            // 
+            this.button_MapColor.Image = ((System.Drawing.Image)(resources.GetObject("button_MapColor.Image")));
+            this.button_MapColor.Location = new System.Drawing.Point(200, 170);
+            this.button_MapColor.Name = "button_MapColor";
+            this.button_MapColor.Size = new System.Drawing.Size(26, 26);
+            this.button_MapColor.TabIndex = 20;
+            this.button_MapColor.UseVisualStyleBackColor = true;
+            this.button_MapColor.Click += new System.EventHandler(this.label_Color_DoubleClick);
+            // 
+            // button1
+            // 
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(200, 94);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 26);
+            this.button1.TabIndex = 24;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.label_AnnotationColor_DoubleClick);
             // 
             // LayerManageForm
             // 
@@ -433,5 +460,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox comboBox_FontSize;
         private System.Windows.Forms.CheckBox checkBox_Annotation;
+        private System.Windows.Forms.Button button_MapColor;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -550,7 +550,7 @@ namespace JXDL.Client
             LayerStruct[] vLayerConfig = vConfigFile.LayerConfig;
             RemoteInterface vRemoteInterface = new RemoteInterface();
             m_Layers = vRemoteInterface.GetLayers();
-            int vLayerIndex = 0;
+            //int vLayerIndex = 0;
             foreach (LayerStruct vTempLayer in m_Layers)
             {
                 try
@@ -559,7 +559,9 @@ namespace JXDL.Client
                     int vCount = vFeatureClass.FeatureCount(null);
                     if (vCount > 0)
                     {
-                        vLayerIndex++;
+                        //vLayerIndex++;
+                        //vLayerIndex = m_Layers.Length - vLayerIndex;
+                        //System.Diagnostics.Debug.WriteLine(vLayerIndex);
                         IFeatureLayer vLayerFeature = new FeatureLayerClass();
                         vLayerFeature.MaximumScale = Program.Village_MaximumScale;
                         vLayerFeature.MinimumScale = Program.Village_MinimumScale;
@@ -579,18 +581,20 @@ namespace JXDL.Client
                             vTempLayer.AnnotationFontColor = vLayer.AnnotationFontColor;
                             vTempLayer.AnnotationFontSize = vLayer.AnnotationFontSize;
                         }
-                        vTempLayer.Order = vLayerIndex;
+                        //vTempLayer.Order = vLayerIndex;
                         if (vTempLayer.Color != -1)
                             ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
                         if (vTempLayer.ShowAnnotation)
                             EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
                         vLayerFeature.Visible = vTempLayer.IsView;
+                       
                     }
                     else
                     {
                         vTempLayer.Order = -1;
                         vTempLayer.IsView = false;
                     }
+               
                 }
                 catch
                 {
@@ -599,6 +603,10 @@ namespace JXDL.Client
             }
             m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
 
+            foreach( var vTempLayer in m_Layers)
+            {
+                vTempLayer.Order = GetLayerIndexFromName(vTempLayer.Name);
+            }
             
 
             //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
@@ -1005,6 +1013,7 @@ namespace JXDL.Client
         public string CreateBufferLayerEx(Dictionary<string, BufferConfig> selectFeatureLayers)
         {
             //Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
+                       
             //生成缓冲区
             Geoprocessor vGP = new Geoprocessor();
             //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
@@ -1072,7 +1081,8 @@ namespace JXDL.Client
                 {
                     ILayer vAnalyseLayer = GetLayerFromName(vItem.Name);
                     IFeatureLayer vAnalyseFeatureLayer = vAnalyseLayer as IFeatureLayer;
-                    vBufferConfig.AnalyzeLayers.Add(new ListViewItem() { Name = vItem.Name, Text = vItem.Text });
+                    ListViewItem vAnalyzeLayerItem = new ListViewItem() { Name = vItem.Name, Text = vItem.Text };
+                    vBufferConfig.AnalyzeLayers.Add(vAnalyzeLayerItem);
 
                     DataTable vTable = CommonUnit.CreateFeaturesTableStruct(vAnalyseFeatureLayer.FeatureClass);
                     vTable.TableName = vItem.Name;
@@ -1082,7 +1092,7 @@ namespace JXDL.Client
                     IFeatureLayer vBufferFeatureLayer = vBufferLayer as IFeatureLayer;
                     IFeatureCursor vFeatureCursor = vBufferFeatureLayer.FeatureClass.Search(null, true);
                     IFeature vFeature = vFeatureCursor.NextFeature();
-
+                    
                     while (vFeature != null)
                     {
                         vSpatialFilter.Geometry = vFeature.Shape;
@@ -1104,9 +1114,9 @@ namespace JXDL.Client
                         }
                         vFeature = vFeatureCursor.NextFeature();
                     }
+                   
                     vTable.AcceptChanges();
-
-
+                    vAnalyzeLayerItem.Text = string.Format("{0}【要素总数:{1}】", vAnalyzeLayerItem.Text, vTable.Rows.Count);
                 }
             }
 
@@ -2046,9 +2056,8 @@ namespace JXDL.Client
         /// <param name="ToIndex"></param>
         public void ChangeLayerIndex(int FromIndex,int ToIndex )
         {
-
-            FromIndex += 2;
-            ToIndex += 2;
+            //FromIndex += 2;
+            //ToIndex += 2;
             axMapControl1.MoveLayerTo(FromIndex, ToIndex);
             axMapControl1.Refresh();
         }
@@ -2071,6 +2080,23 @@ namespace JXDL.Client
                 axMapControl1.Extent = envelope;
                 axMapControl1.Refresh();
             }
+        }
+
+
+        public int GetLayerIndexFromName(string LayerName)
+        {
+            int vIndex = -1;
+            for (int i = 0; i < axMapControl1.LayerCount; i++)
+            {
+                ILayer vLayer = axMapControl1.get_Layer(i);
+                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                if (vFeatureLayer.Name == LayerName)
+                {
+                    vIndex = i;
+                    break;
+                }
+            }
+            return vIndex;
         }
 
         public ILayer GetLayerFromName( string LayerName )

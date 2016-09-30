@@ -49,8 +49,19 @@ namespace JXDL.Client
             //    }
             //}
 
+            //清空原有已分析数据
+            foreach (var vTempLayers in BufferLayers)
+            {
+                vTempLayers.Value.AnalyzeLayers.Clear();
+                vTempLayers.Value.AnalyzeLayers_Detail.Clear();
+            }
+
             VMainForm.DeleteAllBufferLayers();
             string vInfo = VMainForm.CreateBufferLayerEx(BufferLayers);
+
+            //显示当前节点的数据
+            if (treeView_FeatureLayers.SelectedNode!=null)
+                showLayerData(treeView_FeatureLayers.SelectedNode);
 
             //textBox_Info.Text = "";
             //textBox_Info.Text = vInfo;
@@ -121,6 +132,8 @@ namespace JXDL.Client
                 vTempDict.Value.Expository = vNewNode.Text;
                 treeView_FeatureLayers.Nodes.Add(vNewNode);
             }
+            if (treeView_FeatureLayers.Nodes.Count > 0)
+                treeView_FeatureLayers.SelectedNode = treeView_FeatureLayers.Nodes[0];
         }
 
         //public void initSelectedLayers()
@@ -217,8 +230,13 @@ namespace JXDL.Client
 
         private void treeView_FeatureLayers_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            BufferConfig vBufferConfig = getBufferConfig( e.Node.Name);
-            string vLayerName = string.Format("{0}_Buffer", e.Node.Name);
+            showLayerData(e.Node);
+        }
+
+        void showLayerData( TreeNode node )
+        {
+            BufferConfig vBufferConfig = getBufferConfig(node.Name);
+            string vLayerName = string.Format("{0}_Buffer", node.Name);
             textBox_Name.Text = vBufferConfig.LayerName;
             textBox_Type.Text = CommonUnit.ConvertLayerType(getLayerType(vBufferConfig.LayerName));
             numericUpDown_Distance.Value = vBufferConfig.Distance;
@@ -226,12 +244,11 @@ namespace JXDL.Client
             listView_Layers.Items.Clear();
             listView_Layers.Items.AddRange(vBufferConfig.SelectedLayers.ToArray());
 
-            listBox_Buffer.Items.Clear();
-            listBox_Buffer.Items.AddRange(vBufferConfig.AnalyzeLayers.ToArray());
+            listView_Buffer.Items.Clear();
+            listView_Buffer.Items.AddRange(vBufferConfig.AnalyzeLayers.ToArray());
+            //listBox_Buffer.Items.AddRange(vBufferConfig.AnalyzeLayers.ToArray());
 
             dataGridView_Analyze.DataSource = null;
-
-
         }
 
         private void treeView_FeatureLayers_DrawNode(object sender, DrawTreeNodeEventArgs e)
@@ -292,16 +309,7 @@ namespace JXDL.Client
 
         private void listBox_Buffer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListViewItem vSelectedItem = (ListViewItem)listBox_Buffer.SelectedItem;
-            BufferConfig vBufferConfig = getBufferConfig( treeView_FeatureLayers.SelectedNode.Name);
-            foreach( DataTable vTable in vBufferConfig.AnalyzeLayers_Detail)
-            {
-                if ( vTable.TableName == vSelectedItem.Name)
-                {
-                    dataGridView_Analyze.DataSource = vTable;
-                    break;
-                }
-            }
+           
         }
 
         private void numericUpDown_Distance_ValueChanged(object sender, EventArgs e)
@@ -317,7 +325,7 @@ namespace JXDL.Client
                 MessageBox.Show("请选择需要删除的图层", "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            BufferConfig vBufferConfig = (BufferConfig)treeView_FeatureLayers.SelectedNode.Tag;
+            BufferConfig vBufferConfig = getBufferConfig( treeView_FeatureLayers.SelectedNode.Name );
             vBufferConfig.SelectedLayers.Remove(listView_Layers.SelectedItems[0]);
             listView_Layers.Items.Remove(listView_Layers.SelectedItems[0]);
         }
@@ -328,6 +336,23 @@ namespace JXDL.Client
             vBufferConfig.IsSelect = e.Node.Checked;
             if (vBufferConfig.BufferLayerName!=null && vBufferConfig.BufferLayerName != "")
                 VMainForm.ChangeLayerVisible(vBufferConfig.BufferLayerName, vBufferConfig.IsSelect);
+        }
+
+        private void listView_Buffer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView_Buffer.SelectedItems.Count > 0)
+            {
+                ListViewItem vSelectedItem = (ListViewItem)listView_Buffer.SelectedItems[0];
+                BufferConfig vBufferConfig = getBufferConfig(treeView_FeatureLayers.SelectedNode.Name);
+                foreach (DataTable vTable in vBufferConfig.AnalyzeLayers_Detail)
+                {
+                    if (vTable.TableName == vSelectedItem.Name)
+                    {
+                        dataGridView_Analyze.DataSource = vTable;
+                        break;
+                    }
+                }
+            }
         }
     }
 }

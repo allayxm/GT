@@ -172,11 +172,17 @@ namespace JXDL.Client
 
         private void label_Color_DoubleClick(object sender, EventArgs e)
         {
+            changeLayerColor();
+        }
+
+        void changeLayerColor()
+        {
             ColorDialog vColorDialog = new ColorDialog();
             if (vColorDialog.ShowDialog() == DialogResult.OK)
             {
                 label_Color.BackColor = vColorDialog.Color;
                 label_Color.Tag = vColorDialog.Color.ToArgb();
+                button_Apply.Enabled = true;
             }
         }
 
@@ -214,13 +220,19 @@ namespace JXDL.Client
 
         private void label_AnnotationColor_DoubleClick(object sender, EventArgs e)
         {
+            changeAnnotationColor();
+        }
+
+        void changeAnnotationColor()
+        {
             ColorDialog vColorDialog = new ColorDialog();
             if (vColorDialog.ShowDialog() == DialogResult.OK)
             {
                 label_AnnotationColor.BackColor = vColorDialog.Color;
                 label_AnnotationColor.Tag = vColorDialog.Color.ToArgb();
+                button_Apply.Enabled = true;
             }
-        }
+        } 
 
         private void treeView_Layers_DragDrop(object sender, DragEventArgs e)
         {
@@ -234,7 +246,7 @@ namespace JXDL.Client
 
             //如果目标节点无子节点则添加为同级节点,反之添加到下级节点的未端
             TreeNode NewMoveNode = (TreeNode)moveNode.Clone();
-            if (targeNode.Nodes.Count == 0)
+            if (targeNode!=null &&  targeNode.Nodes.Count == 0)
             {
                 treeView_Layers.Nodes.Insert(targeNode.Index, NewMoveNode);
             }
@@ -253,6 +265,7 @@ namespace JXDL.Client
             int vID = int.Parse(treeView_Layers.SelectedNode.Name);
             LayerStruct vLayer = Layers.Where(m => m.ID == vID).FirstOrDefault();
             int vFromIndex = vLayer.Order;
+            int vIndex = VMainForm.GetLayerIndexFromName(vLayer.Name);
             vLayer.Order = treeView_Layers.SelectedNode.Index;
             int vToIndex = vLayer.Order;
             //VMainForm.axmap
@@ -261,7 +274,6 @@ namespace JXDL.Client
                 vID = int.Parse(treeView_Layers.Nodes[i].Name);
                 vLayer = Layers.Where(m => m.ID == vID).FirstOrDefault();
                 vLayer.Order = treeView_Layers.Nodes[i].Index;
-                
             }
             VMainForm.ChangeLayerIndex(vFromIndex, vToIndex);
         }
@@ -325,6 +337,21 @@ namespace JXDL.Client
                 }
             }
 
+        }
+
+        private void checkBox_Annotation_CheckedChanged(object sender, EventArgs e)
+        {
+            button_Apply.Enabled = true;
+        }
+
+        private void comboBox_Label_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            button_Apply.Enabled = true;
+        }
+
+        private void comboBox_FontSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            button_Apply.Enabled = true;
         }
     }
 }

@@ -34,7 +34,6 @@
             this.button_Analysis = new System.Windows.Forms.Button();
             this.contextMenuStrip_Right = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem_Delete = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView_FeatureLayers = new System.Windows.Forms.TreeView();
             this.imageList_Tree = new System.Windows.Forms.ImageList(this.components);
@@ -54,8 +53,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage_Buffer = new System.Windows.Forms.TabPage();
             this.dataGridView_Analyze = new System.Windows.Forms.DataGridView();
-            this.listBox_Buffer = new System.Windows.Forms.ListBox();
+            this.listView_Buffer = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.label5 = new System.Windows.Forms.Label();
             this.contextMenuStrip_Right.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -74,7 +75,7 @@
             this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
             this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Exit.Location = new System.Drawing.Point(420, 534);
+            this.button_Exit.Location = new System.Drawing.Point(539, 534);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(96, 43);
             this.button_Exit.TabIndex = 6;
@@ -88,7 +89,7 @@
             this.button_Analysis.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Analysis.Image = ((System.Drawing.Image)(resources.GetObject("button_Analysis.Image")));
             this.button_Analysis.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Analysis.Location = new System.Drawing.Point(77, 534);
+            this.button_Analysis.Location = new System.Drawing.Point(418, 534);
             this.button_Analysis.Name = "button_Analysis";
             this.button_Analysis.Size = new System.Drawing.Size(96, 43);
             this.button_Analysis.TabIndex = 5;
@@ -109,16 +110,6 @@
             this.toolStripMenuItem_Delete.Name = "toolStripMenuItem_Delete";
             this.toolStripMenuItem_Delete.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem_Delete.Text = "删除";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(273, 539);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 36);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // splitContainer1
             // 
@@ -179,6 +170,7 @@
             // tabPage_Parameter
             // 
             this.tabPage_Parameter.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Parameter.Controls.Add(this.label5);
             this.tabPage_Parameter.Controls.Add(this.comboBox_Layers);
             this.tabPage_Parameter.Controls.Add(this.button_Remove);
             this.tabPage_Parameter.Controls.Add(this.button_Add);
@@ -309,7 +301,7 @@
             // 
             this.tabPage_Buffer.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage_Buffer.Controls.Add(this.dataGridView_Analyze);
-            this.tabPage_Buffer.Controls.Add(this.listBox_Buffer);
+            this.tabPage_Buffer.Controls.Add(this.listView_Buffer);
             this.tabPage_Buffer.Location = new System.Drawing.Point(4, 25);
             this.tabPage_Buffer.Name = "tabPage_Buffer";
             this.tabPage_Buffer.Padding = new System.Windows.Forms.Padding(3);
@@ -319,24 +311,36 @@
             // 
             // dataGridView_Analyze
             // 
+            this.dataGridView_Analyze.AllowUserToAddRows = false;
+            this.dataGridView_Analyze.AllowUserToDeleteRows = false;
             this.dataGridView_Analyze.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView_Analyze.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView_Analyze.Location = new System.Drawing.Point(3, 127);
+            this.dataGridView_Analyze.Location = new System.Drawing.Point(3, 109);
             this.dataGridView_Analyze.Name = "dataGridView_Analyze";
+            this.dataGridView_Analyze.ReadOnly = true;
             this.dataGridView_Analyze.RowTemplate.Height = 23;
-            this.dataGridView_Analyze.Size = new System.Drawing.Size(414, 355);
-            this.dataGridView_Analyze.TabIndex = 1;
+            this.dataGridView_Analyze.Size = new System.Drawing.Size(414, 373);
+            this.dataGridView_Analyze.TabIndex = 26;
             // 
-            // listBox_Buffer
+            // listView_Buffer
             // 
-            this.listBox_Buffer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.listBox_Buffer.FormattingEnabled = true;
-            this.listBox_Buffer.ItemHeight = 15;
-            this.listBox_Buffer.Location = new System.Drawing.Point(3, 3);
-            this.listBox_Buffer.Name = "listBox_Buffer";
-            this.listBox_Buffer.Size = new System.Drawing.Size(414, 124);
-            this.listBox_Buffer.TabIndex = 0;
-            this.listBox_Buffer.SelectedIndexChanged += new System.EventHandler(this.listBox_Buffer_SelectedIndexChanged);
+            this.listView_Buffer.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.listView_Buffer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listView_Buffer.FullRowSelect = true;
+            this.listView_Buffer.Location = new System.Drawing.Point(3, 3);
+            this.listView_Buffer.MultiSelect = false;
+            this.listView_Buffer.Name = "listView_Buffer";
+            this.listView_Buffer.Size = new System.Drawing.Size(414, 106);
+            this.listView_Buffer.TabIndex = 25;
+            this.listView_Buffer.UseCompatibleStateImageBehavior = false;
+            this.listView_Buffer.View = System.Windows.Forms.View.List;
+            this.listView_Buffer.SelectedIndexChanged += new System.EventHandler(this.listView_Buffer_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "图层名称";
+            this.columnHeader1.Width = 400;
             // 
             // statusStrip1
             // 
@@ -345,6 +349,15 @@
             this.statusStrip1.Size = new System.Drawing.Size(647, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(224, 151);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(22, 15);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "米";
             // 
             // BufferForm
             // 
@@ -355,7 +368,6 @@
             this.ClientSize = new System.Drawing.Size(647, 618);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.button_Analysis);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -386,7 +398,6 @@
         #endregion
         private System.Windows.Forms.Button button_Exit;
         private System.Windows.Forms.Button button_Analysis;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Right;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Delete;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -408,7 +419,9 @@
         private System.Windows.Forms.Button button_Add;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ComboBox comboBox_Layers;
-        private System.Windows.Forms.ListBox listBox_Buffer;
+        private System.Windows.Forms.ListView listView_Buffer;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.DataGridView dataGridView_Analyze;
+        private System.Windows.Forms.Label label5;
     }
 }
