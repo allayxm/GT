@@ -89,6 +89,8 @@ namespace JXDL.Client
             Close();
         }
 
+       
+
         private void BufferForm_Load(object sender, EventArgs e)
         {
             //toolStripMenuItem_Delete.Click += ToolStripMenuItem_Delete_Click;
@@ -353,6 +355,11 @@ namespace JXDL.Client
                     }
                 }
             }
+        }
+
+        private void BufferForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            VMainForm.DeleteAllBufferLayers();
         }
     }
 }

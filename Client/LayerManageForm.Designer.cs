@@ -36,6 +36,7 @@
             this.imageList_Tree = new System.Windows.Forms.ImageList(this.components);
             this.tabControl_Layer = new System.Windows.Forms.TabControl();
             this.tabPage_LayerProperty = new System.Windows.Forms.TabPage();
+            this.button_MapColor = new System.Windows.Forms.Button();
             this.label_Color = new System.Windows.Forms.Label();
             this.textBox_Type = new System.Windows.Forms.TextBox();
             this.textBox_Expository = new System.Windows.Forms.TextBox();
@@ -45,6 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage_Annotation = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.checkBox_Annotation = new System.Windows.Forms.CheckBox();
             this.comboBox_FontSize = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -55,8 +57,8 @@
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
-            this.button_MapColor = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.tabPage_Data = new System.Windows.Forms.TabPage();
+            this.dataGridView_Data = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -65,6 +67,8 @@
             this.tabControl_Layer.SuspendLayout();
             this.tabPage_LayerProperty.SuspendLayout();
             this.tabPage_Annotation.SuspendLayout();
+            this.tabPage_Data.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -129,6 +133,7 @@
             // 
             this.tabControl_Layer.Controls.Add(this.tabPage_LayerProperty);
             this.tabControl_Layer.Controls.Add(this.tabPage_Annotation);
+            this.tabControl_Layer.Controls.Add(this.tabPage_Data);
             this.tabControl_Layer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl_Layer.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Layer.Name = "tabControl_Layer";
@@ -154,6 +159,16 @@
             this.tabPage_LayerProperty.Size = new System.Drawing.Size(321, 274);
             this.tabPage_LayerProperty.TabIndex = 0;
             this.tabPage_LayerProperty.Text = "属性";
+            // 
+            // button_MapColor
+            // 
+            this.button_MapColor.Image = ((System.Drawing.Image)(resources.GetObject("button_MapColor.Image")));
+            this.button_MapColor.Location = new System.Drawing.Point(200, 170);
+            this.button_MapColor.Name = "button_MapColor";
+            this.button_MapColor.Size = new System.Drawing.Size(26, 26);
+            this.button_MapColor.TabIndex = 20;
+            this.button_MapColor.UseVisualStyleBackColor = true;
+            this.button_MapColor.Click += new System.EventHandler(this.label_Color_DoubleClick);
             // 
             // label_Color
             // 
@@ -245,6 +260,16 @@
             this.tabPage_Annotation.Size = new System.Drawing.Size(321, 274);
             this.tabPage_Annotation.TabIndex = 1;
             this.tabPage_Annotation.Text = "标注";
+            // 
+            // button1
+            // 
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(200, 94);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 26);
+            this.button1.TabIndex = 24;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.label_AnnotationColor_DoubleClick);
             // 
             // checkBox_Annotation
             // 
@@ -381,25 +406,26 @@
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
-            // button_MapColor
+            // tabPage_Data
             // 
-            this.button_MapColor.Image = ((System.Drawing.Image)(resources.GetObject("button_MapColor.Image")));
-            this.button_MapColor.Location = new System.Drawing.Point(200, 170);
-            this.button_MapColor.Name = "button_MapColor";
-            this.button_MapColor.Size = new System.Drawing.Size(26, 26);
-            this.button_MapColor.TabIndex = 20;
-            this.button_MapColor.UseVisualStyleBackColor = true;
-            this.button_MapColor.Click += new System.EventHandler(this.label_Color_DoubleClick);
+            this.tabPage_Data.Controls.Add(this.dataGridView_Data);
+            this.tabPage_Data.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_Data.Name = "tabPage_Data";
+            this.tabPage_Data.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_Data.Size = new System.Drawing.Size(321, 274);
+            this.tabPage_Data.TabIndex = 2;
+            this.tabPage_Data.Text = "数据";
+            this.tabPage_Data.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // dataGridView_Data
             // 
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(200, 94);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 26);
-            this.button1.TabIndex = 24;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.label_AnnotationColor_DoubleClick);
+            this.dataGridView_Data.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Data.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView_Data.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView_Data.Name = "dataGridView_Data";
+            this.dataGridView_Data.RowTemplate.Height = 23;
+            this.dataGridView_Data.Size = new System.Drawing.Size(315, 268);
+            this.dataGridView_Data.TabIndex = 0;
             // 
             // LayerManageForm
             // 
@@ -412,7 +438,7 @@
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.button_Save);
             this.Controls.Add(this.groupBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "LayerManageForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -429,6 +455,8 @@
             this.tabPage_LayerProperty.PerformLayout();
             this.tabPage_Annotation.ResumeLayout(false);
             this.tabPage_Annotation.PerformLayout();
+            this.tabPage_Data.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -462,5 +490,7 @@
         private System.Windows.Forms.CheckBox checkBox_Annotation;
         private System.Windows.Forms.Button button_MapColor;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage_Data;
+        private System.Windows.Forms.DataGridView dataGridView_Data;
     }
 }

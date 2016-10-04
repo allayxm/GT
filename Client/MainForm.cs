@@ -1101,12 +1101,12 @@ namespace JXDL.Client
                         while(vAnayleFeature!=null)
                         {
                             DataRow vNewRow = vTable.NewRow();
-                            for( int i=0;i<vTable.Columns.Count;i++)
+                            for( int i=0;i< vAnayleFeature.Fields.FieldCount;i++)
                             {
                                 if ( vAnayleFeature.Fields.Field[i].Name != "Shape" )
                                 {
                                     object vValue = vAnayleFeature.get_Value(i);
-                                    vNewRow[i] = vValue;
+                                    vNewRow[vAnayleFeature.Fields.Field[i].Name] = vValue;
                                 }
                             }
                             vTable.Rows.Add(vNewRow);
@@ -1116,7 +1116,20 @@ namespace JXDL.Client
                     }
                    
                     vTable.AcceptChanges();
-                    vAnalyzeLayerItem.Text = string.Format("{0}【要素总数:{1}】", vAnalyzeLayerItem.Text, vTable.Rows.Count);
+                    string vInfo = "";
+                    switch (vAnalyseFeatureLayer.FeatureClass.ShapeType)
+                    {
+                        case esriGeometryType.esriGeometryLine:
+                            vInfo = string.Format("{0}【要素总数:{1} 总长度:{2}】", vAnalyzeLayerItem.Text, vTable.Rows.Count,vTable.Compute("Sum([Shape.STLength()])", ""));
+                            break;
+                        case esriGeometryType.esriGeometryPolygon:
+                            vInfo = string.Format("{0}【要素总数:{1} 总面积:{2}】", vAnalyzeLayerItem.Text, vTable.Rows.Count, vTable.Compute("Sum([Shape.STArea()])", ""));
+                            break;
+                        default:
+                            vInfo = string.Format("{0}【要素总数:{1}】", vAnalyzeLayerItem.Text, vTable.Rows.Count);
+                            break;
+                    }
+                    vAnalyzeLayerItem.Text = vInfo;
                 }
             }
 

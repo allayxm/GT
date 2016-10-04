@@ -39,6 +39,7 @@
             this.imageList_Tree = new System.Windows.Forms.ImageList(this.components);
             this.tabControl_Setup = new System.Windows.Forms.TabControl();
             this.tabPage_Parameter = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
             this.comboBox_Layers = new System.Windows.Forms.ComboBox();
             this.button_Remove = new System.Windows.Forms.Button();
             this.button_Add = new System.Windows.Forms.Button();
@@ -56,7 +57,6 @@
             this.listView_Buffer = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.label5 = new System.Windows.Forms.Label();
             this.contextMenuStrip_Right.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -188,6 +188,15 @@
             this.tabPage_Parameter.Size = new System.Drawing.Size(420, 485);
             this.tabPage_Parameter.TabIndex = 0;
             this.tabPage_Parameter.Text = "参数设置";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(224, 151);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(22, 15);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "米";
             // 
             // comboBox_Layers
             // 
@@ -350,15 +359,6 @@
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(224, 151);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(22, 15);
-            this.label5.TabIndex = 28;
-            this.label5.Text = "米";
-            // 
             // BufferForm
             // 
             this.AcceptButton = this.button_Analysis;
@@ -371,13 +371,14 @@
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.button_Analysis);
             this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "BufferForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "空间分析";
             this.TopMost = true;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BufferForm_FormClosed);
             this.Load += new System.EventHandler(this.BufferForm_Load);
             this.contextMenuStrip_Right.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);

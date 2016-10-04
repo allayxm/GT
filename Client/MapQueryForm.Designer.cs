@@ -81,9 +81,10 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dataGridView_Data);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(257, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(752, 561);
+            this.groupBox2.Size = new System.Drawing.Size(808, 617);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "要素信息";
@@ -97,7 +98,7 @@
             this.dataGridView_Data.Location = new System.Drawing.Point(3, 17);
             this.dataGridView_Data.Name = "dataGridView_Data";
             this.dataGridView_Data.RowTemplate.Height = 23;
-            this.dataGridView_Data.Size = new System.Drawing.Size(746, 541);
+            this.dataGridView_Data.Size = new System.Drawing.Size(802, 597);
             this.dataGridView_Data.TabIndex = 0;
             // 
             // groupBox3
@@ -110,7 +111,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox3.Location = new System.Drawing.Point(257, 555);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(752, 62);
+            this.groupBox3.Size = new System.Drawing.Size(808, 62);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             // 
@@ -120,7 +121,7 @@
             this.button_Location.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Location.Image = ((System.Drawing.Image)(resources.GetObject("button_Location.Image")));
             this.button_Location.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Location.Location = new System.Drawing.Point(540, 12);
+            this.button_Location.Location = new System.Drawing.Point(559, 12);
             this.button_Location.Name = "button_Location";
             this.button_Location.Size = new System.Drawing.Size(96, 43);
             this.button_Location.TabIndex = 10;
@@ -135,7 +136,7 @@
             this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
             this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Exit.Location = new System.Drawing.Point(644, 13);
+            this.button_Exit.Location = new System.Drawing.Point(688, 13);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(96, 43);
             this.button_Exit.TabIndex = 9;
@@ -182,11 +183,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Exit;
-            this.ClientSize = new System.Drawing.Size(1009, 617);
+            this.ClientSize = new System.Drawing.Size(1065, 617);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "MapQueryForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

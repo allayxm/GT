@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using JXDL.ClientBusiness;
 using JXDL.IntrefaceStruct;
 using ESRI.ArcGIS.Display;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Carto;
 
 namespace JXDL.Client
 {
@@ -150,7 +152,35 @@ namespace JXDL.Client
 
                 comboBox_FontSize.Text = vLayer.AnnotationFontSize.ToString();
 
+                //表数据
+                ILayer layer =  VMainForm.GetLayerFromName(vLayer.Name);
+                IFeatureLayer vFeatureLayer = layer as IFeatureLayer;
+                DataTable vTable = CommonUnit.CreateFeaturesTableStruct(vFeatureLayer.FeatureClass);
+                int vFeatureCount = vFeatureLayer.FeatureClass.FeatureCount(null);
+                IFeatureCursor vFeatureCursor = vFeatureLayer.FeatureClass.Search(null, true);
+                IFeature vFeature = vFeatureCursor.NextFeature();
+                while(vFeature != null )
+                {
+                    DataRow vNewRow = vTable.NewRow();
+                    for (int j = 0; j < vTable.Columns.Count; j++)
+                    {
+
+                        if (vFeatureLayer.FeatureClass.Fields.Field[j].Name != "Shape")
+                        {
+                            object vFieldValue = vFeature.get_Value(j);
+                            vNewRow[j] = vFieldValue;
+                        }
+                    }
+                    vTable.Rows.Add(vNewRow);
+                    vFeature = vFeatureCursor.NextFeature();
+                }
+                vTable.AcceptChanges();
+                dataGridView_Data.DataSource = vTable;
+
+
                 button_Apply.Enabled = true;
+
+
             }
         }
 
