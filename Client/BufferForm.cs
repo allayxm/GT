@@ -361,5 +361,13 @@ namespace JXDL.Client
         {
             VMainForm.DeleteAllBufferLayers();
         }
+
+        private void checkBox_Select_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach( TreeNode vTempNode in treeView_FeatureLayers.Nodes)
+            {
+                vTempNode.Checked = checkBox_Select.Checked;
+            }
+        }
     }
 }

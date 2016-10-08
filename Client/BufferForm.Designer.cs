@@ -57,6 +57,7 @@
             this.listView_Buffer = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.checkBox_Select = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip_Right.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -359,6 +360,19 @@
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // checkBox_Select
+            // 
+            this.checkBox_Select.AutoSize = true;
+            this.checkBox_Select.Checked = true;
+            this.checkBox_Select.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_Select.Location = new System.Drawing.Point(13, 521);
+            this.checkBox_Select.Name = "checkBox_Select";
+            this.checkBox_Select.Size = new System.Drawing.Size(48, 16);
+            this.checkBox_Select.TabIndex = 12;
+            this.checkBox_Select.Text = "全选";
+            this.checkBox_Select.UseVisualStyleBackColor = true;
+            this.checkBox_Select.CheckedChanged += new System.EventHandler(this.checkBox_Select_CheckedChanged);
+            // 
             // BufferForm
             // 
             this.AcceptButton = this.button_Analysis;
@@ -366,6 +380,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Exit;
             this.ClientSize = new System.Drawing.Size(647, 618);
+            this.Controls.Add(this.checkBox_Select);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.button_Exit);
@@ -424,5 +439,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.DataGridView dataGridView_Analyze;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkBox_Select;
     }
 }

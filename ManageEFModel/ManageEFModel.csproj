@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="AdminUser.cs" />
     <Compile Include="Features.cs" />
-    <Compile Include="Layerscs.cs" />
+    <Compile Include="Layers.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="SystemConfig.cs" />
     <Compile Include="UploadFiles.cs" />

@@ -143,7 +143,8 @@ namespace JXDL.Client
 
                 string[] vColumnArray = VMainForm.GetColumns(vLayer.Name);
                 comboBox_Label.DataSource = vColumnArray;
-                comboBox_Label.Text = vLayer.AnnotationField;
+                //comboBox_Label.Text = vLayer.AnnotationField;
+                textBox_Express.Text = vLayer.AnnotationField;
 
                 if ( vLayer.AnnotationFontColor != -1)
                     label_AnnotationColor.BackColor = Color.FromArgb(vLayer.AnnotationFontColor);
@@ -168,7 +169,7 @@ namespace JXDL.Client
                         if (vFeatureLayer.FeatureClass.Fields.Field[j].Name != "Shape")
                         {
                             object vFieldValue = vFeature.get_Value(j);
-                            vNewRow[j] = vFieldValue;
+                            vNewRow[vFeatureLayer.FeatureClass.Fields.Field[j].Name] = vFieldValue;
                         }
                     }
                     vTable.Rows.Add(vNewRow);
@@ -232,7 +233,8 @@ namespace JXDL.Client
             }
 
             vLayer.ShowAnnotation = checkBox_Annotation.Checked;
-            string vAnnotationField = comboBox_Label.Text;
+            // string vAnnotationField = comboBox_Label.Text;
+            string vAnnotationField = textBox_Express.Text;
             vLayer.AnnotationField = vAnnotationField;
 
             int vAnnotationColor = label_AnnotationColor.Tag == null ? -1 : (int)label_AnnotationColor.Tag;
@@ -382,6 +384,14 @@ namespace JXDL.Client
         private void comboBox_FontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             button_Apply.Enabled = true;
+        }
+
+        private void button_Add_Click(object sender, EventArgs e)
+        {
+            if (textBox_Express.Text=="")
+                textBox_Express.Text += string.Format("[{0}]", comboBox_Label.Text);
+            else
+                textBox_Express.Text += string.Format("+[{0}]", comboBox_Label.Text);
         }
     }
 }

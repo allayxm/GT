@@ -185,6 +185,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapCustomQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapCustomQueryForm.Designer.cs">
+      <DependentUpon>MapCustomQueryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapQueryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapCustomQueryForm.resx">
+      <DependentUpon>MapCustomQueryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MapQueryForm.resx">
       <DependentUpon>MapQueryForm.cs</DependentUpon>

@@ -729,15 +729,18 @@ namespace JXDL.Client
             //bufferAnayleEx();
             //IActiveView activeView = axMapControl1.ActiveView;
             //activeView.PartialRefresh(esriViewDrawPhase.esriViewGeoSelection, 0, axMapControl1.Extent);
-            ICommand vCurrenTool = axMapControl1.CurrentTool as ICommand;
-            if (vCurrenTool.Name == "ControlToolsFeatureSelection_SelectFeatures" && m_SelectionChanged)
+            if (axMapControl1.CurrentTool != null)
             {
-                if (toolStripMenuItem_MapQuery.Checked)
-                    mapQuery();
-                else if (toolStripMenuItem_FileQuery.Checked)
-                    viewFiles();
-                else if (toolStripMenuItem_SpaceAnalyze.Checked)
-                    bufferAnayleEx();
+                ICommand vCurrenTool = axMapControl1.CurrentTool as ICommand;
+                if (vCurrenTool.Name == "ControlToolsFeatureSelection_SelectFeatures" && m_SelectionChanged)
+                {
+                    if (toolStripMenuItem_MapQuery.Checked)
+                        mapQuery();
+                    else if (toolStripMenuItem_FileQuery.Checked)
+                        viewFiles();
+                    else if (toolStripMenuItem_SpaceAnalyze.Checked)
+                        bufferAnayleEx();
+                }
             }
 
             //if (m_MapQuery)
@@ -1279,6 +1282,7 @@ namespace JXDL.Client
 
         public void SelectFeatures(int[] ObjectIDArray,string LayerName)
         {
+            m_SelectionChanged = false;
             axMapControl1.Map.ClearSelection();
             QueryFilterClass vQueryFilter = new QueryFilterClass();
             string vObjectIDStr = "";
@@ -1302,12 +1306,18 @@ namespace JXDL.Client
                     {
                         axMapControl1.Map.SelectFeature(vLayer, vFeature);
                         vFeature = vSerachResult.NextFeature();
-
                         //axMapControl1.Extent.Union(vFeature.Shape.Envelope);
                     }
                 }
             }
-            axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+            //axMapControl1.FullExtent = axMapControl1.Map.FeatureSelection;
+            //axMapControl1.Refresh(esriViewDrawPhase.esriViewGeoSelection, null, null);
+            //放大到一定的比例尺 实现选中要素的显示
+            ICommand pCommand = new ControlsZoomToSelectedCommandClass();
+            //pCommand.OnCreate(axMapControl1.Object);
+            pCommand.OnCreate(axMapControl1.Object);
+            pCommand.OnClick();
+            m_SelectionChanged = true;
         }
 
         DisplayFilesForm m_DisplayFilesForm = null;
@@ -1519,6 +1529,7 @@ namespace JXDL.Client
             pLabelEngineLayerProperties.IsExpressionSimple = true;
             //设置标注字段
             pLabelEngineLayerProperties.Expression = "[" + annotationField + "]";
+            //pLabelEngineLayerProperties.Expression = annotationField;
             //定义IAnnotateLayerTransformationProperties 接口用来控制feature layer的display of dynamic labels
             IAnnotateLayerTransformationProperties pAnnotateLayerTransformationProperties = pLabelEngineLayerProperties as IAnnotateLayerTransformationProperties;
             //设置标注参考比例尺
@@ -1783,6 +1794,11 @@ namespace JXDL.Client
             vVillagePicForm.ShowDialog();
         }
 
+        /// <summary>
+        /// 定位自然村
+        /// </summary>
+        /// <param name="VillageCommittee">村委会</param>
+        /// <param name="villageName">自然村</param>
         public void locationVillage(string VillageCommittee, string villageName)
         {
             QueryFilterClass vQueryFilter = new QueryFilterClass();
@@ -1791,7 +1807,7 @@ namespace JXDL.Client
             //IFeatureCursor vSerachResult_VillageCommittee = m_VillageCommitteeFeatureLayer.Search(vQueryFilter, true);
             //IFeature vFeature_VillageCommittee = vSerachResult_VillageCommittee.NextFeature();
 
-            vQueryFilter.WhereClause = string.Format("text = '{0}'", villageName);
+            vQueryFilter.WhereClause = string.Format("text = '{0}' and 村委会='{1}'", villageName, VillageCommittee);
             IFeatureCursor vSerachResult_Village = m_VillageFeatureLayer.Search(vQueryFilter, true);
             IFeature vFeature_Village = vSerachResult_Village.NextFeature();
 
@@ -1884,7 +1900,9 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_Pic_Statistics_Click(object sender, EventArgs e)
         {
-
+            MapCustomQueryForm vMapCustomQueryForm = new MapCustomQueryForm();
+            vMapCustomQueryForm.VMainForm = this;
+            vMapCustomQueryForm.Show();
         }
 
         private void ToolStripMenuItem_FeatureSelect_Click(object sender, EventArgs e)
@@ -2025,7 +2043,9 @@ namespace JXDL.Client
                     //pBasicOverposterlayerProps4.RotationField = angleField;
 
                     ILabelEngineLayerProperties pLabelEnginelayerProps = new LabelEngineLayerPropertiesClass();
-                    pLabelEnginelayerProps.Expression = "[" + sLableField + "]";
+                    //pLabelEnginelayerProps.Expression = "[" + sLableField + "]";
+                    pLabelEnginelayerProps.Expression = sLableField ;
+                    //pLabelEnginelayerProps.IsExpressionSimple = true;
                     pLabelEnginelayerProps.Symbol = pTextSymbol;
                     pLabelEnginelayerProps.BasicOverposterLayerProperties = pBasicOverposterlayerProps4 as IBasicOverposterLayerProperties;
                     pAnnoLayerPropsCollection.Add((IAnnotateLayerProperties)pLabelEnginelayerProps);
@@ -2078,7 +2098,7 @@ namespace JXDL.Client
         private void ToolStripMenuItem_Pic_Import_Click(object sender, EventArgs e)
         {
             OpenFileDialog vOpenFileDialog = new OpenFileDialog();
-            vOpenFileDialog.Filter = "shp files (*.shp)|*.shp";
+            vOpenFileDialog.Filter = "shp files (*.shp)|*.shp;*.tif";
             vOpenFileDialog.Multiselect = false;
             if ( vOpenFileDialog.ShowDialog() == DialogResult.OK )
             {
@@ -2123,6 +2143,35 @@ namespace JXDL.Client
                     break;
             }
             return vLayer;
+        }
+
+        private void ToolStripMenuItem_Pic_Raster_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog vOpenFileDialog = new OpenFileDialog();
+            vOpenFileDialog.Filter = "Layer File(*.tif)|*.tif;*.tiff";
+            vOpenFileDialog.Multiselect = false;
+            if (vOpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string vShpFile = vOpenFileDialog.FileName;
+                int vLateIndex = vShpFile.LastIndexOf('\\');
+                string vFilePath = vShpFile.Substring(0, vLateIndex);
+                string vFileName = vShpFile.Substring(vLateIndex + 1);
+                //axMapControl1.AddShapeFile(vFilePath, vFileName);
+                //string vLayerName = vFileName.Substring(0, vFileName.LastIndexOf('.'));
+                //ILayer vLayer = GetLayerFromName(vLayerName);
+              
+                IWorkspaceFactory vWorkspaceFactory;
+                IRasterWorkspace vRasterWorkspace;
+                vWorkspaceFactory = new RasterWorkspaceFactoryClass();
+                vRasterWorkspace = (IRasterWorkspace)vWorkspaceFactory.OpenFromFile(vFilePath, 0);
+                IRasterDataset pRasterDataset = (IRasterDataset)vRasterWorkspace.OpenRasterDataset(vFileName);
+                IRasterLayer pRasterLayer = new RasterLayerClass();
+                pRasterLayer.CreateFromDataset(pRasterDataset);
+                axMapControl1.Map.AddLayer(pRasterLayer);
+                IEnvelope envelope = pRasterLayer.AreaOfInterest;
+                axMapControl1.Extent = envelope;
+                axMapControl1.Refresh();
+            }
         }
     }
 }

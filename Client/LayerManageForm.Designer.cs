@@ -54,11 +54,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox_Label = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.tabPage_Data = new System.Windows.Forms.TabPage();
+            this.dataGridView_Data = new System.Windows.Forms.DataGridView();
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
-            this.tabPage_Data = new System.Windows.Forms.TabPage();
-            this.dataGridView_Data = new System.Windows.Forms.DataGridView();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox_Express = new System.Windows.Forms.TextBox();
+            this.button_Add = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -78,7 +81,7 @@
             this.groupBox1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(547, 326);
+            this.groupBox1.Size = new System.Drawing.Size(547, 357);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "图层管理";
@@ -96,7 +99,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl_Layer);
-            this.splitContainer1.Size = new System.Drawing.Size(541, 303);
+            this.splitContainer1.Size = new System.Drawing.Size(541, 334);
             this.splitContainer1.SplitterDistance = 208;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -112,7 +115,7 @@
             this.treeView_Layers.Location = new System.Drawing.Point(0, 0);
             this.treeView_Layers.Name = "treeView_Layers";
             this.treeView_Layers.SelectedImageIndex = 0;
-            this.treeView_Layers.Size = new System.Drawing.Size(208, 303);
+            this.treeView_Layers.Size = new System.Drawing.Size(208, 334);
             this.treeView_Layers.TabIndex = 2;
             this.treeView_Layers.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Layers_AfterCheck);
             this.treeView_Layers.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView_Layers_DrawNode);
@@ -138,7 +141,7 @@
             this.tabControl_Layer.Location = new System.Drawing.Point(0, 0);
             this.tabControl_Layer.Name = "tabControl_Layer";
             this.tabControl_Layer.SelectedIndex = 0;
-            this.tabControl_Layer.Size = new System.Drawing.Size(329, 303);
+            this.tabControl_Layer.Size = new System.Drawing.Size(329, 334);
             this.tabControl_Layer.TabIndex = 12;
             // 
             // tabPage_LayerProperty
@@ -246,6 +249,9 @@
             // tabPage_Annotation
             // 
             this.tabPage_Annotation.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Annotation.Controls.Add(this.button_Add);
+            this.tabPage_Annotation.Controls.Add(this.textBox_Express);
+            this.tabPage_Annotation.Controls.Add(this.label7);
             this.tabPage_Annotation.Controls.Add(this.button1);
             this.tabPage_Annotation.Controls.Add(this.checkBox_Annotation);
             this.tabPage_Annotation.Controls.Add(this.comboBox_FontSize);
@@ -257,7 +263,7 @@
             this.tabPage_Annotation.Location = new System.Drawing.Point(4, 25);
             this.tabPage_Annotation.Name = "tabPage_Annotation";
             this.tabPage_Annotation.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_Annotation.Size = new System.Drawing.Size(321, 274);
+            this.tabPage_Annotation.Size = new System.Drawing.Size(321, 305);
             this.tabPage_Annotation.TabIndex = 1;
             this.tabPage_Annotation.Text = "标注";
             // 
@@ -347,9 +353,9 @@
             // 
             this.comboBox_Label.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Label.FormattingEnabled = true;
-            this.comboBox_Label.Location = new System.Drawing.Point(94, 57);
+            this.comboBox_Label.Location = new System.Drawing.Point(94, 58);
             this.comboBox_Label.Name = "comboBox_Label";
-            this.comboBox_Label.Size = new System.Drawing.Size(191, 23);
+            this.comboBox_Label.Size = new System.Drawing.Size(152, 23);
             this.comboBox_Label.TabIndex = 12;
             this.comboBox_Label.SelectedIndexChanged += new System.EventHandler(this.comboBox_Label_SelectedIndexChanged);
             // 
@@ -361,50 +367,6 @@
             this.label5.Size = new System.Drawing.Size(75, 15);
             this.label5.TabIndex = 11;
             this.label5.Text = "标注字段:";
-            // 
-            // button_Exit
-            // 
-            this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
-            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Exit.Location = new System.Drawing.Point(329, 343);
-            this.button_Exit.Name = "button_Exit";
-            this.button_Exit.Size = new System.Drawing.Size(96, 43);
-            this.button_Exit.TabIndex = 6;
-            this.button_Exit.Text = "退　出";
-            this.button_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Exit.UseVisualStyleBackColor = true;
-            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
-            // 
-            // button_Save
-            // 
-            this.button_Save.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Save.Image = ((System.Drawing.Image)(resources.GetObject("button_Save.Image")));
-            this.button_Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Save.Location = new System.Drawing.Point(212, 343);
-            this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(96, 43);
-            this.button_Save.TabIndex = 5;
-            this.button_Save.Text = "保　存";
-            this.button_Save.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
-            // 
-            // button_Apply
-            // 
-            this.button_Apply.Enabled = false;
-            this.button_Apply.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Apply.Image = ((System.Drawing.Image)(resources.GetObject("button_Apply.Image")));
-            this.button_Apply.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_Apply.Location = new System.Drawing.Point(439, 343);
-            this.button_Apply.Name = "button_Apply";
-            this.button_Apply.Size = new System.Drawing.Size(96, 43);
-            this.button_Apply.TabIndex = 12;
-            this.button_Apply.Text = "应　用";
-            this.button_Apply.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_Apply.UseVisualStyleBackColor = true;
-            this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
             // tabPage_Data
             // 
@@ -426,6 +388,79 @@
             this.dataGridView_Data.RowTemplate.Height = 23;
             this.dataGridView_Data.Size = new System.Drawing.Size(315, 268);
             this.dataGridView_Data.TabIndex = 0;
+            // 
+            // button_Exit
+            // 
+            this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
+            this.button_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Exit.Location = new System.Drawing.Point(329, 363);
+            this.button_Exit.Name = "button_Exit";
+            this.button_Exit.Size = new System.Drawing.Size(96, 43);
+            this.button_Exit.TabIndex = 6;
+            this.button_Exit.Text = "退　出";
+            this.button_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Exit.UseVisualStyleBackColor = true;
+            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
+            // 
+            // button_Save
+            // 
+            this.button_Save.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Save.Image = ((System.Drawing.Image)(resources.GetObject("button_Save.Image")));
+            this.button_Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Save.Location = new System.Drawing.Point(212, 363);
+            this.button_Save.Name = "button_Save";
+            this.button_Save.Size = new System.Drawing.Size(96, 43);
+            this.button_Save.TabIndex = 5;
+            this.button_Save.Text = "保　存";
+            this.button_Save.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            // 
+            // button_Apply
+            // 
+            this.button_Apply.Enabled = false;
+            this.button_Apply.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Apply.Image = ((System.Drawing.Image)(resources.GetObject("button_Apply.Image")));
+            this.button_Apply.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button_Apply.Location = new System.Drawing.Point(439, 363);
+            this.button_Apply.Name = "button_Apply";
+            this.button_Apply.Size = new System.Drawing.Size(96, 43);
+            this.button_Apply.TabIndex = 12;
+            this.button_Apply.Text = "应　用";
+            this.button_Apply.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button_Apply.UseVisualStyleBackColor = true;
+            this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(32, 182);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(60, 15);
+            this.label7.TabIndex = 25;
+            this.label7.Text = "表达式:";
+            // 
+            // textBox_Express
+            // 
+            this.textBox_Express.Location = new System.Drawing.Point(94, 182);
+            this.textBox_Express.Multiline = true;
+            this.textBox_Express.Name = "textBox_Express";
+            this.textBox_Express.Size = new System.Drawing.Size(191, 117);
+            this.textBox_Express.TabIndex = 26;
+            // 
+            // button_Add
+            // 
+            this.button_Add.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button_Add.Location = new System.Drawing.Point(253, 56);
+            this.button_Add.Margin = new System.Windows.Forms.Padding(0);
+            this.button_Add.Name = "button_Add";
+            this.button_Add.Size = new System.Drawing.Size(26, 26);
+            this.button_Add.TabIndex = 27;
+            this.button_Add.Text = "+";
+            this.button_Add.UseVisualStyleBackColor = true;
+            this.button_Add.Click += new System.EventHandler(this.button_Add_Click);
             // 
             // LayerManageForm
             // 
@@ -492,5 +527,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage tabPage_Data;
         private System.Windows.Forms.DataGridView dataGridView_Data;
+        private System.Windows.Forms.TextBox textBox_Express;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button_Add;
     }
 }
