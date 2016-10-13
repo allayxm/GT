@@ -128,6 +128,8 @@ namespace JXDL.Client
         {
             int vID = (int)e.Node.Tag;
             LayerStruct vLayer =  Layers.Where(m => m.ID == vID).FirstOrDefault();
+            if (vLayer.Type == 3)
+                tabControl_Layer.Enabled = false;
             if ( vLayer != null )
             {
                 textBox_Name.Text = vLayer.Name;

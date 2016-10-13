@@ -33,5 +33,10 @@ namespace JXDL.IntrefaceStruct
 
         public string AnnotationField { get; set; }
 
+        /// <summary>
+        /// 是否是影像图层
+        /// </summary>
+        public bool IsRaster { get; set; } = false;
+
     }
 }

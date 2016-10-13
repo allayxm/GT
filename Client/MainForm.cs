@@ -551,7 +551,8 @@ namespace JXDL.Client
             RemoteInterface vRemoteInterface = new RemoteInterface();
             m_Layers = vRemoteInterface.GetLayers();
             //int vLayerIndex = 0;
-            foreach (LayerStruct vTempLayer in m_Layers)
+            LayerStruct[] vFeatureLyaerAraay = m_Layers.Where(m => m.Type != 3).ToArray();
+            foreach (LayerStruct vTempLayer in vFeatureLyaerAraay)
             {
                 try
                 {
@@ -607,7 +608,23 @@ namespace JXDL.Client
             {
                 vTempLayer.Order = GetLayerIndexFromName(vTempLayer.Name);
             }
+
+            //初始化影像
+            LayerStruct[] vRasterLayerArray = m_Layers.Where(m => m.Type == 3).ToArray();
+            foreach(LayerStruct vTempLayer in vRasterLayerArray )
+            {
+                IRasterWorkspaceEx vRasterWS = vWorkspace as IRasterWorkspaceEx;
+                IRasterDataset vRasterDataset = vRasterWS.OpenRasterDataset( string.Format("DBO.{0}", vTempLayer.Name));
+                IRasterLayer vRasterLayer = new RasterLayerClass();
+                vRasterLayer.CreateFromDataset(vRasterDataset);
+                vRasterLayer.Name = vTempLayer.Name;
+                axMapControl1.Map.AddLayer(vRasterLayer);
+            }
             
+
+            //IEnvelope envelope = vRasterLayer.AreaOfInterest;
+            //axMapControl1.Extent = envelope;
+            //axMapControl1.Refresh();
 
             //axMapControl1.FullExtent.Envelope.set_MinMaxAttributes( ref esriPointAttributes)
             //axMapControl1.FullExtent.Envelope.XMax = 416486.4234;
@@ -640,6 +657,10 @@ namespace JXDL.Client
             //axMapControl1.Map.AddLayer(xjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(cjmLayerFeature as ILayer);
             //axMapControl1.Map.AddLayer(zrcLayerFeature as ILayer);
+            for(int i=0;i<axMapControl1.LayerCount;i++)
+            {
+                System.Diagnostics.Debug.WriteLine( axMapControl1.get_Layer(i).Name );
+            }
         }
 
         private void AxMapControl1_OnFullExtentUpdated(object sender, IMapControlEvents2_OnFullExtentUpdatedEvent e)
@@ -2156,9 +2177,6 @@ namespace JXDL.Client
                 int vLateIndex = vShpFile.LastIndexOf('\\');
                 string vFilePath = vShpFile.Substring(0, vLateIndex);
                 string vFileName = vShpFile.Substring(vLateIndex + 1);
-                //axMapControl1.AddShapeFile(vFilePath, vFileName);
-                //string vLayerName = vFileName.Substring(0, vFileName.LastIndexOf('.'));
-                //ILayer vLayer = GetLayerFromName(vLayerName);
               
                 IWorkspaceFactory vWorkspaceFactory;
                 IRasterWorkspace vRasterWorkspace;

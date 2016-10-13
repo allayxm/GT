@@ -86,7 +86,10 @@ namespace JXDL.Client
                             break;
                         }
                     }
+                    CurrencyManager cm = (CurrencyManager)BindingContext[vTempRow.DataGridView.DataSource];//
+                    cm.SuspendBinding(); //挂起，这行必需有
                     vTempRow.Visible = vVisible;
+                    cm.ResumeBinding();//继续，这行必需有
                 }
                 //if (vOK > 0)
                 //    button_Location.Enabled = true;

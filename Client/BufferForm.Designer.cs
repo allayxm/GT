@@ -72,6 +72,7 @@
             // 
             // button_Exit
             // 
+            this.button_Exit.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.button_Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_Exit.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Exit.Image = ((System.Drawing.Image)(resources.GetObject("button_Exit.Image")));
@@ -87,6 +88,7 @@
             // 
             // button_Analysis
             // 
+            this.button_Analysis.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.button_Analysis.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button_Analysis.Image = ((System.Drawing.Image)(resources.GetObject("button_Analysis.Image")));
             this.button_Analysis.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;

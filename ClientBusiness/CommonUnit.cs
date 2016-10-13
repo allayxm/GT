@@ -26,6 +26,9 @@ namespace JXDL.ClientBusiness
                 case 2:
                     vResult = "面";
                     break;
+                case 3:
+                    vResult = "栅格";
+                    break;
             }
             return vResult;
         }
