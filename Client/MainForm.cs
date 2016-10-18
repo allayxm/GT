@@ -186,7 +186,9 @@ namespace JXDL.Client
             {
                 ILayer vLayer = axMapControl1.get_Layer(i);
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                string vLayerName = fixLayerName(vFeatureLayer);
+                string vLayerName = "";
+                if (vFeatureLayer!=null )
+                    vLayerName = fixLayerName(vFeatureLayer);
                 if (vLayerName== LayerName)
                 {
                     for (int j = 0; j < vFeatureLayer.FeatureClass.Fields.FieldCount; j++)
@@ -614,7 +616,7 @@ namespace JXDL.Client
             foreach(LayerStruct vTempLayer in vRasterLayerArray )
             {
                 IRasterWorkspaceEx vRasterWS = vWorkspace as IRasterWorkspaceEx;
-                IRasterDataset vRasterDataset = vRasterWS.OpenRasterDataset( string.Format("DBO.{0}", vTempLayer.Name));
+                IRasterDataset vRasterDataset = vRasterWS.OpenRasterDataset( string.Format("SDE.{0}", vTempLayer.Name));
                 IRasterLayer vRasterLayer = new RasterLayerClass();
                 vRasterLayer.CreateFromDataset(vRasterDataset);
                 vRasterLayer.Name = vTempLayer.Name;
@@ -2017,7 +2019,9 @@ namespace JXDL.Client
             {
                 ILayer vLayer = axMapControl1.get_Layer(i);
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                string vLayerName = fixLayerName(vFeatureLayer);
+                string vLayerName = "";
+                if (vFeatureLayer != null)
+                    vLayerName = fixLayerName(vFeatureLayer);
                 if (LayerName== vLayerName)
                 {
                     IFeatureLayer pFeaturelayer = vFeatureLayer;
@@ -2160,7 +2164,7 @@ namespace JXDL.Client
             {
                 vLayer = axMapControl1.get_Layer(i);
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                if (vFeatureLayer.Name == LayerName)
+                if (vFeatureLayer!=null && vFeatureLayer.Name == LayerName)
                     break;
             }
             return vLayer;
