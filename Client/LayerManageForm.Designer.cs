@@ -49,7 +49,7 @@
             this.button_Add = new System.Windows.Forms.Button();
             this.textBox_Express = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_Color = new System.Windows.Forms.Button();
             this.checkBox_Annotation = new System.Windows.Forms.CheckBox();
             this.comboBox_FontSize = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -62,6 +62,9 @@
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.trackBar_Transparency = new System.Windows.Forms.TrackBar();
+            this.label_Transparency = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -72,6 +75,7 @@
             this.tabPage_Annotation.SuspendLayout();
             this.tabPage_Data.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -147,6 +151,9 @@
             // tabPage_LayerProperty
             // 
             this.tabPage_LayerProperty.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_LayerProperty.Controls.Add(this.label_Transparency);
+            this.tabPage_LayerProperty.Controls.Add(this.trackBar_Transparency);
+            this.tabPage_LayerProperty.Controls.Add(this.label9);
             this.tabPage_LayerProperty.Controls.Add(this.button_MapColor);
             this.tabPage_LayerProperty.Controls.Add(this.label_Color);
             this.tabPage_LayerProperty.Controls.Add(this.textBox_Type);
@@ -252,7 +259,7 @@
             this.tabPage_Annotation.Controls.Add(this.button_Add);
             this.tabPage_Annotation.Controls.Add(this.textBox_Express);
             this.tabPage_Annotation.Controls.Add(this.label7);
-            this.tabPage_Annotation.Controls.Add(this.button1);
+            this.tabPage_Annotation.Controls.Add(this.button_Color);
             this.tabPage_Annotation.Controls.Add(this.checkBox_Annotation);
             this.tabPage_Annotation.Controls.Add(this.comboBox_FontSize);
             this.tabPage_Annotation.Controls.Add(this.label8);
@@ -296,24 +303,24 @@
             this.label7.TabIndex = 25;
             this.label7.Text = "表达式:";
             // 
-            // button1
+            // button_Color
             // 
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(200, 94);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 26);
-            this.button1.TabIndex = 24;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.label_AnnotationColor_DoubleClick);
+            this.button_Color.Image = ((System.Drawing.Image)(resources.GetObject("button_Color.Image")));
+            this.button_Color.Location = new System.Drawing.Point(200, 94);
+            this.button_Color.Name = "button_Color";
+            this.button_Color.Size = new System.Drawing.Size(26, 26);
+            this.button_Color.TabIndex = 24;
+            this.button_Color.UseVisualStyleBackColor = true;
+            this.button_Color.Click += new System.EventHandler(this.label_AnnotationColor_DoubleClick);
             // 
             // checkBox_Annotation
             // 
             this.checkBox_Annotation.AutoSize = true;
             this.checkBox_Annotation.Location = new System.Drawing.Point(20, 24);
             this.checkBox_Annotation.Name = "checkBox_Annotation";
-            this.checkBox_Annotation.Size = new System.Drawing.Size(191, 19);
+            this.checkBox_Annotation.Size = new System.Drawing.Size(176, 19);
             this.checkBox_Annotation.TabIndex = 23;
-            this.checkBox_Annotation.Text = "标注些图层中的要素字段";
+            this.checkBox_Annotation.Text = "标注图层中的要素字段";
             this.checkBox_Annotation.UseVisualStyleBackColor = true;
             this.checkBox_Annotation.CheckedChanged += new System.EventHandler(this.checkBox_Annotation_CheckedChanged);
             // 
@@ -465,6 +472,34 @@
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(29, 209);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(60, 15);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "透明度:";
+            // 
+            // trackBar_Transparency
+            // 
+            this.trackBar_Transparency.Location = new System.Drawing.Point(95, 209);
+            this.trackBar_Transparency.Maximum = 100;
+            this.trackBar_Transparency.Name = "trackBar_Transparency";
+            this.trackBar_Transparency.Size = new System.Drawing.Size(171, 45);
+            this.trackBar_Transparency.TabIndex = 22;
+            this.trackBar_Transparency.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar_Transparency.ValueChanged += new System.EventHandler(this.trackBar_Transparency_ValueChanged);
+            // 
+            // label_Transparency
+            // 
+            this.label_Transparency.AutoSize = true;
+            this.label_Transparency.Location = new System.Drawing.Point(261, 209);
+            this.label_Transparency.Name = "label_Transparency";
+            this.label_Transparency.Size = new System.Drawing.Size(15, 15);
+            this.label_Transparency.TabIndex = 23;
+            this.label_Transparency.Text = "%";
+            // 
             // LayerManageForm
             // 
             this.AcceptButton = this.button_Save;
@@ -495,6 +530,7 @@
             this.tabPage_Annotation.PerformLayout();
             this.tabPage_Data.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -527,11 +563,14 @@
         private System.Windows.Forms.ComboBox comboBox_FontSize;
         private System.Windows.Forms.CheckBox checkBox_Annotation;
         private System.Windows.Forms.Button button_MapColor;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_Color;
         private System.Windows.Forms.TabPage tabPage_Data;
         private System.Windows.Forms.DataGridView dataGridView_Data;
         private System.Windows.Forms.TextBox textBox_Express;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button_Add;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TrackBar trackBar_Transparency;
+        private System.Windows.Forms.Label label_Transparency;
     }
 }

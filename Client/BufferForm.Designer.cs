@@ -58,6 +58,9 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.checkBox_Select = new System.Windows.Forms.CheckBox();
+            this.label_Transparency = new System.Windows.Forms.Label();
+            this.trackBar_Transparency = new System.Windows.Forms.TrackBar();
+            this.label9 = new System.Windows.Forms.Label();
             this.contextMenuStrip_Right.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -68,6 +71,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Distance)).BeginInit();
             this.tabPage_Buffer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Analyze)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
             this.SuspendLayout();
             // 
             // button_Exit
@@ -173,7 +177,10 @@
             // tabPage_Parameter
             // 
             this.tabPage_Parameter.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage_Parameter.Controls.Add(this.label_Transparency);
             this.tabPage_Parameter.Controls.Add(this.label5);
+            this.tabPage_Parameter.Controls.Add(this.trackBar_Transparency);
+            this.tabPage_Parameter.Controls.Add(this.label9);
             this.tabPage_Parameter.Controls.Add(this.comboBox_Layers);
             this.tabPage_Parameter.Controls.Add(this.button_Remove);
             this.tabPage_Parameter.Controls.Add(this.button_Add);
@@ -195,7 +202,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(224, 151);
+            this.label5.Location = new System.Drawing.Point(224, 165);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(22, 15);
             this.label5.TabIndex = 28;
@@ -205,14 +212,14 @@
             // 
             this.comboBox_Layers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Layers.FormattingEnabled = true;
-            this.comboBox_Layers.Location = new System.Drawing.Point(102, 428);
+            this.comboBox_Layers.Location = new System.Drawing.Point(102, 452);
             this.comboBox_Layers.Name = "comboBox_Layers";
             this.comboBox_Layers.Size = new System.Drawing.Size(126, 23);
             this.comboBox_Layers.TabIndex = 27;
             // 
             // button_Remove
             // 
-            this.button_Remove.Location = new System.Drawing.Point(272, 424);
+            this.button_Remove.Location = new System.Drawing.Point(272, 448);
             this.button_Remove.Name = "button_Remove";
             this.button_Remove.Size = new System.Drawing.Size(32, 32);
             this.button_Remove.TabIndex = 26;
@@ -223,7 +230,7 @@
             // button_Add
             // 
             this.button_Add.Font = new System.Drawing.Font("宋体", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button_Add.Location = new System.Drawing.Point(234, 423);
+            this.button_Add.Location = new System.Drawing.Point(234, 447);
             this.button_Add.Name = "button_Add";
             this.button_Add.Size = new System.Drawing.Size(32, 32);
             this.button_Add.TabIndex = 25;
@@ -236,7 +243,7 @@
             this.listView_Layers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2});
             this.listView_Layers.FullRowSelect = true;
-            this.listView_Layers.Location = new System.Drawing.Point(101, 188);
+            this.listView_Layers.Location = new System.Drawing.Point(101, 212);
             this.listView_Layers.MultiSelect = false;
             this.listView_Layers.Name = "listView_Layers";
             this.listView_Layers.Size = new System.Drawing.Size(198, 228);
@@ -252,7 +259,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(20, 198);
+            this.label4.Location = new System.Drawing.Point(20, 212);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 15);
             this.label4.TabIndex = 23;
@@ -260,7 +267,7 @@
             // 
             // numericUpDown_Distance
             // 
-            this.numericUpDown_Distance.Location = new System.Drawing.Point(102, 149);
+            this.numericUpDown_Distance.Location = new System.Drawing.Point(102, 163);
             this.numericUpDown_Distance.Name = "numericUpDown_Distance";
             this.numericUpDown_Distance.Size = new System.Drawing.Size(120, 24);
             this.numericUpDown_Distance.TabIndex = 22;
@@ -269,7 +276,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 151);
+            this.label1.Location = new System.Drawing.Point(20, 165);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 15);
             this.label1.TabIndex = 21;
@@ -277,7 +284,7 @@
             // 
             // textBox_Type
             // 
-            this.textBox_Type.Location = new System.Drawing.Point(100, 101);
+            this.textBox_Type.Location = new System.Drawing.Point(100, 68);
             this.textBox_Type.Name = "textBox_Type";
             this.textBox_Type.ReadOnly = true;
             this.textBox_Type.Size = new System.Drawing.Size(204, 24);
@@ -286,7 +293,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 103);
+            this.label2.Location = new System.Drawing.Point(20, 71);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 15);
             this.label2.TabIndex = 19;
@@ -294,7 +301,7 @@
             // 
             // textBox_Name
             // 
-            this.textBox_Name.Location = new System.Drawing.Point(100, 56);
+            this.textBox_Name.Location = new System.Drawing.Point(100, 21);
             this.textBox_Name.Name = "textBox_Name";
             this.textBox_Name.ReadOnly = true;
             this.textBox_Name.Size = new System.Drawing.Size(204, 24);
@@ -303,7 +310,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 61);
+            this.label3.Location = new System.Drawing.Point(20, 24);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 15);
             this.label3.TabIndex = 17;
@@ -375,6 +382,34 @@
             this.checkBox_Select.UseVisualStyleBackColor = true;
             this.checkBox_Select.CheckedChanged += new System.EventHandler(this.checkBox_Select_CheckedChanged);
             // 
+            // label_Transparency
+            // 
+            this.label_Transparency.AutoSize = true;
+            this.label_Transparency.Location = new System.Drawing.Point(280, 117);
+            this.label_Transparency.Name = "label_Transparency";
+            this.label_Transparency.Size = new System.Drawing.Size(23, 15);
+            this.label_Transparency.TabIndex = 26;
+            this.label_Transparency.Text = "0%";
+            // 
+            // trackBar_Transparency
+            // 
+            this.trackBar_Transparency.Location = new System.Drawing.Point(100, 115);
+            this.trackBar_Transparency.Maximum = 100;
+            this.trackBar_Transparency.Name = "trackBar_Transparency";
+            this.trackBar_Transparency.Size = new System.Drawing.Size(187, 45);
+            this.trackBar_Transparency.TabIndex = 25;
+            this.trackBar_Transparency.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar_Transparency.ValueChanged += new System.EventHandler(this.trackBar_Transparency_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(35, 118);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(60, 15);
+            this.label9.TabIndex = 24;
+            this.label9.Text = "透明度:";
+            // 
             // BufferForm
             // 
             this.AcceptButton = this.button_Analysis;
@@ -408,6 +443,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Distance)).EndInit();
             this.tabPage_Buffer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Analyze)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,5 +478,8 @@
         private System.Windows.Forms.DataGridView dataGridView_Analyze;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox_Select;
+        private System.Windows.Forms.Label label_Transparency;
+        private System.Windows.Forms.TrackBar trackBar_Transparency;
+        private System.Windows.Forms.Label label9;
     }
 }

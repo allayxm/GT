@@ -157,6 +157,10 @@ namespace JXDL.Client
 
                 comboBox_FontSize.Text = vLayer.AnnotationFontSize.ToString();
 
+                //层透明度
+                trackBar_Transparency.Value = vLayer.Transparency;
+                label_Transparency.Text = string.Format("{0}%", vLayer.Transparency);
+
                 //表数据
                 ILayer layer =  VMainForm.GetLayerFromName(vLayer.Name);
                 IFeatureLayer vFeatureLayer = layer as IFeatureLayer;
@@ -251,6 +255,12 @@ namespace JXDL.Client
                 VMainForm.EnableFeatureLayerLabel(vLayerName, vAnnotationField, vRgbColor, vFontSize);
             else
                 VMainForm.DisableFeatureLayerLabel(vLayerName);
+
+            //改变图层透明度
+            short vTransparency = Convert.ToInt16( trackBar_Transparency.Value );
+            vLayer.Transparency = vTransparency;
+            VMainForm.ChangeLayerTransparency(vLayerName,vTransparency);
+
             button_Apply.Enabled = false;
         }
 
@@ -396,6 +406,13 @@ namespace JXDL.Client
                 textBox_Express.Text += string.Format("[{0}]", comboBox_Label.Text);
             else
                 textBox_Express.Text += string.Format("+[{0}]", comboBox_Label.Text);
+        }
+
+        private void trackBar_Transparency_ValueChanged(object sender, EventArgs e)
+        {
+            label_Transparency.Text = string.Format("{0}%", trackBar_Transparency.Value);
+
+            button_Apply.Enabled = true;
         }
     }
 }

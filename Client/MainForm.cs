@@ -583,12 +583,20 @@ namespace JXDL.Client
                             vTempLayer.AnnotationField = vLayer.AnnotationField;
                             vTempLayer.AnnotationFontColor = vLayer.AnnotationFontColor;
                             vTempLayer.AnnotationFontSize = vLayer.AnnotationFontSize;
+                            vTempLayer.Transparency = vLayer.Transparency;
                         }
                         //vTempLayer.Order = vLayerIndex;
+                        //图层颜色
                         if (vTempLayer.Color != -1)
                             ChangeLayerColor(vLayerFeature.Name, vTempLayer.Color);
+                        //图层标注
                         if (vTempLayer.ShowAnnotation)
                             EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
+                        //改变图层透明度
+                        ILayer vResLayer = vLayerFeature as ILayer;
+                        ILayerEffects vLayerEffects = vResLayer as  ILayerEffects;
+                        vLayerEffects.Transparency = vTempLayer.Transparency;
+                        //改变图层是否可视
                         vLayerFeature.Visible = vTempLayer.IsView;
                        
                     }
@@ -601,28 +609,52 @@ namespace JXDL.Client
                 }
                 catch
                 {
+                    vTempLayer.Order = -1;
+                    vTempLayer.IsView = false;
                     MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
+         
 
-            foreach( var vTempLayer in m_Layers)
-            {
-                vTempLayer.Order = GetLayerIndexFromName(vTempLayer.Name);
-            }
+        
 
             //初始化影像
             LayerStruct[] vRasterLayerArray = m_Layers.Where(m => m.Type == 3).ToArray();
             foreach(LayerStruct vTempLayer in vRasterLayerArray )
             {
-                IRasterWorkspaceEx vRasterWS = vWorkspace as IRasterWorkspaceEx;
-                IRasterDataset vRasterDataset = vRasterWS.OpenRasterDataset( string.Format("SDE.{0}", vTempLayer.Name));
-                IRasterLayer vRasterLayer = new RasterLayerClass();
-                vRasterLayer.CreateFromDataset(vRasterDataset);
-                vRasterLayer.Name = vTempLayer.Name;
-                axMapControl1.Map.AddLayer(vRasterLayer);
+                try
+                {
+                    IRasterWorkspaceEx vRasterWS = vWorkspace as IRasterWorkspaceEx;
+                    IRasterDataset vRasterDataset = vRasterWS.OpenRasterDataset(string.Format("SDE.{0}", vTempLayer.Name));
+                    IRasterLayer vRasterLayer = new RasterLayerClass();
+                    vRasterLayer.CreateFromDataset(vRasterDataset);
+                    vRasterLayer.Name = vTempLayer.Name;
+                    if (vLayerConfig != null)
+                    {
+                        LayerStruct vLayer = vLayerConfig.Where(m => m.Name == vTempLayer.Name).FirstOrDefault();
+                        if (vLayer != null)
+                            vRasterLayer.Visible = vLayer.IsView;
+                        else
+                            vRasterLayer.Visible = false;
+                    }
+                    else
+                        vRasterLayer.Visible = false;
+                    vTempLayer.IsView = vRasterLayer.Visible;
+                    axMapControl1.Map.AddLayer(vRasterLayer);
+                }
+                catch
+                {
+                    vTempLayer.Order = -1;
+                    vTempLayer.IsView = false;
+                    MessageBox.Show(string.Format("{0}栅格图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            
+
+            m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
+            foreach (var vTempLayer in m_Layers)
+            {
+                vTempLayer.Order = GetLayerIndexFromName(vTempLayer.Name);
+            }
 
             //IEnvelope envelope = vRasterLayer.AreaOfInterest;
             //axMapControl1.Extent = envelope;
@@ -1041,7 +1073,7 @@ namespace JXDL.Client
             }
         }
 
-        public string CreateBufferLayerEx(Dictionary<string, BufferConfig> selectFeatureLayers)
+        public string CreateBufferLayerEx(Dictionary<string, BufferConfig> selectFeatureLayers, short Transparency)
         {
             //Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
                        
@@ -1161,6 +1193,10 @@ namespace JXDL.Client
                             break;
                     }
                     vAnalyzeLayerItem.Text = vInfo;
+
+                    //图层透明度
+                    ILayerEffects vLayerEffects = vBufferLayer as ILayerEffects;
+                    vLayerEffects.Transparency = Transparency;
                 }
             }
 
@@ -1667,9 +1703,30 @@ namespace JXDL.Client
             axMapControl1.Refresh();
         }
 
-        public void ChangeLayerColor(string layerName, int color)
+        /// <summary>
+        /// 改变层透明度
+        /// </summary>
+        /// <param name="LayerName"></param>
+        /// <param name="Transparency"></param>
+        public void ChangeLayerTransparency(string LayerName, short Transparency)
         {
 
+            for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
+            {
+                string vName = axMapControl1.Map.Layer[i].Name;
+                if (vName == LayerName)
+                {
+                    ILayer vLayer = axMapControl1.Map.Layer[i] as ILayer;
+                    ILayerEffects pLayerEffects = vLayer as ILayerEffects;
+                    pLayerEffects.Transparency = Transparency;
+                    axMapControl1.Refresh();
+                    break;
+                }
+            }
+        }
+
+        public void ChangeLayerColor(string layerName, int color)
+        {
             for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
             {
                 string vName = axMapControl1.Map.Layer[i].Name;
@@ -2154,8 +2211,8 @@ namespace JXDL.Client
             for (int i = 0; i < axMapControl1.LayerCount; i++)
             {
                 ILayer vLayer = axMapControl1.get_Layer(i);
-                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                if (vFeatureLayer.Name == LayerName)
+                //IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                if (vLayer != null && vLayer.Name == LayerName)
                 {
                     vIndex = i;
                     break;

@@ -48,20 +48,26 @@ namespace JXDL.Client
             //        BufferLayers.Add(vLayerName, vDistance);
             //    }
             //}
-
-            //清空原有已分析数据
-            foreach (var vTempLayers in BufferLayers)
+            if (listView_Layers.Items.Count != 0)
             {
-                vTempLayers.Value.AnalyzeLayers.Clear();
-                vTempLayers.Value.AnalyzeLayers_Detail.Clear();
+
+                //清空原有已分析数据
+                foreach (var vTempLayers in BufferLayers)
+                {
+                    vTempLayers.Value.AnalyzeLayers.Clear();
+                    vTempLayers.Value.AnalyzeLayers_Detail.Clear();
+                }
+
+                VMainForm.DeleteAllBufferLayers();
+                short vTransparency = Convert.ToInt16(trackBar_Transparency.Value);
+                string vInfo = VMainForm.CreateBufferLayerEx(BufferLayers, vTransparency);
+
+                //显示当前节点的数据
+                if (treeView_FeatureLayers.SelectedNode != null)
+                    showLayerData(treeView_FeatureLayers.SelectedNode);
             }
-
-            VMainForm.DeleteAllBufferLayers();
-            string vInfo = VMainForm.CreateBufferLayerEx(BufferLayers);
-
-            //显示当前节点的数据
-            if (treeView_FeatureLayers.SelectedNode!=null)
-                showLayerData(treeView_FeatureLayers.SelectedNode);
+            else
+                MessageBox.Show("请选择需要进行分析图层","信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             //textBox_Info.Text = "";
             //textBox_Info.Text = vInfo;
@@ -368,6 +374,11 @@ namespace JXDL.Client
             {
                 vTempNode.Checked = checkBox_Select.Checked;
             }
+        }
+
+        private void trackBar_Transparency_ValueChanged(object sender, EventArgs e)
+        {
+            label_Transparency.Text = string.Format("{0}%", trackBar_Transparency.Value);
         }
     }
 }

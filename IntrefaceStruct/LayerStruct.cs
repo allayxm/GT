@@ -38,5 +38,10 @@ namespace JXDL.IntrefaceStruct
         /// </summary>
         public bool IsRaster { get; set; } = false;
 
+        /// <summary>
+        /// 透明度
+        /// </summary>
+        public short Transparency { get; set; } = 0;
+
     }
 }
