@@ -641,9 +641,7 @@ namespace JXDL.Client
 
             //axMapControl1.OnSelectionChanged += AxMapControl1_OnSelectionChanged;
 
-            m_EagleEyeForm = new EagleEyeForm();
-            m_EagleEyeForm.MainMapControl = axMapControl1;
-            m_EagleEyeForm.TownshipFeatureLayer = m_EagleEyeFeatureClass;
+           
             //IFeatureClass xjmFeatureClass = vFeatWS.OpenFeatureClass("县界面");
             //IFeatureLayer xjmLayerFeature = new FeatureLayerClass();
             //xjmLayerFeature.FeatureClass = xjmFeatureClass;
@@ -663,6 +661,13 @@ namespace JXDL.Client
             {
                 System.Diagnostics.Debug.WriteLine( axMapControl1.get_Layer(i).Name );
             }
+        }
+
+        void initEagleEyeForm()
+        {
+            m_EagleEyeForm = new EagleEyeForm();
+            m_EagleEyeForm.MainMapControl = axMapControl1;
+            m_EagleEyeForm.TownshipFeatureLayer = m_EagleEyeFeatureClass;
         }
 
         private void AxMapControl1_OnFullExtentUpdated(object sender, IMapControlEvents2_OnFullExtentUpdatedEvent e)
@@ -1585,6 +1590,8 @@ namespace JXDL.Client
 
         private void ToolStripMenuItem_EagleEye_Click(object sender, EventArgs e)
         {
+            if (m_EagleEyeForm == null)
+                initEagleEyeForm();
             m_EagleEyeForm.Show();
         }
 
