@@ -36,6 +36,9 @@
             this.imageList_Tree = new System.Windows.Forms.ImageList(this.components);
             this.tabControl_Layer = new System.Windows.Forms.TabControl();
             this.tabPage_LayerProperty = new System.Windows.Forms.TabPage();
+            this.label_Transparency = new System.Windows.Forms.Label();
+            this.trackBar_Transparency = new System.Windows.Forms.TrackBar();
+            this.label9 = new System.Windows.Forms.Label();
             this.button_MapColor = new System.Windows.Forms.Button();
             this.label_Color = new System.Windows.Forms.Label();
             this.textBox_Type = new System.Windows.Forms.TextBox();
@@ -62,9 +65,6 @@
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.trackBar_Transparency = new System.Windows.Forms.TrackBar();
-            this.label_Transparency = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -72,10 +72,10 @@
             this.splitContainer1.SuspendLayout();
             this.tabControl_Layer.SuspendLayout();
             this.tabPage_LayerProperty.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
             this.tabPage_Annotation.SuspendLayout();
             this.tabPage_Data.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -169,6 +169,34 @@
             this.tabPage_LayerProperty.Size = new System.Drawing.Size(321, 305);
             this.tabPage_LayerProperty.TabIndex = 0;
             this.tabPage_LayerProperty.Text = "属性";
+            // 
+            // label_Transparency
+            // 
+            this.label_Transparency.AutoSize = true;
+            this.label_Transparency.Location = new System.Drawing.Point(261, 209);
+            this.label_Transparency.Name = "label_Transparency";
+            this.label_Transparency.Size = new System.Drawing.Size(15, 15);
+            this.label_Transparency.TabIndex = 23;
+            this.label_Transparency.Text = "%";
+            // 
+            // trackBar_Transparency
+            // 
+            this.trackBar_Transparency.Location = new System.Drawing.Point(95, 209);
+            this.trackBar_Transparency.Maximum = 100;
+            this.trackBar_Transparency.Name = "trackBar_Transparency";
+            this.trackBar_Transparency.Size = new System.Drawing.Size(171, 45);
+            this.trackBar_Transparency.TabIndex = 22;
+            this.trackBar_Transparency.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar_Transparency.ValueChanged += new System.EventHandler(this.trackBar_Transparency_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(29, 209);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(60, 15);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "透明度:";
             // 
             // button_MapColor
             // 
@@ -293,6 +321,7 @@
             this.textBox_Express.Name = "textBox_Express";
             this.textBox_Express.Size = new System.Drawing.Size(191, 117);
             this.textBox_Express.TabIndex = 26;
+            this.textBox_Express.TextChanged += new System.EventHandler(this.textBox_Express_TextChanged);
             // 
             // label7
             // 
@@ -472,34 +501,6 @@
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(29, 209);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(60, 15);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "透明度:";
-            // 
-            // trackBar_Transparency
-            // 
-            this.trackBar_Transparency.Location = new System.Drawing.Point(95, 209);
-            this.trackBar_Transparency.Maximum = 100;
-            this.trackBar_Transparency.Name = "trackBar_Transparency";
-            this.trackBar_Transparency.Size = new System.Drawing.Size(171, 45);
-            this.trackBar_Transparency.TabIndex = 22;
-            this.trackBar_Transparency.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar_Transparency.ValueChanged += new System.EventHandler(this.trackBar_Transparency_ValueChanged);
-            // 
-            // label_Transparency
-            // 
-            this.label_Transparency.AutoSize = true;
-            this.label_Transparency.Location = new System.Drawing.Point(261, 209);
-            this.label_Transparency.Name = "label_Transparency";
-            this.label_Transparency.Size = new System.Drawing.Size(15, 15);
-            this.label_Transparency.TabIndex = 23;
-            this.label_Transparency.Text = "%";
-            // 
             // LayerManageForm
             // 
             this.AcceptButton = this.button_Save;
@@ -526,11 +527,11 @@
             this.tabControl_Layer.ResumeLayout(false);
             this.tabPage_LayerProperty.ResumeLayout(false);
             this.tabPage_LayerProperty.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).EndInit();
             this.tabPage_Annotation.ResumeLayout(false);
             this.tabPage_Annotation.PerformLayout();
             this.tabPage_Data.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar_Transparency)).EndInit();
             this.ResumeLayout(false);
 
         }

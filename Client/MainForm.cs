@@ -1274,9 +1274,9 @@ namespace JXDL.Client
             return vBufferResult;
         }
 
-        string fixLayerName( IFeatureLayer featureLayer)
+        string fixLayerName( ILayer featureLayer)
         {
-            string vAliasName = featureLayer.FeatureClass.AliasName;
+            string vAliasName = featureLayer.Name;
             int vIndex = vAliasName.LastIndexOf('.');
             if (vIndex != -1)
                 vAliasName = vAliasName.Substring(vAliasName.LastIndexOf('.') + 1);
@@ -2133,6 +2133,8 @@ namespace JXDL.Client
 
                     ILabelEngineLayerProperties pLabelEnginelayerProps = new LabelEngineLayerPropertiesClass();
                     //pLabelEnginelayerProps.Expression = "[" + sLableField + "]";
+                    //加入反斜杠
+                    sLableField = sLableField.Replace("+", "+\"/\"+");
                     pLabelEnginelayerProps.Expression = sLableField ;
                     //pLabelEnginelayerProps.IsExpressionSimple = true;
                     pLabelEnginelayerProps.Symbol = pTextSymbol;
@@ -2153,11 +2155,11 @@ namespace JXDL.Client
             for (int i = 0; i < axMapControl1.LayerCount; i++)
             {
                 ILayer vLayer = axMapControl1.get_Layer(i);
-                IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                string vLayerName = fixLayerName(vFeatureLayer);
+                //IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
+                string vLayerName = fixLayerName(vLayer);
                 if (LayerName == vLayerName)
                 {
-                    IFeatureLayer pFeaturelayer = vFeatureLayer;
+                    IFeatureLayer pFeaturelayer = vLayer as IFeatureLayer;
                     //判断图层是否为空
                     if (pFeaturelayer == null)
                         return;

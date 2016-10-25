@@ -129,9 +129,38 @@ namespace JXDL.Client
             int vID = (int)e.Node.Tag;
             LayerStruct vLayer =  Layers.Where(m => m.ID == vID).FirstOrDefault();
             if (vLayer.Type == 3)
-                tabControl_Layer.Enabled = false;
+            {
+                label_Color.Enabled = false;
+                button_MapColor.Enabled = false;
+                trackBar_Transparency.Enabled = true;
+
+                checkBox_Annotation.Enabled = false;
+                comboBox_Label.Enabled = false;
+                button_Add.Enabled = false;
+                label_AnnotationColor.Enabled = false;
+                button_Color.Enabled = false;
+                comboBox_FontSize.Enabled = false;
+                textBox_Express.Enabled = false;
+
+                dataGridView_Data.Enabled = false;
+            }
             else
-                tabControl_Layer.Enabled = true;
+            {
+                label_Color.Enabled = true;
+                button_MapColor.Enabled = true;
+                trackBar_Transparency.Enabled = true;
+
+                checkBox_Annotation.Enabled = true;
+                comboBox_Label.Enabled = true;
+                button_Add.Enabled = true;
+                label_AnnotationColor.Enabled = true;
+                button_Color.Enabled = true;
+                comboBox_FontSize.Enabled = true;
+                textBox_Express.Enabled = true;
+
+                dataGridView_Data.Enabled = true;
+            }
+
             if ( vLayer != null )
             {
                 textBox_Name.Text = vLayer.Name;
@@ -412,6 +441,11 @@ namespace JXDL.Client
         {
             label_Transparency.Text = string.Format("{0}%", trackBar_Transparency.Value);
 
+            button_Apply.Enabled = true;
+        }
+
+        private void textBox_Express_TextChanged(object sender, EventArgs e)
+        {
             button_Apply.Enabled = true;
         }
     }
