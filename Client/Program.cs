@@ -19,13 +19,13 @@ namespace JXDL.Client
         #endregion
 
         #region 地图名称
-        public const string TownshipTableName = "sde.SDE.乡镇街道";
+        public const string TownshipTableName = "乡镇街道";
         public const string TownshipCodeName = "XZDM";
 
-        public const string VillageCommitteeTableName = "sde.SDE.村委会";
+        public const string VillageCommitteeTableName = "村委会";
         public const string VillageCommitteeCodeName = "CWHDM";
 
-        public const string VillageTableName = "sde.SDE.自然村";
+        public const string VillageTableName = "自然村";
         public const string VillageCodeName = "ZRCDM";
 
         public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName };

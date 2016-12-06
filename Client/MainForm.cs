@@ -494,7 +494,7 @@ namespace JXDL.Client
             IPropertySet vPropSet = new PropertySetClass();
 
             vPropSet.SetProperty("SERVER", Program.MapDBAddress);
-            vPropSet.SetProperty("INSTANCE", string.Format(@"{0}:sqlserver:{1}", Program.MapDBName, Program.MapDBAddress));
+            vPropSet.SetProperty("INSTANCE", string.Format(@"{0}:sqlserver:{1}", "SDE", Program.MapDBAddress));
             vPropSet.SetProperty("DATABASE", Program.MapDBName);
             vPropSet.SetProperty("USER", Program.MapDBUserName);
             vPropSet.SetProperty("PASSWORD", Program.MapDBPassword);
@@ -509,7 +509,7 @@ namespace JXDL.Client
             for (int i = 0; i < Program.MapTables.Length; i++)
             {
                 IFeatureClass vFeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
-                if (Program.MapTables[i] == "sde.SDE.乡镇街道")
+                if (Program.MapTables[i] == Program.TownshipTableName)
                 {
                     m_EagleEyeFeatureClass = new FeatureLayerClass();
                     m_EagleEyeFeatureClass.FeatureClass = vFeatWS.OpenFeatureClass(Program.MapTables[i]);
