@@ -363,13 +363,17 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Input.Enabled = false;
                     ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
+                    ToolStripMenuItem_Doc_FileQuery.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Buffer.Enabled = false;
-                    ToolStripMenuItem_Pic_Browse.Enabled = true;
-                    ToolStripMenuItem_Pic_Layer.Enabled = false;
+                    ToolStripMenuItem_Pic_Browse.Enabled = false;
+                    ToolStripMenuItem_Pic_Layer.Enabled = true;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
+                    ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
+                    ToolStripMenuItem_VillagePic.Enabled = true;
+                    ToolStripMenuItem_Pic_Import.Enabled = false;
+                    ToolStripMenuItem_Pic_Raster.Enabled = false;
                     break;
                 //村委会
                 case 2:
@@ -381,13 +385,17 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Input.Enabled = true;
                     ToolStripMenuItem_Doc_Query.Enabled = false;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
+                    ToolStripMenuItem_Doc_FileQuery.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Browse.Enabled = true;
-                    ToolStripMenuItem_Pic_Layer.Enabled = false;
-                    ToolStripMenuItem_Pic_Map.Enabled = false;
+                    ToolStripMenuItem_Pic_Browse.Enabled = false;
+                    ToolStripMenuItem_Pic_Layer.Enabled = true;
+                    ToolStripMenuItem_Pic_Map.Enabled = true;
                     ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
+                    ToolStripMenuItem_VillagePic.Enabled = true;
+                    ToolStripMenuItem_Pic_Import.Enabled = false;
+                    ToolStripMenuItem_Pic_Raster.Enabled = false;
                     break;
                 //政府及城建部门
                 case 3:
@@ -399,13 +407,17 @@ namespace JXDL.Client
                     ToolStripMenuItem_Doc_Input.Enabled = true;
                     ToolStripMenuItem_Doc_Query.Enabled = true;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
+                    ToolStripMenuItem_Doc_FileQuery.Enabled = true;
 
-                    ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Browse.Enabled = true;
                     ToolStripMenuItem_Pic_Layer.Enabled = true;
                     ToolStripMenuItem_Pic_Map.Enabled = true;
+                    ToolStripMenuItem_Pic_Buffer.Enabled = true;
                     ToolStripMenuItem_Pic_Statistics.Enabled = true;
                     ToolStripMenuItem_EagleEye.Enabled = true;
+                    ToolStripMenuItem_VillagePic.Enabled = true;
+                    ToolStripMenuItem_Pic_Import.Enabled = true;
+                    ToolStripMenuItem_Pic_Raster.Enabled = true;
                     break;
             }
         }
@@ -549,7 +561,8 @@ namespace JXDL.Client
             ////加载资源图层
             ConfigFile vConfigFile = new ConfigFile();
             //var vLayerColor = vConfigFile.LayerColor;
-            LayerStruct[] vLayerConfig = vConfigFile.LayerConfig;
+            LayerInfo vLayerInfo = vConfigFile.GetLayerInfo(Program.LoginUserInfo.UserName);
+            LayerStruct[] vLayerConfig = vLayerInfo==null?null:vLayerInfo.Layers;
             RemoteInterface vRemoteInterface = new RemoteInterface();
             m_Layers = vRemoteInterface.GetLayers();
             //int vLayerIndex = 0;
@@ -1901,7 +1914,7 @@ namespace JXDL.Client
             if (vFeature_Village != null)
             {
                 axMapControl1.Extent = vFeature_Village.Shape.Envelope;
-                //axMapControl1.Refresh();
+                axMapControl1.Refresh();
                 //axMapControl1.FlashShape(vFeature_Village.Shape);
             }
 

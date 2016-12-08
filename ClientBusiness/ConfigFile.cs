@@ -8,6 +8,19 @@ using System.Web.Script.Serialization;
 
 namespace JXDL.ClientBusiness
 {
+
+    public class LayerConfig
+    {
+        public List<LayerInfo> Config { get; set; } = new List<LayerInfo>();
+    }
+
+    public class LayerInfo
+    {
+        public string UserName { get; set; }
+        public LayerStruct[] Layers { get; set; } 
+    }
+
+
     public class ConfigFile
     {
         #region 私有变量
@@ -30,8 +43,28 @@ namespace JXDL.ClientBusiness
         public int VillageCommitteeBackgroundColor { get; set; }
         public int VillageBackgroundColor { get; set; }
         //public Dictionary<string, int> LayerColor { get; set; } = new Dictionary<string, int>();
-        public LayerStruct[] LayerConfig { get; set; }
+        LayerConfig LayerConfig;
+        public LayerInfo GetLayerInfo(string UserName)
+        {
+            LayerInfo vLayerInfo = LayerConfig.Config.Where(m => m.UserName.ToUpper() == UserName.ToUpper()).FirstOrDefault();
+            return vLayerInfo;
+        }
+
+        public void  SetLayerInfo(LayerInfo LayerInfoValue )
+        {
+            LayerInfo vLayerInfo = LayerConfig.Config.Where(m => m.UserName.ToUpper() == LayerInfoValue.UserName.ToUpper()).FirstOrDefault();
+            if ( vLayerInfo != null )
+            {
+                vLayerInfo = LayerInfoValue;
+            }
+            else
+            {
+                LayerConfig.Config.Add(LayerInfoValue);
+            }
+        }
+
         #endregion
+
 
         #region 构造
         public ConfigFile()
@@ -63,7 +96,9 @@ namespace JXDL.ClientBusiness
 
             string vLayerConfig = m_Configuration.AppSettings.Settings["LayerConfig"].Value;
             JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
-            LayerConfig = vJSC.Deserialize< LayerStruct[]>(vLayerConfig);
+            LayerConfig = vJSC.Deserialize< LayerConfig>(vLayerConfig);
+            if (LayerConfig == null)
+                LayerConfig = new LayerConfig();
         }
         #endregion
 

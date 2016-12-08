@@ -101,7 +101,7 @@ namespace JXDL.Client
             //    }
             //}
             ConfigFile vConfigFile = new ConfigFile();
-            vConfigFile.LayerConfig = Layers;
+            vConfigFile.SetLayerInfo(new LayerInfo() { UserName = Program.LoginUserInfo.UserName, Layers = Layers });
             vConfigFile.Save();
         }
 

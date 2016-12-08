@@ -28,7 +28,10 @@ namespace JXDL.Client
         public const string VillageTableName = "自然村";
         public const string VillageCodeName = "ZRCDM";
 
-        public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName };
+        public const string FCAreaTableName = "丰城市市界";
+        public const string TownshipAreaTableName = "乡镇街道界线";
+
+        public static string[] MapTables = new string[] { TownshipTableName, VillageCommitteeTableName, VillageTableName, FCAreaTableName, TownshipAreaTableName };
         #endregion
 
         #region 地图图层显示比例尺
