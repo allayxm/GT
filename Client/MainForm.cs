@@ -25,6 +25,7 @@ using JXDL.IntrefaceStruct;
 using System.Runtime.InteropServices;
 using ESRI.ArcGIS.Output;
 using System.Collections;
+using JXDL.ClientBusiness;
 
 namespace JXDL.Client
 {
@@ -535,28 +536,36 @@ namespace JXDL.Client
 
                     switch (Program.MapTables[i])
                     {
+                        //街道
                         case Program.TownshipTableName:
                             m_TownshipFeatureLayer = vLayerFeature;
                             m_TownshipFeatureLayer.MaximumScale = Program.Township_MaximumScale;
                             m_TownshipFeatureLayer.MinimumScale = Program.Township_MinimumScale;
                             showAnnotationByScale(m_TownshipFeatureLayer, "街道", Program.Township_Annotation_MaximumScale, Program.Township_Annotation_MinimumScale);
                             break;
+                        //村委会
                         case Program.VillageCommitteeTableName:
                             m_VillageCommitteeFeatureLayer = vLayerFeature;
                             m_VillageCommitteeFeatureLayer.MaximumScale = Program.VillageCommittee_MaximumScale;
                             m_VillageCommitteeFeatureLayer.MinimumScale = Program.VillageCommittee_MinimumScale;
                             showAnnotationByScale(m_VillageCommitteeFeatureLayer, "村委会_dwg", Program.VillageCommittee_Annotation_MaximumScale, Program.VillageCommittee_Annotation_MinimumScale);
                             break;
+                       //自然村
                         case Program.VillageTableName:
                             m_VillageFeatureLayer = vLayerFeature;
                             m_VillageFeatureLayer.MaximumScale = Program.Village_MaximumScale;
                             m_VillageFeatureLayer.MinimumScale = Program.Village_MinimumScale;
                             showAnnotationByScale(m_VillageFeatureLayer, "Text", Program.Village_Annotation_MaximumScale, Program.Village_Annotation_MinimumScale);
                             break;
+                        //case Program.FCAreaTableName:
+                        //case Program.TownshipAreaTableName:
+                        //    ChangeLayerLineStyle(vLayerFeature, 2);
+                        //    break;
                     }
                 }
             }
             changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
+            
 
             ////加载资源图层
             ConfigFile vConfigFile = new ConfigFile();
@@ -721,6 +730,7 @@ namespace JXDL.Client
             //throw new NotImplementedException();
         }
 
+       
         void changeMapColor(int background, int townshipBackgroundColor,
             int villageCommitteeBackgroundColor, int villageBackgroundColor)
         {
@@ -1695,6 +1705,17 @@ namespace JXDL.Client
             //    vConfigFile.Save();
             //    axMapControl1.Refresh();
             //}
+        }
+
+        public void ChangeLayerLineStyle( ILayer layer,int color )
+        {
+            ILineSymbol vLineSymbol = SymbolHelper.CreateLineDirectionSymbol();
+            IGeoFeatureLayer vGeoFeatureLayer;
+            ISimpleRenderer vSimpleRenderer;
+            vGeoFeatureLayer = (IGeoFeatureLayer)layer;
+            vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+            vSimpleRenderer.Symbol = (ISymbol)vLineSymbol;
+            axMapControl1.Refresh();
         }
 
         public void ChangeLayerColor(ILayer Layer, int color)
