@@ -17,6 +17,9 @@ namespace JXDL.IntrefaceStruct
         
         public String Expository { get; set; }
         
+        /// <summary>
+        /// 图层类型 0:点 1:线 2:面 3:栅格 4:临时图层
+        /// </summary>
         public int? Type { get; set; }
 
         public bool IsView { get; set; } = true;
@@ -25,10 +28,19 @@ namespace JXDL.IntrefaceStruct
 
         public int Order { get; set; }
 
+        /// <summary>
+        /// 显示标注
+        /// </summary>
         public bool ShowAnnotation { get; set; } = false;
 
+        /// <summary>
+        /// 标注字体大小
+        /// </summary>
         public int AnnotationFontSize { get; set; } = 13;
 
+        /// <summary>
+        /// 标注字体颜色
+        /// </summary>
         public int AnnotationFontColor { get; set; } = -1;
 
         public string AnnotationField { get; set; }

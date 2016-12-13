@@ -110,8 +110,8 @@ namespace JXDL.Client
         ComboBoxListItem[] m_ComboBoxLayerItmes;
         void initcomboBox_Layers()
         {
-            m_ComboBoxLayerItmes = new ComboBoxListItem[VMainForm.m_Layers.Length];
-            for (int i=0;i< VMainForm.m_Layers.Length;i++ )
+            m_ComboBoxLayerItmes = new ComboBoxListItem[VMainForm.m_Layers.Count];
+            for (int i=0;i< VMainForm.m_Layers.Count; i++ )
             {
                 ComboBoxListItem vNewItme = new ComboBoxListItem()
                 {

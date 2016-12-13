@@ -29,6 +29,9 @@ namespace JXDL.ClientBusiness
                 case 3:
                     vResult = "栅格";
                     break;
+                case 4:
+                    vResult = "临时图层";
+                    break;
             }
             return vResult;
         }

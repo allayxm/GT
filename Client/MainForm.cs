@@ -25,7 +25,6 @@ using JXDL.IntrefaceStruct;
 using System.Runtime.InteropServices;
 using ESRI.ArcGIS.Output;
 using System.Collections;
-using JXDL.ClientBusiness;
 
 namespace JXDL.Client
 {
@@ -52,7 +51,9 @@ namespace JXDL.Client
 
         int m_ToolButtonIndex;
 
-        public LayerStruct[] m_Layers;
+        public List<LayerStruct> m_Layers;
+
+       
 
         /// <summary>
         /// 缓冲区图层
@@ -573,7 +574,7 @@ namespace JXDL.Client
             LayerInfo vLayerInfo = vConfigFile.GetLayerInfo(Program.LoginUserInfo.UserName);
             LayerStruct[] vLayerConfig = vLayerInfo==null?null:vLayerInfo.Layers;
             RemoteInterface vRemoteInterface = new RemoteInterface();
-            m_Layers = vRemoteInterface.GetLayers();
+            m_Layers = vRemoteInterface.GetLayers().ToList();
             //int vLayerIndex = 0;
             LayerStruct[] vFeatureLyaerAraay = m_Layers.Where(m => m.Type != 3).ToArray();
             foreach (LayerStruct vTempLayer in vFeatureLyaerAraay)
@@ -672,7 +673,7 @@ namespace JXDL.Client
                 }
             }
 
-            m_Layers = m_Layers.Where(m => m.Order != -1).ToArray();
+            m_Layers = m_Layers.Where(m => m.Order != -1).ToList();
             foreach (var vTempLayer in m_Layers)
             {
                 vTempLayer.Order = GetLayerIndexFromName(vTempLayer.Name);
@@ -1081,7 +1082,7 @@ namespace JXDL.Client
                 if (m_BufferForm == null || m_BufferForm.IsDisposed )
                 {
                     m_BufferForm = new BufferForm();
-                    m_BufferForm.Layers = m_Layers;
+                    m_BufferForm.Layers = m_Layers.ToArray();
                     m_BufferForm.VMainForm = this;
                     m_BufferForm.BufferLayers = vSelectFeatureLayers;
                     m_BufferForm.Show();
@@ -1680,7 +1681,7 @@ namespace JXDL.Client
         private void ToolStripMenuItem_Pic_Layer_Click(object sender, EventArgs e)
         {
             LayerManageForm vLayerManageForm = new LayerManageForm();
-            vLayerManageForm.Layers = m_Layers;
+            vLayerManageForm.Layers = m_Layers.ToArray();
             vLayerManageForm.VMainForm = this;
             vLayerManageForm.Show();
 
@@ -2236,6 +2237,18 @@ namespace JXDL.Client
                 ILayer vLayer =  GetLayerFromName(vLayerName);
                 IEnvelope envelope = vLayer.AreaOfInterest;
                 axMapControl1.Extent = envelope;
+
+                LayerStruct vTempLayer = new LayerStruct()
+                {
+                    Name = vLayerName,
+                    Order = GetLayerIndexFromName(vLayerName),
+                    Type = 4,
+                    IsView = true,
+                    Expository = vLayerName,
+                    ID = m_Layers.Max(m => m.ID).Value + 1
+                };
+                m_Layers.Add(vTempLayer);
+
                 axMapControl1.Refresh();
             }
         }
@@ -2290,8 +2303,21 @@ namespace JXDL.Client
                 IRasterLayer pRasterLayer = new RasterLayerClass();
                 pRasterLayer.CreateFromDataset(pRasterDataset);
                 axMapControl1.Map.AddLayer(pRasterLayer);
+               
                 IEnvelope envelope = pRasterLayer.AreaOfInterest;
                 axMapControl1.Extent = envelope;
+
+                LayerStruct vTempLayer = new LayerStruct()
+                {
+                    Name = pRasterLayer.Name,
+                    Order = GetLayerIndexFromName(pRasterLayer.Name),
+                    Type = 4,
+                    IsView = true,
+                    Expository = pRasterLayer.Name,
+                    ID = m_Layers.Max(m => m.ID).Value + 1
+                };
+                m_Layers.Add(vTempLayer);
+
                 axMapControl1.Refresh();
             }
         }
