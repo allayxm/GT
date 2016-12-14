@@ -18,7 +18,7 @@ namespace JXDL.IntrefaceStruct
         public String Expository { get; set; }
         
         /// <summary>
-        /// 图层类型 0:点 1:线 2:面 3:栅格 4:临时图层
+        /// 图层类型 0:点 1:线 2:面 3:栅格 4:临时图层 5:临时栅格
         /// </summary>
         public int? Type { get; set; }
 

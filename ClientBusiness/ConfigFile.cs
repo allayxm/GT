@@ -55,12 +55,10 @@ namespace JXDL.ClientBusiness
             LayerInfo vLayerInfo = LayerConfig.Config.Where(m => m.UserName.ToUpper() == LayerInfoValue.UserName.ToUpper()).FirstOrDefault();
             if ( vLayerInfo != null )
             {
-                vLayerInfo = LayerInfoValue;
+                LayerConfig.Config.Remove(vLayerInfo);
             }
-            else
-            {
-                LayerConfig.Config.Add(LayerInfoValue);
-            }
+            LayerConfig.Config.Add(LayerInfoValue);
+            
         }
 
         #endregion

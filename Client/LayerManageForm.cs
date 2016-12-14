@@ -101,7 +101,7 @@ namespace JXDL.Client
             //    }
             //}
             ConfigFile vConfigFile = new ConfigFile();
-            vConfigFile.SetLayerInfo(new LayerInfo() { UserName = Program.LoginUserInfo.UserName, Layers = Layers });
+            vConfigFile.SetLayerInfo(new LayerInfo() { UserName = Program.LoginUserInfo.UserName, Layers = Layers.Where(m=>m.Type!=4 & m.Type!=5 ).ToArray() });
             vConfigFile.Save();
         }
 
@@ -128,7 +128,7 @@ namespace JXDL.Client
         {
             int vID = (int)e.Node.Tag;
             LayerStruct vLayer =  Layers.Where(m => m.ID == vID).FirstOrDefault();
-            if (vLayer.Type == 3)
+            if (vLayer.Type == 3 || vLayer.Type == 5)
             {
                 label_Color.Enabled = false;
                 button_MapColor.Enabled = false;

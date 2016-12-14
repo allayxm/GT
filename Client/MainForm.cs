@@ -2224,7 +2224,7 @@ namespace JXDL.Client
         private void ToolStripMenuItem_Pic_Import_Click(object sender, EventArgs e)
         {
             OpenFileDialog vOpenFileDialog = new OpenFileDialog();
-            vOpenFileDialog.Filter = "shp files (*.shp)|*.shp;*.tif";
+            vOpenFileDialog.Filter = "shp files (*.shp)|*.shp";
             vOpenFileDialog.Multiselect = false;
             if ( vOpenFileDialog.ShowDialog() == DialogResult.OK )
             {
@@ -2311,7 +2311,7 @@ namespace JXDL.Client
                 {
                     Name = pRasterLayer.Name,
                     Order = GetLayerIndexFromName(pRasterLayer.Name),
-                    Type = 4,
+                    Type = 5,
                     IsView = true,
                     Expository = pRasterLayer.Name,
                     ID = m_Layers.Max(m => m.ID).Value + 1
