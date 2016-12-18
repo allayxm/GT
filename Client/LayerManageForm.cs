@@ -142,6 +142,11 @@ namespace JXDL.Client
                 comboBox_FontSize.Enabled = false;
                 textBox_Express.Enabled = false;
 
+                if ( dataGridView_Data.DataSource != null )
+                {
+                    ((DataTable)dataGridView_Data.DataSource).Rows.Clear();
+                }
+
                 dataGridView_Data.Enabled = false;
             }
             else
@@ -159,6 +164,7 @@ namespace JXDL.Client
                 textBox_Express.Enabled = true;
 
                 dataGridView_Data.Enabled = true;
+               
             }
 
             if ( vLayer != null )
@@ -191,34 +197,33 @@ namespace JXDL.Client
                 label_Transparency.Text = string.Format("{0}%", vLayer.Transparency);
 
                 //表数据
-                ILayer layer =  VMainForm.GetLayerFromName(vLayer.Name);
-                IFeatureLayer vFeatureLayer = layer as IFeatureLayer;
-                DataTable vTable = CommonUnit.CreateFeaturesTableStruct(vFeatureLayer.FeatureClass);
-                int vFeatureCount = vFeatureLayer.FeatureClass.FeatureCount(null);
-                IFeatureCursor vFeatureCursor = vFeatureLayer.FeatureClass.Search(null, true);
-                IFeature vFeature = vFeatureCursor.NextFeature();
-                while(vFeature != null )
+                if (vLayer.Type != 3 && vLayer.Type != 5)
                 {
-                    DataRow vNewRow = vTable.NewRow();
-                    for (int j = 0; j < vTable.Columns.Count; j++)
+                    ILayer layer = VMainForm.GetLayerFromName(vLayer.Name);
+                    IFeatureLayer vFeatureLayer = layer as IFeatureLayer;
+                    DataTable vTable = CommonUnit.CreateFeaturesTableStruct(vFeatureLayer.FeatureClass);
+                    int vFeatureCount = vFeatureLayer.FeatureClass.FeatureCount(null);
+                    IFeatureCursor vFeatureCursor = vFeatureLayer.FeatureClass.Search(null, true);
+                    IFeature vFeature = vFeatureCursor.NextFeature();
+                    while (vFeature != null)
                     {
-
-                        if (vFeatureLayer.FeatureClass.Fields.Field[j].Name != "Shape")
+                        DataRow vNewRow = vTable.NewRow();
+                        for (int j = 0; j < vTable.Columns.Count; j++)
                         {
-                            object vFieldValue = vFeature.get_Value(j);
-                            vNewRow[vFeatureLayer.FeatureClass.Fields.Field[j].Name] = vFieldValue;
+
+                            if (vFeatureLayer.FeatureClass.Fields.Field[j].Name != "Shape")
+                            {
+                                object vFieldValue = vFeature.get_Value(j);
+                                vNewRow[vFeatureLayer.FeatureClass.Fields.Field[j].Name] = vFieldValue;
+                            }
                         }
+                        vTable.Rows.Add(vNewRow);
+                        vFeature = vFeatureCursor.NextFeature();
                     }
-                    vTable.Rows.Add(vNewRow);
-                    vFeature = vFeatureCursor.NextFeature();
+                    vTable.AcceptChanges();
+                    dataGridView_Data.DataSource = vTable;
                 }
-                vTable.AcceptChanges();
-                dataGridView_Data.DataSource = vTable;
-
-
                 button_Apply.Enabled = true;
-
-
             }
         }
 

@@ -1316,7 +1316,7 @@ namespace JXDL.Client
                 IFeatureLayer iFeatureLayer = axMapControl1.get_Layer(i) as IFeatureLayer;
                 IFeatureClass iFeatureCla = iFeatureLayer.FeatureClass;
 
-                if (iFeatureCla == pFeatureClass)
+                if (iFeatureCla!=null && iFeatureCla == pFeatureClass)
                 {
                     vResult = iFeatureLayer;
                     return iFeatureLayer;
@@ -2279,6 +2279,7 @@ namespace JXDL.Client
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
                 if (vFeatureLayer!=null && vFeatureLayer.Name == LayerName)
                     break;
+                vLayer = null;
             }
             return vLayer;
         }

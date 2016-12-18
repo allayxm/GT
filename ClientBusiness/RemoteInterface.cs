@@ -262,9 +262,10 @@ namespace JXDL.ClientBusiness
 
             List<ByteArrayContent> vFormDatas = GetFormDataByteArrayContent(vCollection);
             List<ByteArrayContent> vFiles = GetFileByteArrayContent( new string[] { File });
-
-            string vResult = HttpPostFile(vUrl, vFormDatas, vFiles);
-            return bool.Parse(vResult);
+            string vFileUp = HttpPostFile(vUrl, vFormDatas, vFiles);
+            bool vResult;
+            bool zz  = bool.TryParse(vFileUp, out vResult);        
+            return vResult;
         }
 
         /// <summary>
