@@ -1724,6 +1724,11 @@ namespace JXDL.Client
             axMapControl1.Refresh();
         }
 
+        /// <summary>
+        /// 更改线
+        /// </summary>
+        /// <param name="PFeatureLayer"></param>
+        /// <param name="SymbolName"></param>
         public void ChangeLayerLineSymbol(IFeatureLayer PFeatureLayer,string SymbolName)
         {
             //IUniqueValueRenderer pUVRender = new UniqueValueRendererClass();
