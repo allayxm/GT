@@ -558,15 +558,20 @@ namespace JXDL.Client
                             m_VillageFeatureLayer.MinimumScale = Program.Village_MinimumScale;
                             showAnnotationByScale(m_VillageFeatureLayer, "Text", Program.Village_Annotation_MaximumScale, Program.Village_Annotation_MinimumScale);
                             break;
-                        //case Program.FCAreaTableName:
-                        //case Program.TownshipAreaTableName:
-                        //    ChangeLayerLineStyle(vLayerFeature, 2);
-                        //    break;
+                        //丰城界线
+                        case Program.FCAreaTableName:
+                            ChangeLayerLineSymbol(vLayerFeature, "边界，州");
+                            break;
+                        //乡镇界线
+                        case Program.TownshipAreaTableName:
+                            ChangeLayerLineSymbol(vLayerFeature, "边界，县");
+                            break;
                     }
                 }
             }
             changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
-            
+
+           
 
             ////加载资源图层
             ConfigFile vConfigFile = new ConfigFile();
@@ -1708,7 +1713,7 @@ namespace JXDL.Client
             //}
         }
 
-        public void ChangeLayerLineStyle( ILayer layer,int color )
+        public void ChangeLayerLineColor( ILayer layer,int color )
         {
             ILineSymbol vLineSymbol = SymbolHelper.CreateLineDirectionSymbol();
             IGeoFeatureLayer vGeoFeatureLayer;
@@ -1717,6 +1722,70 @@ namespace JXDL.Client
             vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
             vSimpleRenderer.Symbol = (ISymbol)vLineSymbol;
             axMapControl1.Refresh();
+        }
+
+        public void ChangeLayerLineSymbol(IFeatureLayer PFeatureLayer,string SymbolName)
+        {
+            //IUniqueValueRenderer pUVRender = new UniqueValueRendererClass();
+            //List<string> pFieldValues = new List<string>();
+            //pFieldValues.Add("Single, Nautical Dashed");
+            //for (int i = 0; i < pFieldValues.Count; i++)
+            //{
+                ISymbol pSymbol = new SimpleLineSymbolClass();
+                pSymbol = GetASymbol(".\\ESRI.ServerStyle", "Line Symbols", SymbolName);
+                //pUVRender.AddValue(SymbolName, "", pSymbol);
+            //}
+            //pUVRender.FieldCount = 1;
+            //pUVRender.set_Field(0, "类别");
+            IGeoFeatureLayer pGFeatureLyr = PFeatureLayer as IGeoFeatureLayer;
+            ISimpleRenderer vSimpleRenderer = (ISimpleRenderer)pGFeatureLyr.Renderer;
+            vSimpleRenderer.Symbol = pSymbol;
+            //pGFeatureLyr.Renderer = pUVRender as IFeatureRenderer;
+        }
+
+        private ISymbol GetASymbol(string sServerStylePath, string sGalleryClassName, string symbolName)//从符号库中提取需要的符号
+        {
+            try
+            {
+                IStyleGallery pStyleGaller = new ServerStyleGalleryClass();
+                IStyleGalleryStorage pStyleGalleryStorage = pStyleGaller as IStyleGalleryStorage;
+                IEnumStyleGalleryItem pEnumStyleGalleryItem = null;
+                IStyleGalleryItem pStyleGallerItem = null;
+                IStyleGalleryClass pStyleGalleryClass = null;
+                pStyleGalleryStorage.AddFile(sServerStylePath);
+                for (int i = 0; i < pStyleGaller.ClassCount; i++)
+                {
+                    pStyleGalleryClass = pStyleGaller.get_Class(i);
+                    if (pStyleGalleryClass.Name != sGalleryClassName)
+                        continue;
+                    pEnumStyleGalleryItem = pStyleGaller.get_Items(sGalleryClassName, sServerStylePath, "");
+                    pEnumStyleGalleryItem.Reset();
+                    pStyleGallerItem = pEnumStyleGalleryItem.Next();
+                    while (pStyleGallerItem != null)
+                    {
+                        if (pStyleGallerItem.Name == symbolName)
+                        {
+                            ISymbol pSymbol = pStyleGallerItem.Item as ISymbol;
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(pEnumStyleGalleryItem);
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(pStyleGalleryClass);
+                            return pSymbol;
+                        }
+                        else
+                        {
+
+                        }
+                        pStyleGallerItem = pEnumStyleGalleryItem.Next();
+                    }
+                }
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(pEnumStyleGalleryItem);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(pStyleGalleryClass);
+                return null;
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
         }
 
         public void ChangeLayerColor(ILayer Layer, int color)
