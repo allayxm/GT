@@ -494,9 +494,16 @@ namespace JXDL.Client
             vLoginForm.button_Login.Left = vLoginForm.button_Login.Left + 80;
             if (vLoginForm.ShowDialog() == DialogResult.OK)
             {
+                axMapControl1.Map.ClearLayers();
+                m_BufferLayers.Clear();
+                m_Layers.Clear();
+
                 Program.LoginUserInfo = vLoginForm.LoginUserInfo;
                 Text = string.Format("新农村建设地理信息系统 【当前用户:{0} 所属机构:{1}】", Program.LoginUserInfo.UserName, getPowerName(Program.LoginUserInfo.Power.Value));
                 init_Menu();
+
+                ConfigFile vConfigFile = new ConfigFile();
+                init_Map(vConfigFile.MapBackgroundColor, vConfigFile.TownshipBackgroundColor, vConfigFile.VillageCommitteeBackgroundColor, vConfigFile.VillageBackgroundColor);
             }
         }
 
@@ -560,7 +567,7 @@ namespace JXDL.Client
                             break;
                         //丰城界线
                         case Program.FCAreaTableName:
-                            ChangeLayerLineSymbol(vLayerFeature, "边界，州");
+                            ChangeLayerLineSymbol(vLayerFeature, "边界，国家");
                             break;
                         //乡镇界线
                         case Program.TownshipAreaTableName:
@@ -1065,23 +1072,30 @@ namespace JXDL.Client
             Dictionary<string, BufferConfig> vSelectFeatureLayers = new Dictionary<string, BufferConfig>();
 
             //获取所有的选择的要素，并按图层放入对应的Dictionary中
+            
             ISelection vSelection = axMapControl1.Map.FeatureSelection;
             IEnumFeatureSetup vEnumFeatureSetup = vSelection as IEnumFeatureSetup;
             vEnumFeatureSetup.AllFields = true;
             IEnumFeature vEnumFeature = vSelection as IEnumFeature;
             IFeature vFeature = vEnumFeature.Next();
+            //MessageBox.Show(string.Format("开始执行分析操作,要素状态:{0}", vFeature==null?"空":"非空"));
             while (vFeature != null)
             {
+                //MessageBox.Show(string.Format("图层名称:{0} 缓存图层数据数量:{1} 选择图层数量:{2}", vFeature.Class.AliasName, m_BufferLayers.Count, vSelectFeatureLayers.Count));
                 IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
+                //MessageBox.Show(string.Format("要素名称:{0}", vFeatureLayer.Name) );
                 string vFeatureLayerName = fixLayerName(vFeatureLayer);
+                //MessageBox.Show(string.Format("修正后的图层名称:{0}", vFeatureLayerName));
                 //排除村委会、乡镇街道、自然村三个图层
                 if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村" && m_BufferLayers.Where(m=>m.Name== vFeatureLayerName).Count()== 0 )
                 {
+                    //MessageBox.Show("添加图素进入选择区域");
                     if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
                         vSelectFeatureLayers.Add(vFeatureLayerName, new BufferConfig() { LayerName= vFeatureLayerName });
                 }
                 vFeature = vEnumFeature.Next();
             }
+            //MessageBox.Show(string.Format("选择要素层数据:{0}", vSelectFeatureLayers.Count));
             if (vSelectFeatureLayers.Count > 0)
             {
                 if (m_BufferForm == null || m_BufferForm.IsDisposed )
@@ -1116,42 +1130,45 @@ namespace JXDL.Client
             {
                 ILayer vLayer = axMapControl1.get_Layer(i);
                 IFeatureLayer vFeatureLayer = vLayer as IFeatureLayer;
-                string vAliasName = fixLayerName(vFeatureLayer);
-                if (selectFeatureLayers.ContainsKey(vAliasName) && selectFeatureLayers[vAliasName].IsSelect)
+                if (vFeatureLayer != null)
                 {
-                    var vSelectLayer = selectFeatureLayers[vAliasName];
-                    try
+                    string vAliasName = fixLayerName(vFeatureLayer);
+                    if (selectFeatureLayers.ContainsKey(vAliasName) && selectFeatureLayers[vAliasName].IsSelect)
                     {
-                        //string vLayerName = fixLayerName(vSelectLayer.Value.);
-                        string vBufferFileName = markBufferPath(vAliasName);
-                        ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vFeatureLayer, vBufferFileName, vSelectLayer.Distance);
-                        IGeoProcessorResult results = null;
-                        results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
-                        if (results.Status != esriJobStatus.esriJobSucceeded)
-                            vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vSelectLayer.Expository);
-                        else
+                        var vSelectLayer = selectFeatureLayers[vAliasName];
+                        try
                         {
-                            int vLateIndex = vBufferFileName.LastIndexOf('\\');
-                            string vFilePath = vBufferFileName.Substring(0, vLateIndex);
-                            string vFileName = vBufferFileName.Substring(vLateIndex + 1);
-                            //检查缓存目录是否存在
-                            if (!System.IO.Directory.Exists(vFilePath))
-                                System.IO.Directory.CreateDirectory(vFilePath);
-                            vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vSelectLayer.Expository);
-
-                            LayerStruct vBufferLayer = new LayerStruct()
+                            //string vLayerName = fixLayerName(vSelectLayer.Value.);
+                            string vBufferFileName = markBufferPath(vAliasName);
+                            ESRI.ArcGIS.AnalysisTools.Buffer vBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(vFeatureLayer, vBufferFileName, vSelectLayer.Distance);
+                            IGeoProcessorResult results = null;
+                            results = (IGeoProcessorResult)vGP.Execute(vBuffer, null);
+                            if (results.Status != esriJobStatus.esriJobSucceeded)
+                                vBufferResult += string.Format("{0}缓冲区生成失败！\r\n", vSelectLayer.Expository);
+                            else
                             {
-                                Name = vAliasName + "_Buffer",
-                                IsView = true,
-                                Expository = vAliasName + "缓冲图层"
-                            };
-                            vSelectLayer.BufferLayerName = vBufferLayer.Name;
-                            m_BufferLayers.Add(vBufferLayer);
+                                int vLateIndex = vBufferFileName.LastIndexOf('\\');
+                                string vFilePath = vBufferFileName.Substring(0, vLateIndex);
+                                string vFileName = vBufferFileName.Substring(vLateIndex + 1);
+                                //检查缓存目录是否存在
+                                if (!System.IO.Directory.Exists(vFilePath))
+                                    System.IO.Directory.CreateDirectory(vFilePath);
+                                vBufferResult += string.Format("{0}缓冲区生成成功！\r\n", vSelectLayer.Expository);
+
+                                LayerStruct vBufferLayer = new LayerStruct()
+                                {
+                                    Name = vAliasName + "_Buffer",
+                                    IsView = true,
+                                    Expository = vAliasName + "缓冲图层"
+                                };
+                                vSelectLayer.BufferLayerName = vBufferLayer.Name;
+                                m_BufferLayers.Add(vBufferLayer);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vSelectLayer.Expository, ex.Message);
+                        catch (Exception ex)
+                        {
+                            vBufferResult += string.Format("{0}缓冲区生成失败！{1}\r\n", vSelectLayer.Expository, ex.Message);
+                        }
                     }
                 }
 
@@ -1319,12 +1336,14 @@ namespace JXDL.Client
             for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
             {
                 IFeatureLayer iFeatureLayer = axMapControl1.get_Layer(i) as IFeatureLayer;
-                IFeatureClass iFeatureCla = iFeatureLayer.FeatureClass;
-
-                if (iFeatureCla!=null && iFeatureCla == pFeatureClass)
+                if (iFeatureLayer!=null)
                 {
-                    vResult = iFeatureLayer;
-                    return iFeatureLayer;
+                    IFeatureClass iFeatureCla = iFeatureLayer.FeatureClass;
+                    if (iFeatureCla != null && iFeatureCla == pFeatureClass)
+                    {
+                        vResult = iFeatureLayer;
+                        return iFeatureLayer;
+                    }
                 }
             }
             return vResult;
@@ -1615,6 +1634,9 @@ namespace JXDL.Client
             pBasicOverposterLayerProperties.FeatureType = esriBasicOverposterFeatureType.esriOverposterPolygon;
             //创建标注对象
             ILabelEngineLayerProperties pLabelEngineLayerProperties = new LabelEngineLayerPropertiesClass();
+
+            //var pBasicOverposterLayerProps4 = pLabelEngineLayerProperties as IBasicOverposterLayerProperties4;
+            
             //设置标注符号
             pLabelEngineLayerProperties.Symbol = pTextSymbol;
             pLabelEngineLayerProperties.BasicOverposterLayerProperties = pBasicOverposterLayerProperties;
@@ -2247,6 +2269,9 @@ namespace JXDL.Client
                     pLabelEnginelayerProps.Expression = sLableField ;
                     //pLabelEnginelayerProps.IsExpressionSimple = true;
                     pLabelEnginelayerProps.Symbol = pTextSymbol;
+                    //设置显示所有标注
+                    pBasicOverposterlayerProps4.NumLabelsOption = esriBasicNumLabelsOption.esriOneLabelPerShape;
+
                     pLabelEnginelayerProps.BasicOverposterLayerProperties = pBasicOverposterlayerProps4 as IBasicOverposterLayerProperties;
                     pAnnoLayerPropsCollection.Add((IAnnotateLayerProperties)pLabelEnginelayerProps);
                     pGeoFeaturelayer.DisplayAnnotation = true;//很重要，必须设置 
