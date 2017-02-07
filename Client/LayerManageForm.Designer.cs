@@ -65,6 +65,7 @@
             this.button_Exit = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.button_Apply = new System.Windows.Forms.Button();
+            this.checkBox_All = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -501,6 +502,19 @@
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
+            // checkBox_All
+            // 
+            this.checkBox_All.AutoSize = true;
+            this.checkBox_All.Checked = true;
+            this.checkBox_All.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_All.Location = new System.Drawing.Point(3, 363);
+            this.checkBox_All.Name = "checkBox_All";
+            this.checkBox_All.Size = new System.Drawing.Size(48, 16);
+            this.checkBox_All.TabIndex = 13;
+            this.checkBox_All.Text = "全选";
+            this.checkBox_All.UseVisualStyleBackColor = true;
+            this.checkBox_All.CheckedChanged += new System.EventHandler(this.checkBox_All_CheckedChanged);
+            // 
             // LayerManageForm
             // 
             this.AcceptButton = this.button_Save;
@@ -508,6 +522,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_Exit;
             this.ClientSize = new System.Drawing.Size(547, 413);
+            this.Controls.Add(this.checkBox_All);
             this.Controls.Add(this.button_Apply);
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.button_Save);
@@ -533,6 +548,7 @@
             this.tabPage_Data.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Data)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -573,5 +589,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TrackBar trackBar_Transparency;
         private System.Windows.Forms.Label label_Transparency;
+        private System.Windows.Forms.CheckBox checkBox_All;
     }
 }

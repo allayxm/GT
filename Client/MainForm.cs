@@ -1518,6 +1518,11 @@ namespace JXDL.Client
             //axMapControl1.BackColor = Color.Red;
         }
 
+        IEnvelope mEnvelope = null;
+        IPoint mPoint = new PointClass();//缩放中心点  
+        IPoint mousePoint = null;//鼠标点击点  
+        IPoint startPnt = new PointClass();
+
         private void axMapControl1_OnMouseDown(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseDownEvent e)
         {
             //bool a = axMapControl1.CurrentTool is ESRI.ArcGIS.Controls.ControlsNewRectangleToolClass;
@@ -1531,6 +1536,15 @@ namespace JXDL.Client
                 contextMenuStrip_Right.Show(axMapControl1, p);
             }
 
+            if (e.button == 4)
+            {//中键按下时，记住按下点的位置  
+
+                //this.Cursor = Cursors.Hand;
+                axMapControl1.MousePointer = esriControlsMousePointer.esriPointerPanning;
+                IPoint point = axMapControl1.ActiveView.ScreenDisplay.DisplayTransformation.ToMapPoint(e.x, e.y);
+                axMapControl1.ActiveView.ScreenDisplay.PanStart(point);
+                m_PanOperation = true;
+            }
 
             //if (e.button != 2) return;
             //esriTOCControlItem pItem = esriTOCControlItem.esriTOCControlItemNone; 
@@ -2419,6 +2433,32 @@ namespace JXDL.Client
                 m_Layers.Add(vTempLayer);
 
                 axMapControl1.Refresh();
+            }
+        }
+
+        private void axMapControl1_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)
+        {
+            if (e.button == 4)
+            {
+                IPoint point = axMapControl1.ActiveView.ScreenDisplay.DisplayTransformation.ToMapPoint(e.x,e.y);
+                axMapControl1.ActiveView.ScreenDisplay.PanMoveTo(point);
+            }
+        }
+
+        bool m_PanOperation;
+        private void axMapControl1_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
+        {
+            if (e.button == 4)
+            {
+                if (!m_PanOperation) return;
+                axMapControl1.MousePointer = esriControlsMousePointer.esriPointerDefault;
+                IEnvelope extent = axMapControl1.ActiveView.ScreenDisplay.PanStop();
+                if (extent != null)
+                {
+                    axMapControl1.ActiveView.ScreenDisplay.DisplayTransformation.VisibleBounds = extent;
+                    axMapControl1.ActiveView.ScreenDisplay.Invalidate(null, true, (short)esriScreenCache.esriAllScreenCaches);
+                }
+                m_PanOperation = false;
             }
         }
     }

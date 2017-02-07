@@ -453,5 +453,13 @@ namespace JXDL.Client
         {
             button_Apply.Enabled = true;
         }
+
+        private void checkBox_All_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach( TreeNode tempNode in treeView_Layers.Nodes )
+            {
+                tempNode.Checked = checkBox_All.Checked;
+            }
+        }
     }
 }
