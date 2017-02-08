@@ -1220,6 +1220,9 @@ namespace JXDL.Client
                             }
                             vTable.Rows.Add(vNewRow);
                             vAnayleFeature = vAnalyseFeatureCursor.NextFeature();
+                            axMapControl1.FlashShape(vFeature.Shape);
+                            //axMapControl1.Map.SelectFeature(vAnalyseLayer, vFeature);
+                            
                         }
                         vFeature = vFeatureCursor.NextFeature();
                     }
@@ -1323,6 +1326,15 @@ namespace JXDL.Client
         string fixLayerName( ILayer featureLayer)
         {
             string vAliasName = featureLayer.Name;
+            int vIndex = vAliasName.LastIndexOf('.');
+            if (vIndex != -1)
+                vAliasName = vAliasName.Substring(vAliasName.LastIndexOf('.') + 1);
+            return vAliasName;
+        }
+
+        string fixLayerName(string featureName)
+        {
+            string vAliasName = featureName;
             int vIndex = vAliasName.LastIndexOf('.');
             if (vIndex != -1)
                 vAliasName = vAliasName.Substring(vAliasName.LastIndexOf('.') + 1);
@@ -1444,7 +1456,7 @@ namespace JXDL.Client
             while (pFeature != null)
             {
                 int vXZDMIndex = 0;
-                string vName = pFeature.Class.AliasName;
+                string vName = fixLayerName( pFeature.Class.AliasName );
                 switch (vName)
                 {
                     case Program.TownshipTableName:
