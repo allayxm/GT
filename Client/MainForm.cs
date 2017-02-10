@@ -1217,12 +1217,12 @@ namespace JXDL.Client
                                     object vValue = vAnayleFeature.get_Value(i);
                                     vNewRow[vAnayleFeature.Fields.Field[i].Name] = vValue;
                                 }
+                                //axMapControl1.Map.FeatureSelection.
                             }
                             vTable.Rows.Add(vNewRow);
+                            axMapControl1.Map.SelectFeature(vAnalyseLayer, vFeature);
                             vAnayleFeature = vAnalyseFeatureCursor.NextFeature();
-                            axMapControl1.FlashShape(vFeature.Shape);
-                            //axMapControl1.Map.SelectFeature(vAnalyseLayer, vFeature);
-                            
+                            //axMapControl1.FlashShape(vFeature.Shape);
                         }
                         vFeature = vFeatureCursor.NextFeature();
                     }
@@ -1248,7 +1248,7 @@ namespace JXDL.Client
                     vLayerEffects.Transparency = Transparency;
                 }
             }
-
+            //axMapControl1.Map.ClearSelection();
             return vBufferResult;
         }
 

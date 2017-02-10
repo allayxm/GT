@@ -39,14 +39,14 @@
             this.axToolbarControl1.Location = new System.Drawing.Point(0, 0);
             this.axToolbarControl1.Name = "axToolbarControl1";
             this.axToolbarControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axToolbarControl1.OcxState")));
-            this.axToolbarControl1.Size = new System.Drawing.Size(444, 28);
+            this.axToolbarControl1.Size = new System.Drawing.Size(463, 28);
             this.axToolbarControl1.TabIndex = 0;
             // 
             // MapToolsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 28);
+            this.ClientSize = new System.Drawing.Size(463, 28);
             this.Controls.Add(this.axToolbarControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MapToolsForm";
