@@ -1069,57 +1069,58 @@ namespace JXDL.Client
         BufferForm m_BufferForm = null;
         void bufferAnayleEx()
         {
-            Dictionary<string, BufferConfig> vSelectFeatureLayers = new Dictionary<string, BufferConfig>();
+            if (bufferAnayleLock)
+            {
+                Dictionary<string, BufferConfig> vSelectFeatureLayers = new Dictionary<string, BufferConfig>();
 
-            //获取所有的选择的要素，并按图层放入对应的Dictionary中
-            
-            ISelection vSelection = axMapControl1.Map.FeatureSelection;
-            IEnumFeatureSetup vEnumFeatureSetup = vSelection as IEnumFeatureSetup;
-            vEnumFeatureSetup.AllFields = true;
-            IEnumFeature vEnumFeature = vSelection as IEnumFeature;
-            IFeature vFeature = vEnumFeature.Next();
-            //MessageBox.Show(string.Format("开始执行分析操作,要素状态:{0}", vFeature==null?"空":"非空"));
-            while (vFeature != null)
-            {
-                //MessageBox.Show(string.Format("图层名称:{0} 缓存图层数据数量:{1} 选择图层数量:{2}", vFeature.Class.AliasName, m_BufferLayers.Count, vSelectFeatureLayers.Count));
-                IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
-                //MessageBox.Show(string.Format("要素名称:{0}", vFeatureLayer.Name) );
-                string vFeatureLayerName = fixLayerName(vFeatureLayer);
-                //MessageBox.Show(string.Format("修正后的图层名称:{0}", vFeatureLayerName));
-                //排除村委会、乡镇街道、自然村三个图层
-                if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村" && m_BufferLayers.Where(m=>m.Name== vFeatureLayerName).Count()== 0 )
+                //获取所有的选择的要素，并按图层放入对应的Dictionary中
+
+                ISelection vSelection = axMapControl1.Map.FeatureSelection;
+                IEnumFeatureSetup vEnumFeatureSetup = vSelection as IEnumFeatureSetup;
+                vEnumFeatureSetup.AllFields = true;
+                IEnumFeature vEnumFeature = vSelection as IEnumFeature;
+                IFeature vFeature = vEnumFeature.Next();
+                //MessageBox.Show(string.Format("开始执行分析操作,要素状态:{0}", vFeature==null?"空":"非空"));
+                while (vFeature != null)
                 {
-                    //MessageBox.Show("添加图素进入选择区域");
-                    if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
-                        vSelectFeatureLayers.Add(vFeatureLayerName, new BufferConfig() { LayerName= vFeatureLayerName });
+                    //MessageBox.Show(string.Format("图层名称:{0} 缓存图层数据数量:{1} 选择图层数量:{2}", vFeature.Class.AliasName, m_BufferLayers.Count, vSelectFeatureLayers.Count));
+                    IFeatureLayer vFeatureLayer = findIndexByFeature(vFeature);
+                    //MessageBox.Show(string.Format("要素名称:{0}", vFeatureLayer.Name) );
+                    string vFeatureLayerName = fixLayerName(vFeatureLayer);
+                    //MessageBox.Show(string.Format("修正后的图层名称:{0}", vFeatureLayerName));
+                    //排除村委会、乡镇街道、自然村三个图层
+                    if (vFeatureLayerName != "村委会" && vFeatureLayerName != "乡镇街道" && vFeatureLayerName != "自然村" && m_BufferLayers.Where(m => m.Name == vFeatureLayerName).Count() == 0)
+                    {
+                        //MessageBox.Show("添加图素进入选择区域");
+                        if (!vSelectFeatureLayers.ContainsKey(vFeatureLayerName))
+                            vSelectFeatureLayers.Add(vFeatureLayerName, new BufferConfig() { LayerName = vFeatureLayerName });
+                    }
+                    vFeature = vEnumFeature.Next();
                 }
-                vFeature = vEnumFeature.Next();
-            }
-            //MessageBox.Show(string.Format("选择要素层数据:{0}", vSelectFeatureLayers.Count));
-            if (vSelectFeatureLayers.Count > 0)
-            {
-                if (m_BufferForm == null || m_BufferForm.IsDisposed )
+                //MessageBox.Show(string.Format("选择要素层数据:{0}", vSelectFeatureLayers.Count));
+                if (vSelectFeatureLayers.Count > 0)
                 {
-                    m_BufferForm = new BufferForm();
-                    m_BufferForm.Layers = m_Layers.ToArray();
-                    m_BufferForm.VMainForm = this;
-                    m_BufferForm.BufferLayers = vSelectFeatureLayers;
-                    m_BufferForm.Show();
-                }
-                else
-                {
-                    m_BufferForm.BufferLayers = vSelectFeatureLayers;
-                    //m_BufferForm.initSelectedLayers();
-                    m_BufferForm.initTreeView();
-                    m_BufferForm.Refresh();
+                    if (m_BufferForm == null || m_BufferForm.IsDisposed)
+                    {
+                        m_BufferForm = new BufferForm();
+                        m_BufferForm.Layers = m_Layers.ToArray();
+                        m_BufferForm.VMainForm = this;
+                        m_BufferForm.BufferLayers = vSelectFeatureLayers;
+                        m_BufferForm.Show();
+                    }
+                    else
+                    {
+                        m_BufferForm.BufferLayers = vSelectFeatureLayers;
+                        //m_BufferForm.initSelectedLayers();
+                        m_BufferForm.initTreeView();
+                        m_BufferForm.Refresh();
+                    }
                 }
             }
         }
 
         public string CreateBufferLayerEx(Dictionary<string, BufferConfig> selectFeatureLayers, short Transparency)
         {
-            //Dictionary<IFeatureLayer, int> vBufferLayers = new Dictionary<IFeatureLayer, int>();
-                       
             //生成缓冲区
             Geoprocessor vGP = new Geoprocessor();
             //OverwriteOutput为真时，输出图层会覆盖当前文件夹下的同名图层
@@ -1200,6 +1201,7 @@ namespace JXDL.Client
                     ILayer vBufferLayer = GetLayerFromName(vBufferStruct.Name);
                     IFeatureLayer vBufferFeatureLayer = vBufferLayer as IFeatureLayer;
                     IFeatureCursor vFeatureCursor = vBufferFeatureLayer.FeatureClass.Search(null, true);
+                    List<IFeature> vFeatureList = new List<IFeature>();
                     IFeature vFeature = vFeatureCursor.NextFeature();
                     
                     while (vFeature != null)
@@ -1217,16 +1219,22 @@ namespace JXDL.Client
                                     object vValue = vAnayleFeature.get_Value(i);
                                     vNewRow[vAnayleFeature.Fields.Field[i].Name] = vValue;
                                 }
-                                //axMapControl1.Map.FeatureSelection.
                             }
                             vTable.Rows.Add(vNewRow);
-                            axMapControl1.Map.SelectFeature(vAnalyseLayer, vFeature);
+                            vFeatureList.Add(vAnayleFeature);
+                            axMapControl1.Map.SelectFeature(vAnalyseLayer, vAnayleFeature);
+                            //axMapControl1.FlashShape(vAnayleFeature.Shape,500,500,null);
+
                             vAnayleFeature = vAnalyseFeatureCursor.NextFeature();
-                            //axMapControl1.FlashShape(vFeature.Shape);
                         }
                         vFeature = vFeatureCursor.NextFeature();
                     }
-                   
+                    //foreach(IFeature vTempFeature in vFeatureList)
+                    //{
+                        
+                    //}
+                    //vFeatureList.Clear();
+
                     vTable.AcceptChanges();
                     string vInfo = "";
                     switch (vAnalyseFeatureLayer.FeatureClass.ShapeType)
@@ -1242,12 +1250,14 @@ namespace JXDL.Client
                             break;
                     }
                     vAnalyzeLayerItem.Text = vInfo;
-
+                    
                     //图层透明度
                     ILayerEffects vLayerEffects = vBufferLayer as ILayerEffects;
                     vLayerEffects.Transparency = Transparency;
                 }
             }
+            IActiveView pActiveView = axMapControl1.Map as IActiveView;
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphicSelection, null, null);
             //axMapControl1.Map.ClearSelection();
             return vBufferResult;
         }
@@ -1912,10 +1922,13 @@ namespace JXDL.Client
           
         }
 
+        bool bufferAnayleLock = false;
         private void ToolStripMenuItem_Pic_Anayle_Click(object sender, EventArgs e)
         {
             SpaceAnalyzeMode();
+            bufferAnayleLock = true;
             bufferAnayleEx();
+            bufferAnayleLock = false;
         }
 
         private void ToolStripMenuItem_Pic_Map_Click(object sender, EventArgs e)
