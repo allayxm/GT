@@ -14,7 +14,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    增加新用户
+                    编辑用户
                 </h1>
             </section>
 
@@ -42,7 +42,7 @@
                                             <div class="form-group">
                                                 <label>密码</label>
                                                 @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "请输入新密码" })
-                                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })4
+                                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                                             </div>
                                             <div class="form-group">
                                                 <label>所属机构</label>

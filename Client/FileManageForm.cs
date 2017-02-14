@@ -225,6 +225,8 @@ namespace JXDL.Client
                         if (vRemoteInterface.DeleteFile(vFileID, vFileName))
                         {
                             dataGridView_FileList.Rows.RemoveAt(e.RowIndex);
+                            ((DataTable)dataGridView_FileList.DataSource).Rows.RemoveAt(e.RowIndex);
+                            ((DataTable)dataGridView_FileList.DataSource).AcceptChanges();
                         }
                         else
                         {
