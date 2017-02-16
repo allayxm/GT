@@ -920,6 +920,7 @@
     <Compile Include="App\FileNumberStatisticsController.cs" />
     <Compile Include="App\GetFileListController.cs" />
     <Compile Include="App\GetLayersController.cs" />
+    <Compile Include="App\GetSymbolController.cs" />
     <Compile Include="App\HeartbeatController.cs" />
     <Compile Include="App\LoginController.cs" />
     <Compile Include="App\LogoutController.cs" />

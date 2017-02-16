@@ -3,6 +3,7 @@ using ESRI.ArcGIS.esriSystem;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using JXDL.IntrefaceStruct;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,11 @@ namespace JXDL.ClientBusiness
 {
     public class SymbolHelper
     {
+        //public static SymbolStruct[] GetAllSymbolData()
+        //{
+            
+        //}
+
         //MultiLayerLineSymbol
         public static ILineSymbol CreateLineDirectionSymbol()
         {

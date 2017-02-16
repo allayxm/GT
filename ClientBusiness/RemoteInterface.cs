@@ -560,5 +560,18 @@ namespace JXDL.ClientBusiness
             return flag;
         }
         #endregion
+
+        /// <summary>
+        /// 获取符号数据
+        /// </summary>
+        /// <returns></returns>
+        public SymbolStruct[] GetSymbols()
+        {
+            string vUrl = string.Format("{0}/Api/GetSymbols", m_RemotingServerAddress);
+            string vData = HttpGet(vUrl, "");
+            JavaScriptSerializer vJSC = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return vJSC.Deserialize<SymbolStruct[]>(vData);
+
+        }
     }
 }

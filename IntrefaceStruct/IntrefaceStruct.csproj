@@ -43,6 +43,7 @@
     <Compile Include="FeaturesStruct.cs" />
     <Compile Include="FileNumberStatisticsStruct.cs" />
     <Compile Include="LayerStruct.cs" />
+    <Compile Include="SymbolStruct.cs" />
     <Compile Include="UploadFileStruct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserAuthorSturct.cs" />

@@ -51,8 +51,14 @@ namespace JXDL.Client
 
         int m_ToolButtonIndex;
 
+        /// <summary>
+        /// 图层数据
+        /// </summary>
         public List<LayerStruct> m_Layers;
-
+        /// <summary>
+        /// 要素数据
+        /// </summary>
+        public List<SymbolStruct> m_Symbols;
        
 
         /// <summary>
@@ -138,6 +144,7 @@ namespace JXDL.Client
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //UseSymbol();
             try
             {
                 LoginForm vLoginForm = new LoginForm();
@@ -578,7 +585,7 @@ namespace JXDL.Client
             }
             changeMapColor(background, townshipBackgroundColor, villageCommitteeBackgroundColor, villageBackgroundColor);
 
-           
+       
 
             ////加载资源图层
             ConfigFile vConfigFile = new ConfigFile();
@@ -586,7 +593,10 @@ namespace JXDL.Client
             LayerInfo vLayerInfo = vConfigFile.GetLayerInfo(Program.LoginUserInfo.UserName);
             LayerStruct[] vLayerConfig = vLayerInfo==null?null:vLayerInfo.Layers;
             RemoteInterface vRemoteInterface = new RemoteInterface();
+            //加截层数据
             m_Layers = vRemoteInterface.GetLayers().ToList();
+            //加载要素数据
+            m_Symbols = vRemoteInterface.GetSymbols().ToList();
             //int vLayerIndex = 0;
             LayerStruct[] vFeatureLyaerAraay = m_Layers.Where(m => m.Type != 3).ToArray();
             foreach (LayerStruct vTempLayer in vFeatureLyaerAraay)
@@ -627,6 +637,13 @@ namespace JXDL.Client
                         //图层标注
                         if (vTempLayer.ShowAnnotation)
                             EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
+                        //图层符号
+                        SymbolStruct vFindSymbol = m_Symbols.Where(m => m.LayerName == vTempLayer.Name).FirstOrDefault(); ;
+                        if (vFindSymbol!=null && vFindSymbol.ID!=null)
+                        {
+                            //vFindSymbol.
+                        }
+
                         //改变图层透明度
                         ILayer vResLayer = vLayerFeature as ILayer;
                         ILayerEffects vLayerEffects = vResLayer as  ILayerEffects;
@@ -649,9 +666,9 @@ namespace JXDL.Client
                     MessageBox.Show(string.Format("{0}图层读取失败", vTempLayer.Name), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-         
 
-        
+            
+
 
             //初始化影像
             LayerStruct[] vRasterLayerArray = m_Layers.Where(m => m.Type == 3).ToArray();
@@ -1780,6 +1797,29 @@ namespace JXDL.Client
             vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
             vSimpleRenderer.Symbol = (ISymbol)vLineSymbol;
             axMapControl1.Refresh();
+        }
+
+        /// <summary>
+        /// 改图图层符号
+        /// MarkerSymbol（点符号）、 LineSymbol(线符号)和FillSymbol(填充符号)
+        /// </summary>
+        public void ChangeLayerSymbol(IFeatureLayer layer, string SymbolCode,string SymbolName)
+        {
+            ISymbol pSymbol = new SimpleLineSymbolClass();
+            pSymbol = GetASymbol("F:\\GZ\\YG\\Symbol\\fc.ServerStyle", "Line Symbols", "铁路");
+            IQueryFilter vQueryFilter = new QueryFilterClass();
+            vQueryFilter.WhereClause = string.Format("代码={0}", SymbolCode);
+            IFeatureCursor vFeatureCursor = layer.FeatureClass.Search(vQueryFilter, true);
+            IFeature vFeature =  vFeatureCursor.NextFeature();
+            while (vFeature!=null)
+            {
+                
+                //vFeature
+            }
+
+            IGeoFeatureLayer pGFeatureLyr = layer as IGeoFeatureLayer;
+            ISimpleRenderer vSimpleRenderer = (ISimpleRenderer)pGFeatureLyr.Renderer;
+            vSimpleRenderer.Symbol = pSymbol;
         }
 
         /// <summary>

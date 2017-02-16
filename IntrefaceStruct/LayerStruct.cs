@@ -8,7 +8,6 @@ namespace JXDL.IntrefaceStruct
 {
     public class LayerStruct
     {
-        
         public int? ID { get; set; }
         
         public String classify { get; set; }

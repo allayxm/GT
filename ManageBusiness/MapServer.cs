@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MXKJ.DBMiddleWareLib;
 using System.Data;
 using JXDL.ManageEFModel;
+using JXDL.IntrefaceStruct;
 
 
 namespace JXDL.ManageBusiness
@@ -37,6 +38,11 @@ namespace JXDL.ManageBusiness
         public DataTable GetLayers()
         {
             return m_BasicDBClass.SelectAllRecords<LayersEFModel>();
+        }
+
+        public SymbolStruct[] GetSymbols()
+        {
+            return m_BasicDBClass.SelectAllRecordsEx<SymbolStruct>();
         }
     }
 }
