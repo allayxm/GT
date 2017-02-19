@@ -70,6 +70,213 @@ namespace JXDL.Client
         /// </summary>
         EagleEyeForm m_EagleEyeForm = null;
 
+        /// <summary>
+        /// 唯一符号示例
+        /// </summary>
+        /// <param name="R_pFeatureLayer"></param>
+        public void Render(IFeatureLayer R_pFeatureLayer)
+        {
+            IFeatureSelection R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            IFeature R_pFeature;
+            IFeatureCursor R_FeatureCursor;
+            R_pFeatureSelection = R_pFeatureLayer as IFeatureSelection;
+            R_pFeatureSelection.Clear();
+
+            ISelectionSet R_pSelectionSet = R_pFeatureSelection.SelectionSet;
+            IFeatureClass R_pFeatureClass = R_pFeatureLayer.FeatureClass;
+            IQueryFilter R_pQueryFilter = new QueryFilterClass();
+            R_pQueryFilter.WhereClause = null;
+            R_FeatureCursor = R_pFeatureClass.Search(R_pQueryFilter, true);
+            R_pFeature = R_FeatureCursor.NextFeature();
+
+            IUniqueValueRenderer renderer = new UniqueValueRendererClass();
+            renderer.FieldCount = 1;
+            renderer.set_Field(0, "地区名称");
+            int index = R_pFeatureLayer.FeatureClass.Fields.FindField("地区名称");
+            IRandomColorRamp rx = new RandomColorRampClass();
+            rx.MinSaturation = 15;
+            rx.MaxSaturation = 30;
+            rx.MinValue = 85;
+            rx.MaxValue = 100;
+            rx.StartHue = 0;
+            rx.EndHue = 360;
+            rx.Size = 100;
+            bool ok; ;
+            rx.CreateRamp(out ok);
+
+            IEnumColors RColors = rx.Colors;
+            RColors.Reset();
+
+            while (R_pFeature != null)
+            {
+                ISimpleFillSymbol symd = new SimpleFillSymbolClass();
+                symd.Style = esriSimpleFillStyle.esriSFSSolid;
+                symd.Outline.Width = 1;
+                symd.Color = RColors.Next();
+                string valuestr = R_pFeature.get_Value(index).ToString();
+                renderer.AddValue(valuestr, valuestr, symd as ISymbol);
+                R_pFeature = R_FeatureCursor.NextFeature();
+            }
+            IGeoFeatureLayer geoLayer = R_pFeatureLayer as IGeoFeatureLayer;
+
+            geoLayer.Renderer = renderer as IFeatureRenderer;
+
+           // axMap.Refresh();
+        }
+
+        /// <summary>
+        /// 唯一符号示例
+        /// </summary>
+        /// <param name="pFeatLyr"></param>
+        /// <param name="sFieldName"></param>
+        private void UniqueValueRenderer(IFeatureLayer pFeatLyr, string[] sFieldName)
+        {
+            IUniqueValueRenderer pUniqueValueRender;
+            IColor pNextUniqueColor;
+            IEnumColors pEnumRamp;
+            ITable pTable;
+            IRow pNextRow;
+            ICursor pCursor;
+            IQueryFilter pQueryFilter;
+            IRandomColorRamp pRandColorRamp = new RandomColorRampClass();
+            pRandColorRamp.StartHue = 0;
+            pRandColorRamp.MinValue = 0;
+            pRandColorRamp.MinSaturation = 15;
+            pRandColorRamp.EndHue = 360;
+            pRandColorRamp.MaxValue = 100;
+            pRandColorRamp.MaxSaturation = 30;
+            IQueryFilter pQueryFilter1 = new QueryFilterClass();
+            pRandColorRamp.Size = pFeatLyr.FeatureClass.FeatureCount(pQueryFilter1);
+            bool bSuccess = false;
+            pRandColorRamp.CreateRamp(out bSuccess);
+            if (sFieldName.Length == 2)
+            {
+                string sFieldName1 = sFieldName[0];
+                string sFieldName2 = sFieldName[1];
+                IGeoFeatureLayer pGeoFeatureL = (IGeoFeatureLayer)pFeatLyr;
+                pUniqueValueRender = new UniqueValueRendererClass();
+                pTable = (ITable)pGeoFeatureL;
+                int pFieldNumber = pTable.FindField(sFieldName1);
+                int pFieldNumber2 = pTable.FindField(sFieldName2);
+                pUniqueValueRender.FieldCount = 2;
+                pUniqueValueRender.set_Field(0, sFieldName1);
+                pUniqueValueRender.set_Field(1, sFieldName2);
+                pEnumRamp = pRandColorRamp.Colors;
+                pNextUniqueColor = null;
+                pQueryFilter = new QueryFilterClass();
+                pQueryFilter.AddField(sFieldName1);
+                pQueryFilter.AddField(sFieldName2);
+                pCursor = pTable.Search(pQueryFilter, true);
+                pNextRow = pCursor.NextRow();
+                string codeValue;
+                while (pNextRow != null)
+                {
+                    codeValue = pNextRow.get_Value(pFieldNumber).ToString() + pUniqueValueRender.FieldDelimiter + pNextRow.get_Value(pFieldNumber2).ToString();
+                    pNextUniqueColor = pEnumRamp.Next();
+                    if (pNextUniqueColor == null)
+                    {
+                        pEnumRamp.Reset();
+                        pNextUniqueColor = pEnumRamp.Next();
+                    }
+                    IFillSymbol pFillSymbol;
+                    ILineSymbol pLineSymbol;
+                    IMarkerSymbol pMarkerSymbol;
+                    switch (pGeoFeatureL.FeatureClass.ShapeType)
+                    {
+                        case esriGeometryType.esriGeometryPolygon:
+                            {
+                                pFillSymbol = new SimpleFillSymbolClass();
+                                pFillSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2, (ISymbol)pFillSymbol);
+                                break;
+                            }
+                        case esriGeometryType.esriGeometryPolyline:
+                            {
+                                pLineSymbol = new SimpleLineSymbolClass();
+                                pLineSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2, (ISymbol)pLineSymbol);
+                                break;
+                            }
+                        case esriGeometryType.esriGeometryPoint:
+                            {
+                                pMarkerSymbol = new SimpleMarkerSymbolClass();
+                                pMarkerSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2, (ISymbol)pMarkerSymbol);
+                                break;
+                            }
+                    }
+                    pNextRow = pCursor.NextRow();
+                }
+                pGeoFeatureL.Renderer = (IFeatureRenderer)pUniqueValueRender;
+                axMapControl1.Refresh();
+            }
+            else if (sFieldName.Length == 3)
+            {
+                string sFieldName1 = sFieldName[0];
+                string sFieldName2 = sFieldName[1];
+                string sFieldName3 = sFieldName[2];
+                IGeoFeatureLayer pGeoFeatureL = (IGeoFeatureLayer)pFeatLyr;
+                pUniqueValueRender = new UniqueValueRendererClass();
+                pTable = (ITable)pGeoFeatureL;
+                int pFieldNumber = pTable.FindField(sFieldName1);
+                int pFieldNumber2 = pTable.FindField(sFieldName2);
+                int pFieldNumber3 = pTable.FindField(sFieldName3);
+                pUniqueValueRender.FieldCount = 3;
+                pUniqueValueRender.set_Field(0, sFieldName1);
+                pUniqueValueRender.set_Field(1, sFieldName2);
+                pUniqueValueRender.set_Field(2, sFieldName3);
+                pEnumRamp = pRandColorRamp.Colors;
+                pNextUniqueColor = null;
+                pQueryFilter = new QueryFilterClass();
+                pQueryFilter.AddField(sFieldName1);
+                pQueryFilter.AddField(sFieldName2);
+                pQueryFilter.AddField(sFieldName3);
+                pCursor = pTable.Search(pQueryFilter, true);
+                pNextRow = pCursor.NextRow();
+                string codeValue;
+                while (pNextRow != null)
+                {
+                    codeValue = pNextRow.get_Value(pFieldNumber).ToString() + pUniqueValueRender.FieldDelimiter + pNextRow.get_Value(pFieldNumber2).ToString() + pUniqueValueRender.FieldDelimiter + pNextRow.get_Value(pFieldNumber3).ToString();
+                    pNextUniqueColor = pEnumRamp.Next();
+                    if (pNextUniqueColor == null)
+                    {
+                        pEnumRamp.Reset();
+                        pNextUniqueColor = pEnumRamp.Next();
+                    }
+                    IFillSymbol pFillSymbol;
+                    ILineSymbol pLineSymbol;
+                    IMarkerSymbol pMarkerSymbol;
+                    switch (pGeoFeatureL.FeatureClass.ShapeType)
+                    {
+                        case esriGeometryType.esriGeometryPolygon:
+                            {
+                                pFillSymbol = new SimpleFillSymbolClass();
+                                pFillSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2 + "" + sFieldName3, (ISymbol)pFillSymbol);
+                                break;
+                            }
+                        case esriGeometryType.esriGeometryPolyline:
+                            {
+                                pLineSymbol = new SimpleLineSymbolClass();
+                                pLineSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2 + "" + sFieldName3, (ISymbol)pLineSymbol);
+                                break;
+                            }
+                        case esriGeometryType.esriGeometryPoint:
+                            {
+                                pMarkerSymbol = new SimpleMarkerSymbolClass();
+                                pMarkerSymbol.Color = pNextUniqueColor;
+                                pUniqueValueRender.AddValue(codeValue, sFieldName1 + " " + sFieldName2 + "" + sFieldName3, (ISymbol)pMarkerSymbol);
+                                break;
+                            }
+                    }
+                    pNextRow = pCursor.NextRow();
+                }
+                pGeoFeatureL.Renderer = (IFeatureRenderer)pUniqueValueRender;
+                axMapControl1.Refresh();
+            }
+        }
+
         public void ChangeLayerVisible( string LayerName,bool Visible )
         {
             for( int i=0;i<axMapControl1.LayerCount;i++)
@@ -638,10 +845,10 @@ namespace JXDL.Client
                         if (vTempLayer.ShowAnnotation)
                             EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
                         //图层符号
-                        SymbolStruct vFindSymbol = m_Symbols.Where(m => m.LayerName == vTempLayer.Name).FirstOrDefault(); ;
-                        if (vFindSymbol!=null && vFindSymbol.ID!=null)
+                        var vFindSymbol = m_Symbols.Where(m => m.LayerName == vTempLayer.Name && m.Symbol!="").ToList();
+                        if (vFindSymbol!=null && vFindSymbol.Count>0)
                         {
-                            //vFindSymbol.
+                           ChangeLayerSymbol(vLayerFeature, vFindSymbol);
                         }
 
                         //改变图层透明度
@@ -657,7 +864,9 @@ namespace JXDL.Client
                         vTempLayer.Order = -1;
                         vTempLayer.IsView = false;
                     }
-               
+                    
+                    
+
                 }
                 catch
                 {
@@ -745,6 +954,9 @@ namespace JXDL.Client
             {
                 System.Diagnostics.Debug.WriteLine( axMapControl1.get_Layer(i).Name );
             }
+
+            axToolbarControl1.AddItem("esriControls.ControlsRedoCommand", 0, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
+            axToolbarControl1.AddItem("esriControls.ControlsEditingSketchDirectionLengthCommand", 0, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
         }
 
         void initEagleEyeForm()
@@ -1803,23 +2015,47 @@ namespace JXDL.Client
         /// 改图图层符号
         /// MarkerSymbol（点符号）、 LineSymbol(线符号)和FillSymbol(填充符号)
         /// </summary>
-        public void ChangeLayerSymbol(IFeatureLayer layer, string SymbolCode,string SymbolName)
+        public void ChangeLayerSymbol(IFeatureLayer layer, List<SymbolStruct> symbolList)
         {
+            string path = string.Format(@"{0}\Symbol\fc.ServerStyle", System.Windows.Forms.Application.StartupPath);
             ISymbol pSymbol = new SimpleLineSymbolClass();
-            pSymbol = GetASymbol("F:\\GZ\\YG\\Symbol\\fc.ServerStyle", "Line Symbols", "铁路");
-            IQueryFilter vQueryFilter = new QueryFilterClass();
-            vQueryFilter.WhereClause = string.Format("代码={0}", SymbolCode);
-            IFeatureCursor vFeatureCursor = layer.FeatureClass.Search(vQueryFilter, true);
-            IFeature vFeature =  vFeatureCursor.NextFeature();
-            while (vFeature!=null)
+            IUniqueValueRenderer renderer = new UniqueValueRendererClass();
+            renderer.FieldCount = 1;
+            renderer.set_Field(0, "代码");
+            foreach (SymbolStruct tempSymbol in symbolList)
             {
-                
-                //vFeature
+                switch (layer.FeatureClass.ShapeType)
+                {
+                    case esriGeometryType.esriGeometryPolygon://面
+                        pSymbol = GetASymbol(path, "Fill Symbols", tempSymbol.Symbol);
+                        break;
+                    case esriGeometryType.esriGeometryPoint://点
+                        pSymbol = GetASymbol(path, "Marker Symbols", tempSymbol.Symbol);
+                        break;
+                    case esriGeometryType.esriGeometryPolyline://线
+                        pSymbol = GetASymbol(path, "Line Symbols", tempSymbol.Symbol);
+                        break;
+                }
+                renderer.AddValue(tempSymbol.Code, "代码", pSymbol);
             }
-
             IGeoFeatureLayer pGFeatureLyr = layer as IGeoFeatureLayer;
-            ISimpleRenderer vSimpleRenderer = (ISimpleRenderer)pGFeatureLyr.Renderer;
-            vSimpleRenderer.Symbol = pSymbol;
+            pGFeatureLyr.Renderer = renderer as IFeatureRenderer;
+            //ISimpleRenderer vSimpleRenderer = (ISimpleRenderer)pGFeatureLyr.Renderer;
+            //vSimpleRenderer.Symbol = pSymbol;
+            axMapControl1.Refresh();
+            
+
+            //IQueryFilter vQueryFilter = new QueryFilterClass();
+            //vQueryFilter.WhereClause = string.Format("代码={0}", SymbolCode);
+            //IFeatureCursor vFeatureCursor = layer.FeatureClass.Search(vQueryFilter, true);
+            //IFeature vFeature =  vFeatureCursor.NextFeature();
+            //while (vFeature!=null)
+            //{
+
+            //    //vFeature
+            //}
+
+
         }
 
         /// <summary>

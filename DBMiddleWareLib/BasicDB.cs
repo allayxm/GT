@@ -1717,7 +1717,7 @@ namespace MXKJ.DBMiddleWareLib
     /// <summary>
     ///自定义表属性 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Property| AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class TableAttrib : Attribute
     {
         /// <summary>

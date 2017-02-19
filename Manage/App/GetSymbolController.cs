@@ -8,12 +8,13 @@ using JXDL.IntrefaceStruct;
 using System.Data;
 using JXDL.ManageBusiness;
 using MXKJ.DBMiddleWareLib;
+using JXDL.ManageEFModel;
 
 namespace JXDL.Manage.App
 {
     public class GetSymbolsController : ApiController
     {
-        public SymbolStruct[] Get()
+        public SymbolEFModel[] Get()
         {
             MapServer vMapServer = new MapServer();
             return  vMapServer.GetSymbols();

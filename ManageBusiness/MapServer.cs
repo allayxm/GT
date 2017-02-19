@@ -40,9 +40,9 @@ namespace JXDL.ManageBusiness
             return m_BasicDBClass.SelectAllRecords<LayersEFModel>();
         }
 
-        public SymbolStruct[] GetSymbols()
+        public SymbolEFModel[] GetSymbols()
         {
-            return m_BasicDBClass.SelectAllRecordsEx<SymbolStruct>();
+            return m_BasicDBClass.SelectAllRecordsEx<SymbolEFModel>();
         }
     }
 }
