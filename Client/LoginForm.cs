@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using JXDL.ClientBusiness;
+using System.Runtime.InteropServices;
+using System.IO;
 
 namespace JXDL.Client
 {
@@ -60,6 +62,66 @@ namespace JXDL.Client
         {
             ConfigForm vConfigForm = new ConfigForm();
             vConfigForm.ShowDialog();
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            fontInstall();
+        }
+
+        void fontInstall()
+        {
+            var vFonts = System.Drawing.FontFamily.Families;
+            bool vFont1 = false, vFont2 = false;
+            foreach (var vTempFont in vFonts)
+            {
+                if (vTempFont.Name == "FCfont1")
+                    vFont1 = true;
+                if (vTempFont.Name == "FCfont2")
+                    vFont2 = true;
+            }
+
+            if (!vFont1)
+                FontOperate.InstallFont(string.Format(@"FCfont1.ttf", System.Environment.CurrentDirectory), "FCfont1");
+            if (!vFont2)
+                FontOperate.InstallFont(string.Format(@"FCfont2.ttf", System.Environment.CurrentDirectory), "FCfont2");
+        }
+    }
+
+    public class FontOperate
+    {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern int WriteProfileString(string lpszSection, string lpszKeyName, string lpszString);
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(int hWnd,
+        uint Msg,
+        int wParam,
+        int lParam
+        );
+        [DllImport("gdi32")]
+        public static extern int AddFontResource(string lpFileName);
+
+
+        public static bool InstallFont(string sFontFileName, string sFontName)
+        {
+            string _sTargetFontPath = string.Format(@"{0}\fonts\{1}", System.Environment.GetEnvironmentVariable("WINDIR"), sFontFileName);//系统FONT目录
+            string _sResourceFontPath = string.Format(@"{0}\Fonts\{1}", System.Windows.Forms.Application.StartupPath, sFontFileName);//需要安装的FONT目录
+            try
+            {
+                if (!File.Exists(_sTargetFontPath) && File.Exists(_sResourceFontPath))
+                {
+                    int _nRet;
+                    File.Copy(_sResourceFontPath, _sTargetFontPath);
+                    _nRet = AddFontResource(_sTargetFontPath);
+                    _nRet = WriteProfileString("fonts", sFontName + "(TrueType)", sFontFileName);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -845,10 +845,13 @@ namespace JXDL.Client
                         if (vTempLayer.ShowAnnotation)
                             EnableFeatureLayerLabel(vLayerFeature.Name, vTempLayer.AnnotationField, CommonUnit.ColorToIRgbColor(Color.FromArgb(vTempLayer.AnnotationFontColor)), vTempLayer.AnnotationFontSize);
                         //图层符号
-                        var vFindSymbol = m_Symbols.Where(m => m.LayerName == vTempLayer.Name && m.Symbol!="").ToList();
-                        if (vFindSymbol!=null && vFindSymbol.Count>0)
+                        if (vConfigFile.UseSymbol)
                         {
-                           ChangeLayerSymbol(vLayerFeature, vFindSymbol);
+                            var vFindSymbol = m_Symbols.Where(m => m.LayerName == vTempLayer.Name && m.Symbol != "").ToList();
+                            if (vFindSymbol != null && vFindSymbol.Count > 0)
+                            {
+                                ChangeLayerSymbol(vLayerFeature, vFindSymbol);
+                            }
                         }
 
                         //改变图层透明度
@@ -2040,6 +2043,7 @@ namespace JXDL.Client
             }
             IGeoFeatureLayer pGFeatureLyr = layer as IGeoFeatureLayer;
             pGFeatureLyr.Renderer = renderer as IFeatureRenderer;
+            
             //ISimpleRenderer vSimpleRenderer = (ISimpleRenderer)pGFeatureLyr.Renderer;
             //vSimpleRenderer.Symbol = pSymbol;
             axMapControl1.Refresh();
@@ -2170,6 +2174,7 @@ namespace JXDL.Client
 
         public void ChangeLayerColor(string layerName, int color)
         {
+            ConfigFile vConfigFile = new ConfigFile();
             for (int i = 0; i < axMapControl1.Map.LayerCount; i++)
             {
                 string vName = axMapControl1.Map.Layer[i].Name;
@@ -2177,19 +2182,44 @@ namespace JXDL.Client
                 {
                     ILayer vLayer = axMapControl1.Map.Layer[i] as ILayer;
                     IGeoFeatureLayer vGeoFeatureLayer;
-                    ISimpleRenderer vSimpleRenderer;
-                    IFillSymbol vFillSymbol;
+                    
+                   
                     Color vColorRgb;
                     vGeoFeatureLayer = (IGeoFeatureLayer)vLayer;
-                    vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
-                    vFillSymbol = new SimpleFillSymbolClass();
+                    
                     vColorRgb = Color.FromArgb(color);
                     IRgbColor vColor = new RgbColorClass();
                     vColor.Red = vColorRgb.R;
                     vColor.Green = vColorRgb.G;
                     vColor.Blue = vColorRgb.B;
-                    vFillSymbol.Color = vColor;
-                    vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+                    //if (vConfigFile.UseSymbol)
+                    //{
+                    //    IUniqueValueRenderer vUniqueValueRendere = (IUniqueValueRenderer)vGeoFeatureLayer.Renderer;
+                        
+                    //    switch ( ( (IFeatureLayer)vLayer ).FeatureClass.ShapeType)
+                    //    {
+                    //        case esriGeometryType.esriGeometryPolygon://面
+                    //            IFillSymbol vFillSymbol = (IFillSymbol)vUniqueValueRendere.Symbol;
+                    //            vFillSymbol.Color = vColor;
+                    //            break;
+                    //        case esriGeometryType.esriGeometryPoint://点
+                    //            IMarkerSymbol vMarkerSymbol = (IMarkerSymbol)vUniqueValueRendere.Symbol;
+                    //            vMarkerSymbol.Color = vColor;
+                    //            break;
+                    //        case esriGeometryType.esriGeometryPolyline://线
+                    //            ILineSymbol vLineSymbol  = (ILineSymbol)vUniqueValueRendere.Symbol;
+                    //            vLineSymbol.Color = vColor;
+                    //            break;
+                    //    }
+                    //}
+                    //else
+                    //{
+                        ISimpleRenderer vSimpleRenderer = vSimpleRenderer = (ISimpleRenderer)vGeoFeatureLayer.Renderer;
+                        IFillSymbol vFillSymbol = new SimpleFillSymbolClass();
+                        vFillSymbol.Color = vColor;
+                        vSimpleRenderer.Symbol = (ISymbol)vFillSymbol;
+                    //}
+                   
                     axMapControl1.Refresh();
                     break;
                 }

@@ -278,7 +278,7 @@ namespace JXDL.Client
             // string vAnnotationField = comboBox_Label.Text;
             string vAnnotationField = textBox_Express.Text;
             vLayer.AnnotationField = vAnnotationField;
-
+            //改变颜色
             int vAnnotationColor = label_AnnotationColor.Tag == null ? -1 : (int)label_AnnotationColor.Tag;
             vLayer.AnnotationFontColor = vAnnotationColor;
             IRgbColor vRgbColor = vAnnotationColor == -1 ? null : CommonUnit.ColorToIRgbColor(Color.FromArgb(vAnnotationColor));

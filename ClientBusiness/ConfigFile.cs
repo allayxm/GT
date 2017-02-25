@@ -31,6 +31,10 @@ namespace JXDL.ClientBusiness
         /// </summary>
         public string RemotingServerAddress { get; set; }
         /// <summary>
+        /// 使用符号库
+        /// </summary>
+        public bool UseSymbol { get; set; } = true;
+        /// <summary>
         /// 文档下载路径
         /// </summary>
         public string DownloadPath { get; set; }
@@ -70,6 +74,7 @@ namespace JXDL.ClientBusiness
             m_Configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             
             RemotingServerAddress = m_Configuration.AppSettings.Settings["RemotingServerAddress"].Value;
+            UseSymbol = Convert.ToBoolean( m_Configuration.AppSettings.Settings["UseSymbol"].Value );
             MapBackgroundColor    = int.Parse( m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value );
             TownshipBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["TownshipBackgroundColor"].Value);
             VillageCommitteeBackgroundColor = int.Parse(m_Configuration.AppSettings.Settings["VillageCommitteeBackgroundColor"].Value);
@@ -105,6 +110,7 @@ namespace JXDL.ClientBusiness
         {
             //远程服务器
             m_Configuration.AppSettings.Settings["RemotingServerAddress"].Value = RemotingServerAddress;
+            m_Configuration.AppSettings.Settings["UseSymbol"].Value = UseSymbol.ToString();
             m_Configuration.AppSettings.Settings["MapBackgroundColor"].Value = MapBackgroundColor.ToString();
             m_Configuration.AppSettings.Settings["TownshipBackgroundColor"].Value = TownshipBackgroundColor.ToString();
             m_Configuration.AppSettings.Settings["VillageCommitteeBackgroundColor"].Value = VillageCommitteeBackgroundColor.ToString();

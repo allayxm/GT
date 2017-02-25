@@ -109,7 +109,7 @@
     </Reference>
     <Reference Include="ESRI.ArcGIS.Version, Version=10.2.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86" />
     <Reference Include="LSCommonHelper">
-      <HintPath>..\..\Desktop\LSCommonHelper.dll</HintPath>
+      <HintPath>..\..\..\Desktop\LSCommonHelper.dll</HintPath>
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -287,6 +287,12 @@
     <EmbeddedResource Include="VillagePicForm.resx">
       <DependentUpon>VillagePicForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Fonts\FCfont1.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Fonts\FCfont2.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -301,7 +307,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Earth.ico" />

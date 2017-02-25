@@ -23,6 +23,7 @@ namespace JXDL.Client
         {
             ConfigFile vConfigFile = new ConfigFile();
             textBox_ServerAddress.Text = vConfigFile.RemotingServerAddress;
+            checkBox_Symbol.Checked = vConfigFile.UseSymbol;
         }
 
         private void button_Exit_Click(object sender, EventArgs e)
@@ -35,6 +36,7 @@ namespace JXDL.Client
         {
             ConfigFile vConfigFile = new ConfigFile();
             vConfigFile.RemotingServerAddress = textBox_ServerAddress.Text;
+            vConfigFile.UseSymbol = checkBox_Symbol.Checked;
             vConfigFile.Save();
             DialogResult = DialogResult.OK;
             Close();
