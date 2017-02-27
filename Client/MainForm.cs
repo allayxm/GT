@@ -621,7 +621,7 @@ namespace JXDL.Client
 
                     ToolStripMenuItem_Doc_Edit.Enabled = true;
                     ToolStripMenuItem_Doc_Input.Enabled = true;
-                    ToolStripMenuItem_Doc_Query.Enabled = true;
+                    ToolStripMenuItem_Doc_Query.Enabled = false;
                     ToolStripMenuItem_Doc_Report.Enabled = true;
                     ToolStripMenuItem_Doc_FileQuery.Enabled = true;
 
